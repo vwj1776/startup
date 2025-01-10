@@ -26,7 +26,7 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 ### Elevator pitch
 
-Greyhound Writing is a platform designed for young writers to easily publish and get feedback to improve their writing to help them reach their maximum potential as authors. (Older authors can participate as well.) Few advertisements are used to make money, which is primarily given to the authors. It is sort of designed as a way for a school writing club to publish the short stories they write and make a little money off of it.
+Greyhound Writing is a platform designed for young writers to easily publish and get feedback to improve their writing to help them reach their maximum potential as authors. (Older authors can participate as well.) Few advertisements are used to make money, which is primarily given to the authors. It is sort of designed as a way for a school writing club to publish the short stories they write and make a little money off of it. It can also be used for journalism, nonfiction or stories, anything the writer wishes.
 ### Design
 
 ![logoPage1](startupDesign/logoP1.png)
@@ -47,20 +47,21 @@ sequenceDiagram
 
 ### Key features
 
-- Describe your key feature
-- Describe your key feature
-- Describe your key feature
+- Options for new users to view and read different stories published by other authors.
+- Ways for users to comment and give public or private feedback to the authors.
+- A messaging board
+- A home page for authors with accounts where they can upload new stories and view feedback.
 
 ### Technologies
 
 I am going to use the required technologies in the following ways.
 
-- **HTML** - Description here
-- **CSS** - Description here
+- **HTML** - Design and layout the website, putting in the necessary boxes, text, and blueprints.
+- **CSS** - Fill in the details and color of the website. 
 - **React** - Description here
 - **Service** - Description here
 - **DB/Login** - Description here
-- **WebSocket** - Description here
+- **WebSocket** - Create a messaging platform and get all of the feedback to go where it needs.
 
 ## 🚀 AWS deliverable
 
