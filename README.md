@@ -36,7 +36,7 @@ Greyhound Writing is a platform designed for young writers to easily publish and
 ![accountPage5](startupDesign/accountP5.png)
 
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+The authorUser uploads a story, which the Website saves to the Database. A readerUser accesses the website, first requesting a list of all stories from the database and then selecting a specific story to read. When the reader writes a comment on the story, the interaction uses a WebSocket connection to send the comment to the website in real-time. The Website saves the comment to the DB and retrieves updated comments with the same WebSocket channel, ensuring that the reader sees live updates.
 
 ```mermaid
 sequenceDiagram
