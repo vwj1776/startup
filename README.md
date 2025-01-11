@@ -40,9 +40,27 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 ```mermaid
 sequenceDiagram
-    actor You
+    actor authorUser
     actor Website
-    You->>Website: Replace this with your design
+    actor Database
+    authorUser->>Website: uploads story to the website
+    Website->>Database: uploads story to the DB
+```
+```mermaid
+sequenceDiagram
+    actor readerUser
+    actor Website
+    actor Database
+    readerUser->>Website: opens page
+    Website->>Database: asks for list of all stories
+    Database->>Website: gives list of all stories
+    readerUser->>Website: opens a story
+    Website->>Database: asks for the story
+    Database->>Website: gives the story
+    readerUser->>Website: writes comment on story(websocket)
+    Database->>Website: gives comments on story(websocket)
+    Website->>Database: uploads comment to DB
+
 ```
 
 ### Key features
