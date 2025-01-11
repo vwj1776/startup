@@ -9,7 +9,7 @@ A writing platform designed for writers and readers to publish and review eachot
 > ʇsoɹɹɐɔ ǝʞᴉl sllǝɯs ʇᴉ <br>
 
 > [!NOTE]
->  documentation for markdown [documentation](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax) before continuing.
+>  For markdown [documentation](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
 
 ## 🚀 Specification Deliverable
 
