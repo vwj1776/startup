@@ -5,8 +5,9 @@
 A writing platform designed for writers and readers to publish and review eachothers work. 
 
 > [!NOTE]
-> What does one snowman say to the other?
-> ʇsoɹɹɐɔ ǝʞᴉl sllǝɯs ʇᴉ
+> What does one snowman say to the other? <br>
+> ʇsoɹɹɐɔ ǝʞᴉl sllǝɯs ʇᴉ <br>
+
 > [!NOTE]
 >  documentation for markdown [documentation](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax) before continuing.
 
