@@ -23,49 +23,38 @@
     
     
     
-    <div id="allstories">
-      <a href="1ststory.html">
-      <div class="stories" id="left1">
-        <p class="title">Title of the story</p>
-        <p>gist of the story....</p>
-        <p>length:#pgs</p>
-        <p>Author(written by):so-and-so</p>
-        <p class="buybutton">Buy for $#.##</p>
-      </div>
-      </a>
-      
-      <a href="1ststory.html">
-      <div class="stories" id="right1">
-        <p class="title">Title of the story</p>
-        <p>gist of the story....</p>
-        <p>length:#pgs</p>
-        <p>Author(written by):so-and-so</p>
-        <p class="buybutton">Buy for $#.##</p>
-      </div>
-      </a>
-      
-      <a href="1ststory.html">
-      <div class="stories" id="left2">
-        <p class="title">Title of the story</p>
-        <p>gist of the story....</p>
-        <p>length:#pgs</p>
-        <p>Author(written by):so-and-so</p>
-        <p class="buybutton">Buy for $#.##</p>
-      </div>
-      </a>
-      
-      <a href="1ststory.html">
-      <div class="stories" id="right2">
-        <p class="title">Title of the story</p>
-        <p>gist of the story....</p>
-        <p>length:#pgs</p>
-        <p>Author(written by):so-and-so</p>
-        <p class="buybutton">Buy for $#.##</p>
-      </div>
-      </a>
-      
-      
-    </div>
+    <div id="allstories"></div>
+
+    <script>
+      // Array of story objects
+      const stories = [
+        { title: "Title of the story", gist: "gist of the story....", length: "#pgs", author: "so-and-so", price: "#.##", link: "1ststory.html" },
+        { title: "Title of the story", gist: "gist of the story....", length: "#pgs", author: "so-and-so", price: "#.##", link: "1ststory.html" },
+        { title: "Title of the story", gist: "gist of the story....", length: "#pgs", author: "so-and-so", price: "#.##", link: "1ststory.html" },
+        { title: "Title of the story", gist: "gist of the story....", length: "#pgs", author: "so-and-so", price: "#.##", link: "1ststory.html" }
+      ];
+    
+      // Select the container div
+      const container = document.getElementById("allstories");
+    
+      // Generate stories dynamically
+      stories.forEach((story, index) => {
+        const positionClass = index % 2 === 0 ? "left" : "right";
+        const storyHtml = `
+          <a href="${story.link}">
+            <div class="stories" id="${positionClass}${Math.floor(index / 2) + 1}">
+              <p class="title">${story.title}</p>
+              <p>${story.gist}</p>
+              <p>length: ${story.length}</p>
+              <p>Author(written by): ${story.author}</p>
+              <p class="buybutton">Buy for $${story.price}</p>
+            </div>
+          </a>
+        `;
+        container.innerHTML += storyHtml;
+      });
+    </script>
+    
     
     <footer>
       <p>Do you want to sell your stories on this website? Email me at Gavin.Jones.Greyhound@gmail.com</p>
