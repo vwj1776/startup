@@ -3,6 +3,33 @@
 <head>
   <link href="1ststory.css" rel="stylesheet">
 </head>
+<body>
+  <h2>Display Text File Content:</h2>
+
+<!-- Display Text File Content -->
+<pre id="fileContent"></pre>
+
+<script>
+  // Assuming the text file is in the same folder as this HTML file
+  const fileUrl = 'story1.txt';
+
+  // Fetch the text file and display its contents
+  fetch(fileUrl)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.text(); // Convert the response to text
+    })
+    .then(data => {
+      document.getElementById('fileContent').textContent = data; // Display the content in the <pre> tag
+    })
+    .catch(error => {
+      console.error('Error fetching file:', error);
+      document.getElementById('fileContent').textContent = 'Failed to load the file.'; // Show error message
+    });
+</script>
+</body>
 
 
 </html>
