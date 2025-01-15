@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "startup",
+			"path": "."
+		},
+		{
+			"name": "startupDesign",
+			"path": "../startupDesign"
+		}
+	],
+	"settings": {}
+}
