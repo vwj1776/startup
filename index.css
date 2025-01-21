@@ -53,9 +53,6 @@ footer {
   margin-right:0;
 }
 
-
-
-
 .title {
   font-size:200%;
   border:solid yellow 1px;
@@ -65,4 +62,8 @@ footer {
   border:solid darkorange 5px;
   background-color:yellow;
   color:black;
+}
+
+img {
+  width:100%;
 }
