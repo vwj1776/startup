@@ -1,92 +1,98 @@
 <!DOCTYPE HTML>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Story Viewer</title>
   <link href="1ststory.css" rel="stylesheet">
 </head>
+<body>
 
-
-
-
-
-<div id="leftColumn">
+  <!-- Story Information -->
   <div id="storyInformation">
-    <p>Author info 
-    <br>
-    name
-    <br>
-    picture of story
-    <br>
-    Other stories by the same author:
-    <br>
-    1
-    <br>
-    2
-    <br>
-    3
+    <p>
+      <strong>Author Info:</strong>
+      <br>
+      Name
+      <br>
+      Picture of Story
+      <br>
+      <strong>Other Stories by the Same Author:</strong>
+      <br>
+      1
+      <br>
+      2
+      <br>
+      3
     </p>
   </div>
 
+  <!-- Message the Author -->
   <div id="messageAuthor">
     <form>
-      <p>Here you can message the author.</p>
-      <input type="text">
-      <input type="submit" value="send">
+      <label for="authorMessage">Message the Author:</label>
+      <input type="text" id="authorMessage" name="authorMessage" placeholder="Type your message here">
+      <input type="submit" value="Send">
     </form>
   </div>
 
+  <!-- Advertisement Section -->
   <div id="advertisement">
-    <!-- so copy and paste the code the advertisement platform gives you right here -->
+    <!-- Paste the advertisement platform's code here -->
+    <p>Advertisement Placeholder</p>
   </div>
 
-</div>
+  <!-- Story Content -->
+  <div id="fileContent"  class="scrollable-div">Loading story content...</div>
 
+  <!-- Reviews Section -->
+  <div id="reviews">
+    <p><strong>Leave a Review:</strong></p>
+    <form id="reviewForm">
+      <label for="newReview">Your Review:</label>
+      <textarea id="newReview" name="newReview" placeholder="Write your review here" rows="4" cols="50"></textarea>
+      <br>
+      <input type="submit" value="Submit">
+    </form>
 
-
-
-
-
+    <div id="reviewList">
+      <!-- New reviews will appear here -->
+    </div>
+  </div>
 
   
-<body>
 
-  <div id="middleColumn">
- <!-- Div where the content will be displayed -->
- <div id="fileContent" style="border: 1px solid #ccc; padding: 10px; margin-top: 20px; width: 300px;"></div>
+  <!-- Script to Fetch Story Content -->
+  <script>
+    // Fetch the .txt file and display its contents
+    fetch('story1.txt') // Use the correct path to your file
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.text();
+      })
+      .then(data => {
+        // Display the contents of the file in the div
+        document.getElementById('fileContent').textContent = data;
+      })
+      .catch(error => {
+        // Handle any errors that occur during the fetch
+        document.getElementById('fileContent').textContent = 'Error loading file: ' + error.message;
+      });
 
- <script>
-     // Fetch the .txt file and display its contents
-     fetch('story1.txt') // Use the correct path to your file
-         .then(response => {
-             if (!response.ok) {
-                 throw new Error('Network response was not ok');
-             }
-             return response.text();
-         })
-         .then(data => {
-             // Display the contents of the file in the div
-             document.getElementById('fileContent').textContent = data;
-         })
-         .catch(error => {
-             // Handle any errors that occur during the fetch
-             document.getElementById('fileContent').textContent = 'Error loading file: ' + error.message;
-         });
- </script>
-
-</div>
-
+    // Handle review submissions
+    document.getElementById('reviewForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent page reload
+      const reviewInput = document.getElementById('newReview').value;
+      if (reviewInput.trim()) {
+        const reviewList = document.getElementById('reviewList');
+        const newReview = document.createElement('p');
+        newReview.textContent = reviewInput;
+        reviewList.appendChild(newReview); // Add the new review to the list
+        document.getElementById('newReview').value = ''; // Clear the textarea
+      }
+    });
+  </script>
 </body>
-
-<div id="rightColumn">
-<div id="reviews" >
-<!--put some sort of rule in here for whenever someone makes a new review for it to pop up -->
-<form>
-  <p>Consider what kinds of readers would enjoy reading this story. Is it fast-paced? full of juicy drama? What did and didn't you like?</p>
-  <input type="textbox">
-  <input type="submit" value="send">
-</form>
-</div>
-
-</div>
-
-
 </html>
