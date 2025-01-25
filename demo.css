@@ -1,0 +1,39 @@
+/* Container for the book */
+#book {
+    position: relative;
+    width: 600px; /* 300px for each page */
+    height: 400px;
+    background: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    perspective: 1000px; /* Enables 3D effect */
+    margin: 50px auto;
+}
+
+/* Individual pages */
+.page {
+    position: absolute;
+    width: 300px;
+    height: 100%;
+    background: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    backface-visibility: hidden; /* Hides the back face when flipped */
+    transform-origin: left center; /* Flipping pivot point */
+    transition: transform 1s ease-in-out; /* Smooth flip effect */
+}
+
+/* Left page */
+#left-page {
+    z-index: 2; /* Keeps it above the right page initially */
+}
+
+/* Right page */
+#right-page {
+    transform: rotateY(180deg); /* Pre-flipped */
+    z-index: 1;
+}
+
+/* Hover effect for flipping the left page */
+#book:hover #left-page {
+    transform: rotateY(-180deg); /* Flips the left page */
+}
