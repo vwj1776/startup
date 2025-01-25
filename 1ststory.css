@@ -12,6 +12,20 @@
 
 #reviews {
   border:#00d100, 5px, solid;
-  margin:10px
-  padding:10px;
+  margin:10px;
+  padding: 10px;
+}
+
+/* Styles for the scrollable div */
+.scrollable-div {
+  width: 90%;           
+  max-height: 400px;     /* Adjust height as needed */
+  overflow-y: auto;      /* Make it scrollable vertically */
+  padding: 10px;         /* Add padding inside the div */
+  border: 1px solid #ccc; /* Add a light border */
+  background-color: #f9f9f9; /* Light background for contrast */
+  font-family: Arial, sans-serif; /* Optional: Style the text */
+  line-height: 1.5;      /* Optional: Improve text readability */
+  word-break: break-word; /* Break long words or unbroken text */
+  white-space: pre-wrap; /* Preserve spaces and line breaks in the text */
 }
