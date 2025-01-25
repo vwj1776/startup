@@ -36,34 +36,39 @@
 
   
 <body>
-  <div id="mainStory">
-  <h2>Display Text File Content:</h2>
+ <!-- Div where the content will be displayed -->
+ <div id="fileContent" style="border: 1px solid #ccc; padding: 10px; margin-top: 20px; width: 300px;"></div>
 
-<!-- Display Text File Content -->
-<pre id="fileContent"></pre>
+ <script>
+     // Fetch the .txt file and display its contents
+     fetch('story1.txt') // Use the correct path to your file
+         .then(response => {
+             if (!response.ok) {
+                 throw new Error('Network response was not ok');
+             }
+             return response.text();
+         })
+         .then(data => {
+             // Display the contents of the file in the div
+             document.getElementById('fileContent').textContent = data;
+         })
+         .catch(error => {
+             // Handle any errors that occur during the fetch
+             document.getElementById('fileContent').textContent = 'Error loading file: ' + error.message;
+         });
+ </script>
 
-<script>
-  // Assuming the text file is in the same folder as this HTML file
-  const fileUrl = 'story1.txt';
-
-  // Fetch the text file and display its contents
-  fetch(fileUrl)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.text(); // Convert the response to text
-    })
-    .then(data => {
-      document.getElementById('fileContent').textContent = data; // Display the content in the <pre> tag
-    })
-    .catch(error => {
-      console.error('Error fetching file:', error);
-      document.getElementById('fileContent').textContent = 'Failed to load the file.'; // Show error message
-    });
-</script>
-  </div>
 </body>
+
+
+<div id="reviews">
+<!--put some sort of rule in here for whenever someone makes a new review for it to pop up -->
+<form>
+  <p>consider </p>
+  <input type="textbox">
+  <input type="submit" value="send">
+</form>
+</div>
 
 
 </html>
