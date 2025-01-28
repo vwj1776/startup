@@ -46,14 +46,31 @@
     </p>
   </div>
 
-  <!-- Message the Author -->
   <div id="messageAuthor">
-    <form>
+    <form id="authorForm">
       <label for="authorMessage">Message the Author:</label>
       <input type="text" id="authorMessage" name="authorMessage" placeholder="Type your message here">
       <input type="submit" value="Send">
     </form>
   </div>
+  
+  <script>
+      const messages = [];
+      const form = document.getElementById('authorForm');
+  
+    form.addEventListener('submit', function (event) {
+      event.preventDefault(); 
+        const message = document.getElementById('authorMessage').value;
+  
+      if (message.trim() !== "") { 
+        messages.push(message);
+        console.log('Messages list:', messages); 
+      }
+      form.reset();
+    });
+  </script>
+  
+  
 
   <!-- Advertisement Section -->
   <div id="advertisement">
@@ -74,8 +91,7 @@
       <input type="submit" value="Submit">
     </form>
 
-    <div id="reviewList">
-      <!-- New reviews will appear here -->
+    <div id="reviewList" style="overflow-y: auto; max-height: 100px; border: 1px solid #ccc;">
     </div>
   </div>
 
