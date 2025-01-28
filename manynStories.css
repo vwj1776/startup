@@ -1,0 +1,69 @@
+* {
+  background-color:#040009;
+  color:#00d100;
+}
+
+header {
+  vertical-align:top;
+  border:solid yellow 5px;
+}
+
+#introduction {
+  border:solid green 5px;
+  font-size:150%;
+  text-align:center;
+  padding:5%;
+  margin-top:3%;
+}
+
+#allstories {
+  width:100%;
+}
+
+
+.stories {
+  display:inline-block;
+  border:solid green 3px;
+  width:48%;
+  margin-top:10px;
+  text-align:center;
+}
+
+footer {
+  border:yellow 5px solid;
+  text-align:center;
+  font-size:150%;
+  padding-top:3%;
+  padding-bottom:3%;
+}
+
+#left1 {
+  margin-left:0;
+}
+
+#left2 {
+  margin-left:0;
+}
+
+#right1 {
+  margin-right:0;
+}
+
+#right2 {
+  margin-right:0;
+}
+
+.title {
+  font-size:200%;
+  border:solid yellow 1px;
+}
+
+.buybutton {
+  border:solid darkorange 5px;
+  background-color:yellow;
+  color:black;
+}
+
+img {
+  width:100%;
+}
