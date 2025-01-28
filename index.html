@@ -16,11 +16,11 @@
     </div>
     
     
-    <div id="searchbar"></div>
-
-
-
-    <a href="authorAccount.html" target="_blank">
+    
+    
+    
+    <nav>
+<a href="authorAccount.html" target="_blank">
       <div>
         <p>Upload Stories here</p>
       </div>
@@ -34,6 +34,12 @@
     <a href="loginPage.html" target="_blank">
       login page
     </a>
+
+    <div id="authorIcon">
+      <p> &lt; Author Acount Name &gt; </p>
+      <img href="" alt="no profile picture found" height="16px">
+    </div>
+  </nav>
     
     
     
@@ -58,7 +64,7 @@
       stories.forEach((story, index) => {
         const positionClass = index % 2 === 0 ? "left" : "right";
         const storyHtml = `
-          <a href="${story.link}">
+          <a href="${story.link}" target="_blank">
             <div class="stories" id="${positionClass}${Math.floor(index / 2) + 1}">
               <p class="title">${story.title}</p>
               <p>${story.gist}</p>
