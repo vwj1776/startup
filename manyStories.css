@@ -16,54 +16,64 @@ header {
   margin-top:3%;
 }
 
-#allstories {
-  width:100%;
+
+
+/* Make #allstories a grid container */
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive columns */
+  gap: 20px; /* Add space between grid items */
+  padding: 10px; /* Optional: Add padding around the grid */
+}
+
+/* Individual story styles */
+.stories {
+  border: solid green 3px;
+  padding: 10px; /* Add padding inside the box */
+  text-align: center;
+  background-color: #f9f9f9; /* Optional: Light background for contrast */
+  border-radius: 8px; /* Optional: Rounded corners */
+  transition: transform 0.2s ease; /* Optional: Hover effect */
+}
+
+.stories:hover {
+  transform: scale(1.05); /* Slight enlargement on hover */
+}
+
+/* Title styles */
+.title {
+  font-size: 150%; /* Adjust size as needed */
+  font-weight: bold;
+  margin-bottom: 10px; /* Add space below the title */
+  border: solid yellow 1px; /* Optional: Visual separator */
+}
+
+/* Buy button styles */
+.buybutton {
+  color: white;
+  background-color: green;
+  padding: 10px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.buybutton:hover {
+  background-color: darkgreen; /* Darker shade on hover */
 }
 
 
-.stories {
-  display:inline-block;
-  border:solid green 3px;
-  width:48%;
-  margin-top:10px;
-  text-align:center;
+img {
+  width:10%;
 }
 
 footer {
-  border:yellow 5px solid;
+  border:solid yellow 5px;
+  font-size: 2em;
   text-align:center;
-  font-size:150%;
-  padding-top:3%;
-  padding-bottom:3%;
+  padding:5%;
+  margin-top:3%;
 }
 
-#left1 {
-  margin-left:0;
-}
-
-#left2 {
-  margin-left:0;
-}
-
-#right1 {
-  margin-right:0;
-}
-
-#right2 {
-  margin-right:0;
-}
-
-.title {
-  font-size:200%;
-  border:solid yellow 1px;
-}
-
-.buybutton {
-  border:solid darkorange 5px;
-  background-color:yellow;
-  color:black;
-}
-
-img {
-  width:100%;
-}
+ 

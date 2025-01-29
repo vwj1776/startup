@@ -42,15 +42,24 @@
   </nav>
     
     
+  <!-- <p>${story.gist}</p>
+  <p>length: ${story.length}</p>
+  <p>Author(written by): ${story.author}</p>
+  <p class="buybutton">Buy for $${story.price}</p> -->
     
     
     
-    
-    <div id="allstories"></div>
+    <div id="allstories" class="container"></div>
 
     <script>
       // Array of story objects
       const stories = [
+      { title: "Title of the story", gist: "gist of the story....", length: "#pgs", author: "so-and-so", price: "#.##", link: "1ststory.html" },
+        { title: "Title of the story", gist: "gist of the story....", length: "#pgs", author: "so-and-so", price: "#.##", link: "1ststory.html" },
+        { title: "Title of the story", gist: "gist of the story....", length: "#pgs", author: "so-and-so", price: "#.##", link: "1ststory.html" },
+        { title: "Title of the story", gist: "gist of the story....", length: "#pgs", author: "so-and-so", price: "#.##", link: "1ststory.html" },
+        { title: "Title of the story", gist: "gist of the story....", length: "#pgs", author: "so-and-so", price: "#.##", link: "1ststory.html" },
+        { title: "Title of the story", gist: "gist of the story....", length: "#pgs", author: "so-and-so", price: "#.##", link: "1ststory.html" },
         { title: "Title of the story", gist: "gist of the story....", length: "#pgs", author: "so-and-so", price: "#.##", link: "1ststory.html" },
         { title: "Title of the story", gist: "gist of the story....", length: "#pgs", author: "so-and-so", price: "#.##", link: "1ststory.html" },
         { title: "Title of the story", gist: "gist of the story....", length: "#pgs", author: "so-and-so", price: "#.##", link: "1ststory.html" },
@@ -62,10 +71,9 @@
     
       // Generate stories dynamically
       stories.forEach((story, index) => {
-        const positionClass = index % 2 === 0 ? "left" : "right";
         const storyHtml = `
           <a href="${story.link}" target="_blank">
-            <div class="stories" id="${positionClass}${Math.floor(index / 2) + 1}">
+            <div class="stories">
               <p class="title">${story.title}</p>
               <p>${story.gist}</p>
               <p>length: ${story.length}</p>
