@@ -36,7 +36,7 @@
 
         
 
-  <!-- Story Information -->
+
   <div id="storyInformation">
     <p>
       <strong>Author Info:</strong>
@@ -81,16 +81,16 @@
   
   
 
-  <!-- Advertisement Section -->
+
   <div id="advertisement">
-    <!-- Paste the advertisement platform's code here -->
+
     <p>Advertisement Placeholder</p>
   </div>
 
-  <!-- Story Content -->
+
   <div id="fileContent"  class="scrollable-div">Loading story content...</div>
 
-  <!-- Reviews Section -->
+
   <div id="reviews">
     <p><strong>Leave a Review:</strong></p>
     <form id="reviewForm">
@@ -106,10 +106,10 @@
 
   
 
-  <!-- Script to Fetch Story Content -->
+
   <script>
-    // Fetch the .txt file and display its contents
-    fetch('story2.txt') // Use the correct path to your file
+
+    fetch('story2.txt') 
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -117,24 +117,23 @@
         return response.text();
       })
       .then(data => {
-        // Display the contents of the file in the div
         document.getElementById('fileContent').textContent = data;
       })
       .catch(error => {
-        // Handle any errors that occur during the fetch
+
         document.getElementById('fileContent').textContent = 'Error loading file: ' + error.message;
       });
 
     // Handle review submissions
     document.getElementById('reviewForm').addEventListener('submit', function(event) {
-      event.preventDefault(); // Prevent page reload
+      event.preventDefault();
       const reviewInput = document.getElementById('newReview').value;
       if (reviewInput.trim()) {
         const reviewList = document.getElementById('reviewList');
         const newReview = document.createElement('p');
         newReview.textContent = reviewInput;
-        reviewList.appendChild(newReview); // Add the new review to the list
-        document.getElementById('newReview').value = ''; // Clear the textarea
+        reviewList.appendChild(newReview); 
+        document.getElementById('newReview').value = ''; 
       }
     });
   </script>
