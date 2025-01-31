@@ -103,15 +103,15 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [X] **HTML pages** - I completed this part of the deliverable.
-- [X] **Proper HTML element usage** - I completed this part of the deliverable.
-- [X] **Links** - I completed this part of the deliverable.
-- [X] **Text** - I completed this part of the deliverable.
-- [X] **3rd party API placeholder** - I did not complete this part of the deliverable.
-- [X] **Images** - I completed this part of the deliverable.
-- [X] **Login placeholder** - I completed this part of the deliverable.
-- [X] **DB data placeholder** - I did not complete this part of the deliverable.
-- [X] **WebSocket placeholder** - I did not complete this part of the deliverable.
+- [X] **HTML pages** - added HTML pages including `authorAccount.html`, `demo.html`, `1ststory.html`, `manyStories.html`, and `index.html` to structure the web application.
+- [X] **Proper HTML element usage** - Used HTML elements such as `<nav>`, `<main>`, `<form>`, and `<div>` 
+- [X] **Links** - Added navigation links between pages and to the GitHub repository.
+- [X] **Text** - added text elements to display information about stories, authors, and login details.
+- [X] **3rd party API placeholder** - stubbed out a 3rd party API to enhance functionality.
+- [X] **Images** - Added images such as profile pictures and an attemted page turn animation.
+- [X] **Login placeholder** - login form in `index.html` to display the author's account name.
+- [X] **DB data placeholder** - Placeholder for database functionality to store and retrieve data.
+- [X] **WebSocket placeholder** - Placeholder for WebSocket functionality for comments and messages.
 
 ## 🚀 CSS deliverable
 
