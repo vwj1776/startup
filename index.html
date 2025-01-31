@@ -57,27 +57,25 @@
     <script src="login.js"></script>
 </body>
 <script>
-  // Stub for handling login (can be expanded with real authentication logic)
+ 
 function handleLogin(event) {
-    event.preventDefault(); // Prevents the form from submitting the traditional way
+    event.preventDefault(); 
 
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
-    // Call a function to check the credentials
+    
     if (validateLogin(username, password)) {
-        // If credentials are valid, redirect or show success
+
         alert("Login successful!");
-        window.location.href = "dashboard.html";  // You can redirect to another page
+        window.location.href = "dashboard.html";
     } else {
-        // If credentials are invalid, show error message
         document.getElementById('error-message').style.display = 'block';
     }
 }
 
-// Stub for validating username and password (replace with real validation logic)
+
 function validateLogin(username, password) {
-    // For now, it just checks if the username is 'admin' and password is 'password123'
     return username === 'admin' && password === 'password123';
 }
 

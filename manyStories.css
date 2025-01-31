@@ -1,79 +1,145 @@
+/* General Styles */
 * {
-  background-color:#040009;
-  color:#00d100;
+  background-color: #040009; /* Dark background */
+  color: #00d100; /* Green text */
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
+/* Header */
 header {
-  vertical-align:top;
-  border:solid yellow 5px;
+  text-align: center;
+  margin-top: 20px;
 }
 
+header img {
+  max-width: 200px; /* Set max width for logo */
+  width: 100%; /* Make sure it is responsive */
+  height: auto;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+/* Introduction Section */
 #introduction {
-  border:solid green 5px;
-  font-size:150%;
-  text-align:center;
-  padding:5%;
-  margin-top:3%;
+  border: solid green 5px;
+  font-size: 1.5rem;
+  text-align: center;
+  padding: 5%;
+  margin-top: 3%;
+  background-color: #111; /* Slightly dark background for intro */
+  border-radius: 8px;
+  color: #00d100;
 }
 
+/* Navigation Bar */
+nav {
+  background-color: #0a0a0a; /* Dark background for the navbar */
+  padding: 15px;
+  text-align: center;
+  margin-top: 20px;
+}
 
+nav a {
+  color: #00d100; /* Green text for links */
+  margin: 10px;
+  text-decoration: none;
+  font-size: 1.2rem;
+  display: inline-block;
+}
 
-/* Make #allstories a grid container */
+nav a:hover {
+  text-decoration: underline;
+}
+
+#authorIcon {
+  margin-top: 20px;
+}
+
+#authorIcon p {
+  font-size: 1.2rem;
+}
+
+#authorIcon img {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  margin-top: 10px;
+}
+
+/* Grid Container for Stories */
 .container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive columns */
-  gap: 20px; /* Add space between grid items */
-  padding: 10px; /* Optional: Add padding around the grid */
+  gap: 20px;
+  padding: 10px;
+  margin-top: 20px;
 }
 
-/* Individual story styles */
+/* Individual Story Box */
 .stories {
   border: solid green 3px;
-  padding: 10px; /* Add padding inside the box */
+  padding: 15px;
   text-align: center;
-  background-color: #f9f9f9; /* Optional: Light background for contrast */
-  border-radius: 8px; /* Optional: Rounded corners */
-  transition: transform 0.2s ease; /* Optional: Hover effect */
+  background-color: #222; /* Darker background for stories */
+  border-radius: 8px;
+  transition: transform 0.2s ease; /* Hover effect */
 }
 
 .stories:hover {
   transform: scale(1.05); /* Slight enlargement on hover */
 }
 
-/* Title styles */
+/* Title Styles */
 .title {
-  font-size: 150%; /* Adjust size as needed */
+  font-size: 1.5rem;
   font-weight: bold;
-  margin-bottom: 10px; /* Add space below the title */
-  border: solid yellow 1px; /* Optional: Visual separator */
+  margin-bottom: 10px;
+  border-bottom: solid yellow 2px; /* Yellow underline */
 }
 
-/* Buy button styles */
+/* Story Content (Gist, Author, Length) */
+.stories p {
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
+/* Buy Button Styles */
 .buybutton {
   color: white;
-  background-color: green;
+  background-color: #00c800; /* Green button */
   padding: 10px;
   border-radius: 4px;
   display: inline-block;
   margin-top: 10px;
   cursor: pointer;
+  text-decoration: none;
+  font-size: 1.1rem;
 }
 
 .buybutton:hover {
-  background-color: darkgreen; /* Darker shade on hover */
+  background-color: #008f00; /* Darker shade on hover */
 }
 
-
-img {
-  width:10%;
-}
-
+/* Footer */
 footer {
-  border:solid yellow 5px;
-  font-size: 2em;
-  text-align:center;
-  padding:5%;
-  margin-top:3%;
+  border: solid yellow 5px;
+  font-size: 1.5rem;
+  text-align: center;
+  padding: 5%;
+  margin-top: 3%;
+  background-color: #111;
+  color: #00d100;
+  border-radius: 8px;
 }
 
- 
+footer a {
+  color: #00d100;
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}

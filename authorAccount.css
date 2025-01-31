@@ -1,0 +1,120 @@
+/* General Styles */
+* {
+    background-color: #040009; /* Dark background */
+    color: #00c800; /* Lighter green for better contrast */
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Navigation Bar */
+  nav {
+    background-color: #0a0a0a; /* Dark background for the navbar */
+    padding: 15px;
+    text-align: center;
+  }
+  
+  nav a {
+    color: #00c800; /* Green text for links */
+    margin: 10px;
+    text-decoration: none;
+    font-size: 1.1rem;
+  }
+  
+  nav a:hover {
+    text-decoration: underline;
+  }
+  
+  #authorIcon {
+    margin-top: 20px;
+  }
+  
+  #authorIcon p {
+    font-size: 1.2rem;
+    color: #00c800;
+  }
+  
+  #authorIcon img {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    margin-top: 10px;
+  }
+  
+  /* File Upload Section */
+  li {
+    list-style-type: none;
+    margin: 20px;
+    padding: 15px;
+    background-color: #111;
+    border-radius: 8px;
+    border: 5px solid #00c800; /* Green border */
+    width: 30%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  li label {
+    font-size: 1.1rem;
+    color: #00c800;
+    margin-right: 10px;
+  }
+  
+  li input[type="file"] {
+    background-color: #222;
+    border: 2px solid #00c800;
+    color: #00c800;
+    padding: 8px;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+  
+  li input[type="file"]:focus {
+    outline: none;
+    border-color: #00ff00;
+  }
+  
+  li input[type="file"]::file-selector-button {
+    background-color: #00c800;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 8px 15px;
+    font-size: 1rem;
+  }
+  
+  li input[type="file"]::file-selector-button:hover {
+    background-color: #008f00;
+  }
+  
+  /* Error handling for invalid file type (message alert) */
+  li input[type="file"]:invalid {
+    border-color: red;
+  }
+  
+  li input[type="file"]:invalid:focus {
+    border-color: red;
+    box-shadow: 0 0 5px red;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 600px) {
+    li {
+      width: 90%; /* Full width on smaller screens */
+      margin: 10px auto;
+    }
+  
+    /* Adjust font sizes and padding for smaller screens */
+    li label,
+    li input[type="file"] {
+      font-size: 1rem;
+    }
+  
+    li input[type="file"]::file-selector-button {
+      padding: 8px;
+      font-size: 1rem;
+    }
+  }
+  
