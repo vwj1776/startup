@@ -1,11 +1,17 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './app.css';
+import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
+import { Demo } from './demo/demo';
+import { Login } from './login/login';
+import { authorAccount } from './authorAccount/authorAccount';
+import { manyStories } from './manyStories/manyStories';
 
 
 
 export default function App() {
   return (
+    <BrowserRouter>
     <div className="body bg-dark text-light">
       <header className="container-fluid">
         <nav className="navbar fixed-top navbar-dark">
@@ -14,35 +20,45 @@ export default function App() {
           </div>
           <menu className="navbar-nav">
             <li className="nav-item">
-              <a className="nav-link" href="demo.html">
+              <NavLink className="nav-link" href="demo.html">
                 Demo
-              </a>
+              </NavLink>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="index.html">
+              <NavLink className="nav-link" href="index.html">
                 Login
-              </a>
+              </NavLink>
             </li> 
             <li className="nav-item">
-              <a className="nav-link" href="1ststory.html">
+              <NavLink className="nav-link" href="1ststory.html">
                 1st Story
-              </a>
+              </NavLink>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="authorAccount.html">
+              <NavLink className="nav-link" href="authorAccount.html">
                 Author Account
-              </a>
+              </NavLink>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="manyStories.html">
+              <NavLink className="nav-link" href="manyStories.html">
                 Many Stories
-              </a>
+              </NavLink>
             </li>
           </menu>
         </nav>
       </header>
 
-      <main>App components go here</main>
+      <Routes>
+  <Route path='/demo' element={<Demo />} exact />
+  <Route path='/login' element={<Login />} />
+  <Route path='/authorAccount' element={<authorAccount />} />
+  <Route path='/manyStories' element={<manyStories />} />
+  <Route path='*' element={<NotFound />} />
+      </Routes>
+
+      function NotFound() {
+  return <main className="container-fluid bg-secondary text-center">404: Return to sender. Address unknown.</main>;
+}
 
       <footer className="bg-dark text-white-50">
         <div className="container-fluid">
@@ -53,5 +69,6 @@ export default function App() {
         </div>
       </footer>
     </div>
+    </BrowserRouter>
   );
 }

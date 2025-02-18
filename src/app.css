@@ -1,5 +1,14 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  background-color: #000000; /* Black background */
+  color: #00FF00; /* Green text */
+}
+
 .body {
-    display: flex;
-    flex-direction: column;
-    min-width: 375px;
-  }
+  display: flex;
+  flex-direction: column;
+  min-width: 375px;
+  background-color: #000000; /* Black background */
+  color: #00FF00; /* Green text */
+}
