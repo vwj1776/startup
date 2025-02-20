@@ -1,47 +1,49 @@
 import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
+// import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
 import Demo from './demo/demo';
 import Login from './login/login';
 import AuthorAccount from './authorAccount/authorAccount';
 import ManyStories from './manyStories/manyStories';
+import FirstStory from './1ststory/1ststory';
 import './app.css'; // Make sure to move styling here
 
 export default function App() {
   function NotFound() {
-    return <main className="not-found">404: Return to sender. Address unknown.</main>;
+    return <main>404: Return to sender. Address unknown.</main>;
   }
 
   return (
     <BrowserRouter>
-      <div className="app-container">
-        <header className="header">
-          <nav className="navbar">
-            <div className="brand">Greyhound Writing<sup>&reg;</sup></div>
-            <menu className="nav-links">
+      <div >
+        <header>
+          <nav >
+            <div >Greyhound Writing</div>
+            <menu>
               <li>
-                <NavLink to="/demo">Demo</NavLink>
+                <NavLink to="/demo" className="highlighted-link">Demo</NavLink>
               </li>
               <li>
-                <NavLink to="/">Login</NavLink>
+                <NavLink to="/" className="highlighted-link">Login</NavLink>
               </li> 
               <li>
-                <NavLink to="/1stStory">1st Story</NavLink>
+                <NavLink to="/FirstStory" className="highlighted-link">1st Story</NavLink>
               </li>
               <li>
-                <NavLink to="/authorAccount">Author Account</NavLink>
+                <NavLink to="/authorAccount" className="highlighted-link">Author Account</NavLink>
               </li>
               <li>
-                <NavLink to="/manyStories">Many Stories</NavLink>
+                <NavLink to="/manyStories" className="highlighted-link">Many Stories</NavLink>
               </li>
             </menu>
           </nav>
         </header>
 
         <Routes>
-          {/* <Route path="/demo" element={<Demo />} exact /> */}
+          <Route path="/demo" element={<Demo />} exact />
           <Route path="/authorAccount" element={<AuthorAccount />} />
           <Route path="/manyStories" element={<ManyStories />} />
+          <Route path="/FirstStory" element={<FirstStory />} />
           <Route path="*" element={<NotFound />} />
           <Route path="/" element={<Login />} />
         </Routes>

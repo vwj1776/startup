@@ -83,7 +83,8 @@ nav a:hover {
 /* Individual Story Box */
 .stories {
   border: solid green 3px;
-  padding: 15px;
+  margin: 0 !important;
+  padding: 0 !important;
   text-align: center;
   background-color: #222; /* Darker background for stories */
   border-radius: 8px;
@@ -145,3 +146,12 @@ footer a {
 footer a:hover {
   text-decoration: underline;
 }
+
+.highlighted-link,
+.highlighted-link a {
+  margin: 0 !important;
+  padding: 0 !important;
+  position: relative;
+  display: inline-block; /* Ensures it behaves like a normal link */
+}
+

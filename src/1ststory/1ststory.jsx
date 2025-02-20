@@ -7,7 +7,7 @@ export default function FirstStory() {
   const [storyContent, setStoryContent] = useState('Loading story content...');
 
   useEffect(() => {
-    fetch('story2.txt')
+    fetch('/story2.txt')
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
