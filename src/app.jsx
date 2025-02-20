@@ -1,11 +1,11 @@
 import React from 'react';
-// import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
 import Demo from './demo/demo';
 import Login from './login/login';
 import AuthorAccount from './authorAccount/authorAccount';
 import ManyStories from './manyStories/manyStories';
-// import './app.css'; // Make sure to move styling here
+import './app.css'; // Make sure to move styling here
 
 export default function App() {
   function NotFound() {
