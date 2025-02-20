@@ -35,6 +35,12 @@ export default function App() {
               <li>
                 <NavLink to="/manyStories" className="highlighted-link">Many Stories</NavLink>
               </li>
+              <li>
+                <NavLink to="https://github.com/vwj1776/startup.git">Repository</NavLink>
+              </li>
+              <li>
+                <NavLink to="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Repository</NavLink>
+              </li>
             </menu>
           </nav>
         </header>
