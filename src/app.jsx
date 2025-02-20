@@ -33,6 +33,9 @@ export default function App() {
               </li>
               <li>
                 <NavLink to="/manyStories">Many Stories</NavLink>
+              </li> 
+              <li>
+                <NavLink to="https://github.com/vwj1776/startup.git">Repository</NavLink>
               </li>
             </menu>
           </nav>
