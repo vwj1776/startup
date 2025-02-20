@@ -1,7 +1,7 @@
 import React from "react";
 import "./demo.css";
 
-const PageTurn = () => {
+const Demo = () => {
   return (
     <div>
       <nav>
@@ -66,4 +66,4 @@ const PageTurn = () => {
   );
 };
 
-export default PageTurn;
+export default Demo;

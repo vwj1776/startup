@@ -1,5 +1,5 @@
 import React from 'react';
-import './authorAccount.css';
+// import './authorAccount.css';
 
 export default function AuthorAccount() {
   const handleFileChange = (event) => {

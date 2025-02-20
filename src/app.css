@@ -12,3 +12,11 @@ html, body {
     background-color: #000000; /* Black background */
     color: #00FF00; /* Green text */
 }
+
+.nav-links {
+    display: flex;
+    list-style: none; /* Removes bullets */
+    gap: 15px;
+    padding: 0;
+  }
+  
