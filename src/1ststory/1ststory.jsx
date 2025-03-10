@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './1ststory.css';
 
 export default function FirstStory() {
   const [messages, setMessages] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [storyContent, setStoryContent] = useState('Loading story content...');
+  const ws = useRef(null);
 
   useEffect(() => {
     fetch('/story2.txt')
@@ -20,14 +21,40 @@ export default function FirstStory() {
       .catch(error => {
         setStoryContent('Error loading file: ' + error.message);
       });
+
+    // Initialize WebSocket connection
+    ws.current = new WebSocket('ws://localhost:8080');
+
+    ws.current.onopen = () => {
+      console.log('WebSocket connection established');
+    };
+
+    ws.current.onmessage = (event) => {
+      const messageData = JSON.parse(event.data);
+
+      if (messageData.type === 'initial') {
+        // Load initial messages
+        setMessages(messageData.data);
+      } else if (messageData.type === 'new') {
+        // Add new message to the list
+        setMessages((prevMessages) => [...prevMessages, messageData.data]);
+      }
+    };
+
+    ws.current.onclose = () => {
+      console.log('WebSocket connection closed');
+    };
+
+    return () => {
+      ws.current.close();
+    };
   }, []);
 
   const handleAuthorMessageSubmit = (event) => {
     event.preventDefault();
     const message = event.target.authorMessage.value.trim();
     if (message) {
-      setMessages([...messages, message]);
-      console.log('Messages list:', [...messages, message]);
+      ws.current.send(JSON.stringify({ type: 'new', data: message }));
       event.target.reset();
     }
   };
@@ -85,18 +112,17 @@ export default function FirstStory() {
       </div>
 
       <div id="messageAuthor">
+        <div id="messagesBox" className="scrollable-div">
+          {messages.map((message, index) => (
+            <p key={index}>{JSON.parse(message).data}</p>
+          ))}
+        </div>
         <form id="authorForm" onSubmit={handleAuthorMessageSubmit}>
           <label htmlFor="authorMessage">Message the Author:</label>
           <input type="text" id="authorMessage" name="authorMessage" placeholder="Type your message here" />
           <input type="submit" value="Send" />
         </form>
       </div>
-
-      <div id="advertisement">
-        <p>Advertisement Placeholder</p>
-      </div>
-
-      <div id="fileContent" className="scrollable-div">{storyContent}</div>
 
       <div id="reviews">
         <p><strong>Leave a Review:</strong></p>
@@ -107,7 +133,7 @@ export default function FirstStory() {
           <input type="submit" value="Submit" />
         </form>
 
-        <div id="reviewList" style={{ overflowY: 'auto', maxHeight: '100px', border: '1px solid #ccc' }}>
+        <div id="reviewList" className="scrollable-div">
           {reviews.map((review, index) => (
             <p key={index}>{review}</p>
           ))}
