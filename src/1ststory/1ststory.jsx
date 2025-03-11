@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
 import './1ststory.css';
 
 export default function FirstStory() {
@@ -8,17 +9,13 @@ export default function FirstStory() {
   const ws = useRef(null);
 
   useEffect(() => {
-    fetch('/story2.txt')
+    axios.get('../public/1ststory.txt')
       .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.text();
-      })
-      .then(data => {
-        setStoryContent(data);
+        console.log('Response:', response);
+        setStoryContent(response.data);
       })
       .catch(error => {
+        console.error('Error fetching the file:', error);
         setStoryContent('Error loading file: ' + error.message);
       });
 
@@ -86,7 +83,7 @@ export default function FirstStory() {
         </a>
         <div id="authorIcon">
           <p>&lt; Author Account Name &gt;</p>
-          <img src="monkey.png" alt="no profile picture found" />
+          <img src="public/monkey.png" alt="no profile picture found" />
         </div>
         <a href="manyStories.html" target="_blank">
           <p>Many Stories</p>
@@ -123,7 +120,11 @@ export default function FirstStory() {
           <input type="submit" value="Send" />
         </form>
       </div>
+      <div id="advertisement">
+        <p>Advertisement Placeholder</p>
+      </div>
 
+      <div id="fileContent" className="scrollable-div">{storyContent}</div>
       <div id="reviews">
         <p><strong>Leave a Review:</strong></p>
         <form id="reviewForm" onSubmit={handleReviewSubmit}>
