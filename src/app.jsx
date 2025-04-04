@@ -7,6 +7,8 @@ import AuthorAccount from './authorAccount/authorAccount';
 import ManyStories from './manyStories/manyStories';
 import FirstStory from './1ststory/1ststory';
 import './app.css'; // Make sure to move styling here
+import logo from '../public/writing_logo.png'; // Adjust the path as necessary
+
 
 export default function App() {
   function NotFound() {
@@ -18,6 +20,8 @@ export default function App() {
       <div >
         <header>
           <nav >
+          <img src={logo} alt="logo" />
+
             <div >Greyhound Writing</div>
             <menu>
               <li>
