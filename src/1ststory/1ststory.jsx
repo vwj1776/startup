@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import './1ststory.css';
-
+import text from '../../public/story1.txt';
 export default function FirstStory() {
   const [messages, setMessages] = useState([]);
   const [reviews, setReviews] = useState([]);
-  const [storyContent, setStoryContent] = useState('Loading story content...');
+  const [storyContent, setStoryContent] = useState(text);
   const ws = useRef(null);
 
   useEffect(() => {
@@ -84,22 +84,6 @@ export default function FirstStory() {
           <br />
           3
         </p>
-      </div>
-
-      <div id="messageAuthor">
-        <div id="messagesBox" className="scrollable-div">
-          {messages.map((message, index) => (
-            <p key={index}>{JSON.parse(message).data}</p>
-          ))}
-        </div>
-        <form id="authorForm" onSubmit={handleAuthorMessageSubmit}>
-          <label htmlFor="authorMessage">Message the Author:</label>
-          <input type="text" id="authorMessage" name="authorMessage" placeholder="Type your message here" />
-          <input type="submit" value="Send" />
-        </form>
-      </div>
-      <div id="advertisement">
-        <p>Advertisement Placeholder</p>
       </div>
 
       <div id="fileContent" className="scrollable-div">{storyContent}</div>
