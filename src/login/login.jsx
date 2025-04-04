@@ -4,6 +4,8 @@ import './login.css';
 const Login = () => {
   const [username, setUsername] = useState(localStorage.getItem('authorName') || '');
 
+  console.log('Login component loaded');
+
   const handleLogin = (event) => {
     event.preventDefault();
     localStorage.setItem('authorName', username);

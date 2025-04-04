@@ -2,6 +2,10 @@ import React from "react";
 import "./demo.css";
 
 const Demo = () => {
+
+  console.log("Demo component loaded");
+
+
   return (
     <div>
       <nav>
