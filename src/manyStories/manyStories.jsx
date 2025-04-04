@@ -1,20 +1,15 @@
 import React from 'react';
 import './manyStories.css';
+import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
+
 
 
 
 export default function ManyStories() {
     const stories = [
-        { title: "Title of the story", gist: "gist of the story....", length: "#pgs", author: "so-and-so", price: "#.##", link: "1ststory.html" },
-        { title: "Title of the story", gist: "gist of the story....", length: "#pgs", author: "so-and-so", price: "#.##", link: "1ststory.html" },
-        { title: "Title of the story", gist: "gist of the story....", length: "#pgs", author: "so-and-so", price: "#.##", link: "1ststory.html" },
-        { title: "Title of the story", gist: "gist of the story....", length: "#pgs", author: "so-and-so", price: "#.##", link: "1ststory.html" },
-        { title: "Title of the story", gist: "gist of the story....", length: "#pgs", author: "so-and-so", price: "#.##", link: "1ststory.html" },
-        { title: "Title of the story", gist: "gist of the story....", length: "#pgs", author: "so-and-so", price: "#.##", link: "1ststory.html" },
-        { title: "Title of the story", gist: "gist of the story....", length: "#pgs", author: "so-and-so", price: "#.##", link: "1ststory.html" },
-        { title: "Title of the story", gist: "gist of the story....", length: "#pgs", author: "so-and-so", price: "#.##", link: "1ststory.html" },
-        { title: "Title of the story", gist: "gist of the story....", length: "#pgs", author: "so-and-so", price: "#.##", link: "1ststory.html" },
-        { title: "Title of the story", gist: "gist of the story....", length: "#pgs", author: "so-and-so", price: "#.##", link: "1ststory.html" }
+        { title: "Title of the story", gist: "gist of the story....", length: "#pgs", author: "so-and-so", link: "/FirstStory" },
+        { title: "Title of the story", gist: "gist of the story....", length: "#pgs", author: "so-and-so", link: "/FirstStory" },
+        { title: "Title of the story", gist: "gist of the story....", length: "#pgs", author: "so-and-so", link: "/FirstStory" },
       ];
 
 
@@ -34,15 +29,14 @@ export default function ManyStories() {
       <main>
         <div id="allstories" className="container">
           {stories.map((story, index) => (
-            <a href={story.link} target="_blank" key={index} className="highlighted-link">
+            <NavLink to={story.link} key={index} className="highlighted-link">
               <div className="stories">
                 <p className="title">{story.title}</p>
                 <p>{story.gist}</p>
                 <p>length: {story.length}</p>
                 <p>Author(written by): {story.author}</p>
-                <p className="buybutton">Buy for ${story.price}</p>
               </div>
-            </a>
+              </NavLink>
           ))}
         </div>
       </main>
