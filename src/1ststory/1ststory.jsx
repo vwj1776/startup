@@ -100,6 +100,7 @@ export default function FirstStory() {
           {reviews.map((review, index) => (
             <p key={index}>{review}</p>
           ))}
+          
         </div>
       </div>
     </div>
