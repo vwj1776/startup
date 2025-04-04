@@ -16,14 +16,8 @@ export default function ManyStories() {
 
   return (
     <div>
-      <header>
-        <img src="writing logo.png" alt="Writing Logo" />
-      </header>
-
-
-
       <div id="introduction">
-        <p>Greyhound Writing2 is a platform for you to sell and buy stories online. Stories are mainly written by youth, so by buying these stories you are supporting the rising generation of our world’s next authors.</p>
+        <p>Greyhound Writing is a platform for you to sell and buy stories online. Stories are mainly written by youth, so by buying these stories you are supporting the rising generation of our world’s next authors.</p>
       </div>
 
       <main>
