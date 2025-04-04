@@ -4,30 +4,7 @@ import "./demo.css";
 const Demo = () => {
   return (
     <div>
-      <nav>
-        <a href="authorAccount.html" target="_blank">
-          <div>
-            <p>Upload Stories here</p>
-          </div>
-        </a>
 
-        <a href="demo.html" target="_blank">
-          <div>
-            <p>demo page turn</p>
-          </div>
-        </a>
-
-        <a href="index.html" target="_blank">Login</a>
-
-        <div id="authorIcon">
-          <p>&lt; Author Account Name &gt;</p>
-          <img src="monkey.png" alt="no profile picture found" />
-        </div>
-
-        <a href="manyStories.html" target="_blank">
-          <p>Many Stories</p>
-        </a>
-      </nav>
 
       <div id="all">
         <div id="page-flip">
