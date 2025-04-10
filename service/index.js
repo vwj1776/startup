@@ -6,53 +6,44 @@ const app = express();
 
 const authCookieName = 'token';
 
-// The scores and users are saved in memory and disappear whenever the service is restarted.
+// In-memory storage
 let users = [];
-let scores = [];
+let comments = [];
+let stories = [];
 
-// The service port. In production the front-end code is statically hosted by the service on the same port.
 const port = process.argv.length > 2 ? process.argv[2] : 3000;
 
-// JSON body parsing using built-in middleware
 app.use(express.json());
-
-// Use the cookie parser middleware for tracking authentication tokens
 app.use(cookieParser());
-
-// Serve up the front-end static content hosting
 app.use(express.static('public'));
 
-// Router for service endpoints
-var apiRouter = express.Router();
-app.use(`/api`, apiRouter);
+const apiRouter = express.Router();
+app.use('/api', apiRouter);
 
-// CreateAuth a new user
+// Create a new user
 apiRouter.post('/auth/create', async (req, res) => {
   if (await findUser('email', req.body.email)) {
     res.status(409).send({ msg: 'Existing user' });
   } else {
     const user = await createUser(req.body.email, req.body.password);
-
     setAuthCookie(res, user.token);
     res.send({ email: user.email });
   }
 });
 
-// GetAuth login an existing user
+// Login
 apiRouter.post('/auth/login', async (req, res) => {
   const user = await findUser('email', req.body.email);
-  if (user) {
-    if (await bcrypt.compare(req.body.password, user.password)) {
-      user.token = uuid.v4();
-      setAuthCookie(res, user.token);
-      res.send({ email: user.email });
-      return;
-    }
+  if (user && await bcrypt.compare(req.body.password, user.password)) {
+    user.token = uuid.v4();
+    setAuthCookie(res, user.token);
+    res.send({ email: user.email });
+    return;
   }
   res.status(401).send({ msg: 'Unauthorized' });
 });
 
-// DeleteAuth logout a user
+// Logout
 apiRouter.delete('/auth/logout', async (req, res) => {
   const user = await findUser('token', req.cookies[authCookieName]);
   if (user) {
@@ -62,79 +53,85 @@ apiRouter.delete('/auth/logout', async (req, res) => {
   res.status(204).end();
 });
 
-// Middleware to verify that the user is authorized to call an endpoint
+// Auth middleware
 const verifyAuth = async (req, res, next) => {
   const user = await findUser('token', req.cookies[authCookieName]);
   if (user) {
+    req.user = user; // Attach user to request
     next();
   } else {
     res.status(401).send({ msg: 'Unauthorized' });
   }
 };
 
-// GetScores
-apiRouter.get('/scores', verifyAuth, (_req, res) => {
-  res.send(scores);
+// Comments
+apiRouter.get('/comments', verifyAuth, (_req, res) => {
+  res.send(comments);
 });
 
-// SubmitScore
-apiRouter.post('/score', verifyAuth, (req, res) => {
-  scores = updateScores(req.body);
-  res.send(scores);
+apiRouter.post('/comment', verifyAuth, (req, res) => {
+  comments = updatecomments(req.body);
+  res.send(comments);
 });
 
-// Default error handler
-app.use(function (err, req, res, next) {
-  res.status(500).send({ type: err.name, message: err.message });
-});
-
-// Return the application's default page if the path is unknown
-app.use((_req, res) => {
-  res.sendFile('index.html', { root: 'public' });
-});
-
-// updateScores considers a new score for inclusion in the high scores.
-function updateScores(newScore) {
-  let found = false;
-  for (const [i, prevScore] of scores.entries()) {
-    if (newScore.score > prevScore.score) {
-      scores.splice(i, 0, newScore);
-      found = true;
-      break;
-    }
+function updatecomments(newcomment) {
+  newcomment.createdAt = new Date().toISOString();
+  comments.push(newcomment);
+  if (comments.length > 10) {
+    comments = comments.slice(-10); // Keep last 10
   }
-
-  if (!found) {
-    scores.push(newScore);
-  }
-
-  if (scores.length > 10) {
-    scores.length = 10;
-  }
-
-  return scores;
+  return comments;
 }
 
+// Stories
+apiRouter.get('/stories', verifyAuth, (_req, res) => {
+  res.send(stories);
+});
+
+apiRouter.post('/story', verifyAuth, (req, res) => {
+  const story = {
+    id: uuid.v4(),
+    title: req.body.title,
+    content: req.body.content,
+    author: req.user.email, // Use logged-in user's email
+    createdAt: new Date().toISOString(),
+  };
+
+  stories.push(story);
+  res.status(201).send(story);
+});
+
+apiRouter.delete('/story/:id', verifyAuth, (req, res) => {
+  const { id } = req.params;
+  const index = stories.findIndex((s) => s.id === id);
+
+  if (index !== -1) {
+    stories.splice(index, 1);
+    res.status(204).end();
+  } else {
+    res.status(404).send({ msg: 'Story not found' });
+  }
+});
+
+// Create user
 async function createUser(email, password) {
   const passwordHash = await bcrypt.hash(password, 10);
-
   const user = {
-    email: email,
+    email,
     password: passwordHash,
     token: uuid.v4(),
   };
   users.push(user);
-
   return user;
 }
 
+// Find user helper
 async function findUser(field, value) {
   if (!value) return null;
-
   return users.find((u) => u[field] === value);
 }
 
-// setAuthCookie in the HTTP response
+// Set auth cookie
 function setAuthCookie(res, authToken) {
   res.cookie(authCookieName, authToken, {
     secure: true,
@@ -142,6 +139,16 @@ function setAuthCookie(res, authToken) {
     sameSite: 'strict',
   });
 }
+
+// Error handler
+app.use((err, req, res, next) => {
+  res.status(500).send({ type: err.name, message: err.message });
+});
+
+// Fallback route for unknown GETs (not POST/DELETE)
+app.get('*', (_req, res) => {
+  res.sendFile('index.html', { root: 'public' });
+});
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
