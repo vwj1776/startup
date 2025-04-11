@@ -1,60 +1,29 @@
-import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import './1ststory.css';
-import text from '../../public/story1.txt';
+
 export default function FirstStory() {
-  const [messages, setMessages] = useState([]);
+  const { id } = useParams();
+  const [story, setStory] = useState(null);
   const [reviews, setReviews] = useState([]);
-  const [storyContent, setStoryContent] = useState(text);
-  const ws = useRef(null);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    axios.get('../public/1ststory.txt')
-      .then(response => {
-        console.log('Response:', response);
-        setStoryContent(response.data);
+    fetch('/api/stories', { credentials: 'include' })
+      .then((res) => res.json())
+      .then((data) => {
+        const found = data.find((s) => s.id === id);
+        if (found) {
+          setStory(found);
+        } else {
+          setError('Story not found.');
+        }
       })
-      .catch(error => {
-        console.error('Error fetching the file:', error);
-        setStoryContent('Error loading file: ' + error.message);
+      .catch((err) => {
+        console.error(err);
+        setError('Error fetching story.');
       });
-
-    // Initialize WebSocket connection
-    ws.current = new WebSocket('ws://localhost:8080');
-
-    ws.current.onopen = () => {
-      console.log('WebSocket connection established');
-    };
-
-    ws.current.onmessage = (event) => {
-      const messageData = JSON.parse(event.data);
-
-      if (messageData.type === 'initial') {
-        // Load initial messages
-        setMessages(messageData.data);
-      } else if (messageData.type === 'new') {
-        // Add new message to the list
-        setMessages((prevMessages) => [...prevMessages, messageData.data]);
-      }
-    };
-
-    ws.current.onclose = () => {
-      console.log('WebSocket connection closed');
-    };
-
-    return () => {
-      ws.current.close();
-    };
-  }, []);
-
-  const handleAuthorMessageSubmit = (event) => {
-    event.preventDefault();
-    const message = event.target.authorMessage.value.trim();
-    if (message) {
-      ws.current.send(JSON.stringify({ type: 'new', data: message }));
-      event.target.reset();
-    }
-  };
+  }, [id]);
 
   const handleReviewSubmit = (event) => {
     event.preventDefault();
@@ -65,28 +34,23 @@ export default function FirstStory() {
     }
   };
 
+  if (error) return <p>{error}</p>;
+  if (!story) return <p>Loading story...</p>;
+
   return (
     <div>
-
       <div id="storyInformation">
         <p>
-          <strong>Author Info:</strong>
-          <br />
-          Name
-          <br />
-          Picture of Story
-          <br />
-          <strong>Other Stories by the Same Author:</strong>
-          <br />
-          1
-          <br />
-          2
-          <br />
-          3
+          <strong>Title:</strong> {story.title}<br />
+          <strong>Author:</strong> {story.author}<br />
+          <strong>Date:</strong> {new Date(story.createdAt).toLocaleString()}
         </p>
       </div>
 
-      <div id="fileContent" className="scrollable-div">{storyContent}</div>
+      <div id="fileContent" className="scrollable-div">
+        <pre>{story.content}</pre>
+      </div>
+
       <div id="reviews">
         <p><strong>Leave a Review:</strong></p>
         <form id="reviewForm" onSubmit={handleReviewSubmit}>
@@ -97,10 +61,13 @@ export default function FirstStory() {
         </form>
 
         <div id="reviewList" className="scrollable-div">
-          {reviews.map((review, index) => (
-            <p key={index}>{review}</p>
-          ))}
-          
+          {reviews.length === 0 ? (
+            <p>No reviews yet.</p>
+          ) : (
+            reviews.map((review, index) => (
+              <p key={index}>{review}</p>
+            ))
+          )}
         </div>
       </div>
     </div>
