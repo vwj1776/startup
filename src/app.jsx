@@ -13,6 +13,8 @@ export default function App() {
   function NotFound() {
     return <main>404: Return to sender. Address unknown.</main>;
   }
+  const authorEmail = localStorage.getItem('authorEmail');
+
 
   return (
     <BrowserRouter>
@@ -46,6 +48,23 @@ export default function App() {
                   Repository
                 </a>
               </li>
+              {authorEmail && (
+                <li>
+                  <button
+                    className="highlighted-link"
+                    onClick={async () => {
+                      await fetch('/api/auth/logout', {
+                        method: 'DELETE',
+                        credentials: 'include',
+                      });
+                      localStorage.removeItem('authorEmail');
+                      window.location.href = '/';
+                    }}
+                  >
+                    Logout
+                  </button>
+                </li>
+              )}
               <li>
                 <a className="highlighted-link" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" rel="noopener noreferrer">
                   Repository
@@ -68,7 +87,7 @@ export default function App() {
 
         <footer className="footer">
           <div>
-            <span>Author Name(s)</span>
+            <span>{authorEmail}</span>
             <a href="https://github.com/webprogramming260/simon-react">Source</a>
           </div>
         </footer>

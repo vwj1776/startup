@@ -63,15 +63,16 @@ apiRouter.delete('/auth/logout', async (req, res) => {
   res.status(204).end();
 });
 
-// Middleware to verify that the user is authorized to call an endpoint
 const verifyAuth = async (req, res, next) => {
   const user = await findUser('token', req.cookies[authCookieName]);
   if (user) {
+    req.user = user; 
     next();
   } else {
     res.status(401).send({ msg: 'Unauthorized' });
   }
 };
+
 
 // Getcomments
 apiRouter.get('/comments', verifyAuth, (_req, res) => {
@@ -90,9 +91,9 @@ app.use(function (err, req, res, next) {
 });
 
 // Return the application's default page if the path is unknown
-app.use((_req, res) => {
-  res.sendFile('index.html', { root: 'public' });
-});
+// app.use((_req, res) => {
+//   res.sendFile('index.html', { root: 'public' });
+// });
 
 // updatecomments considers a new comment for inclusion in the high comments.
 function updatecomments(newcomment) {
@@ -143,27 +144,30 @@ apiRouter.get('/stories', verifyAuth, (_req, res) => {
 // Add a new story
 
 apiRouter.post('/upload', verifyAuth, (req, res) => {
-  const { content, filename } = req.body;
-  if (!content || !filename) {
-    return res.status(400).send({ msg: 'Missing file content or filename' });
+  try {
+    const { content, filename } = req.body;
+    console.log('Incoming upload:', { content, filename, user: req.user });
+
+    if (!content || !filename) {
+      return res.status(400).json({ msg: 'Missing file content or filename' });
+    }
+
+    const story = {
+      id: uuid.v4(),
+      title: filename.replace('.txt', ''),
+      content,
+      author: req.user.email,
+      createdAt: new Date().toISOString(),
+    };
+
+    stories.push(story);
+    res.status(201).json({ msg: 'Upload successful', story });
+  } catch (err) {
+    console.error('UPLOAD ERROR:', err);
+    res.status(500).json({ msg: 'Internal Server Error' });
   }
-
-  const story = {
-    id: uuid.v4(),
-    title: filename.replace('.txt', ''),
-    content,
-    author: req.user.email,
-    createdAt: new Date().toISOString(),
-  };
-
-  stories.push(story);
-
-  // ⛔ If this is what you currently have:
-  // res.status(201).end();
-
-  // ✅ Replace with:
-  res.status(201).json({ msg: 'Upload successful' });
 });
+
 
 // Delete a story by ID
 apiRouter.delete('/story/:id', verifyAuth, (req, res) => {
