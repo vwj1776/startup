@@ -19,7 +19,6 @@ function NavBar({ authorEmail, onLogout }) {
           <>
             <li><NavLink to="/authorAccount" className="highlighted-link">Author Account</NavLink></li>
             <li><NavLink to="/manyStories" className="highlighted-link">Many Stories</NavLink></li>
-            <li><NavLink to="/demo" className="highlighted-link">Demo</NavLink></li>
             <li>
               <button className="highlighted-link" onClick={onLogout}>Logout</button>
             </li>
