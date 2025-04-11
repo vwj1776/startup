@@ -58,6 +58,7 @@ export default function App() {
           <Route path="/FirstStory" element={<FirstStory />} />
           <Route path="/" element={<Login />} />
           <Route path="*" element={<NotFound />} />
+          
         </Routes>
 
         <footer className="footer">
