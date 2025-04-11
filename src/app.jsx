@@ -5,6 +5,7 @@ import Login from './login/login';
 import AuthorAccount from './authorAccount/authorAccount';
 import ManyStories from './manyStories/manyStories';
 import FirstStory from './1ststory/1ststory';
+import Register from './register';
 import './app.css';
 import logo from '../public/writing_logo.png'; // Adjust the path as necessary
 
@@ -37,6 +38,9 @@ export default function App() {
                 <NavLink to="/manyStories" className="highlighted-link">Many Stories</NavLink>
               </li>
               <li>
+                <NavLink to="/register" className="highlighted-link">Register</NavLink>
+              </li>
+              <li>
                 {/* Use <a> instead of <NavLink> for external links */}
                 <a className="highlighted-link" href="https://github.com/vwj1776/startup.git" target="_blank" rel="noopener noreferrer">
                   Repository
@@ -56,6 +60,7 @@ export default function App() {
           <Route path="/authorAccount" element={<AuthorAccount />} />
           <Route path="/manyStories" element={<ManyStories />} />
           <Route path="/FirstStory" element={<FirstStory />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/" element={<Login />} />
           <Route path="*" element={<NotFound />} />
           
