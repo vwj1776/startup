@@ -141,16 +141,28 @@ apiRouter.get('/stories', verifyAuth, (_req, res) => {
 });
 
 // Add a new story
-apiRouter.post('/story', verifyAuth, (req, res) => {
+
+apiRouter.post('/upload', verifyAuth, (req, res) => {
+  const { content, filename } = req.body;
+  if (!content || !filename) {
+    return res.status(400).send({ msg: 'Missing file content or filename' });
+  }
+
   const story = {
     id: uuid.v4(),
-    title: req.body.title,
-    content: req.body.content,
-    author: req.body.author, // optional: you could also tie this to the authenticated user's email
+    title: filename.replace('.txt', ''),
+    content,
+    author: req.user.email,
+    createdAt: new Date().toISOString(),
   };
 
   stories.push(story);
-  res.status(201).send(story);
+
+  // ⛔ If this is what you currently have:
+  // res.status(201).end();
+
+  // ✅ Replace with:
+  res.status(201).json({ msg: 'Upload successful' });
 });
 
 // Delete a story by ID
