@@ -6,9 +6,10 @@ const app = express();
 
 const authCookieName = 'token';
 
-// The scores and users are saved in memory and disappear whenever the service is restarted.
+// The comments and users are saved in memory and disappear whenever the service is restarted.
 let users = [];
-let scores = [];
+let comments = [];
+let stories = [];
 
 // The service port. In production the front-end code is statically hosted by the service on the same port.
 const port = process.argv.length > 2 ? process.argv[2] : 3000;
@@ -72,15 +73,15 @@ const verifyAuth = async (req, res, next) => {
   }
 };
 
-// GetScores
-apiRouter.get('/scores', verifyAuth, (_req, res) => {
-  res.send(scores);
+// Getcomments
+apiRouter.get('/comments', verifyAuth, (_req, res) => {
+  res.send(comments);
 });
 
-// SubmitScore
-apiRouter.post('/score', verifyAuth, (req, res) => {
-  scores = updateScores(req.body);
-  res.send(scores);
+// Submitcomment
+apiRouter.post('/comment', verifyAuth, (req, res) => {
+  comments = updatecomments(req.body);
+  res.send(comments);
 });
 
 // Default error handler
@@ -93,26 +94,26 @@ app.use((_req, res) => {
   res.sendFile('index.html', { root: 'public' });
 });
 
-// updateScores considers a new score for inclusion in the high scores.
-function updateScores(newScore) {
+// updatecomments considers a new comment for inclusion in the high comments.
+function updatecomments(newcomment) {
   let found = false;
-  for (const [i, prevScore] of scores.entries()) {
-    if (newScore.score > prevScore.score) {
-      scores.splice(i, 0, newScore);
+  for (const [i, prevcomment] of comments.entries()) {
+    if (newcomment.comment > prevcomment.comment) {
+      comments.splice(i, 0, newcomment);
       found = true;
       break;
     }
   }
 
   if (!found) {
-    scores.push(newScore);
+    comments.push(newcomment);
   }
 
-  if (scores.length > 10) {
-    scores.length = 10;
+  if (comments.length > 10) {
+    comments.length = 10;
   }
 
-  return scores;
+  return comments;
 }
 
 async function createUser(email, password) {
@@ -133,6 +134,50 @@ async function findUser(field, value) {
 
   return users.find((u) => u[field] === value);
 }
+
+// Get all stories
+apiRouter.get('/stories', verifyAuth, (_req, res) => {
+  res.send(stories);
+});
+
+// Add a new story
+
+apiRouter.post('/upload', verifyAuth, (req, res) => {
+  const { content, filename } = req.body;
+  if (!content || !filename) {
+    return res.status(400).send({ msg: 'Missing file content or filename' });
+  }
+
+  const story = {
+    id: uuid.v4(),
+    title: filename.replace('.txt', ''),
+    content,
+    author: req.user.email,
+    createdAt: new Date().toISOString(),
+  };
+
+  stories.push(story);
+
+  // ⛔ If this is what you currently have:
+  // res.status(201).end();
+
+  // ✅ Replace with:
+  res.status(201).json({ msg: 'Upload successful' });
+});
+
+// Delete a story by ID
+apiRouter.delete('/story/:id', verifyAuth, (req, res) => {
+  const { id } = req.params;
+  const index = stories.findIndex((s) => s.id === id);
+
+  if (index !== -1) {
+    stories.splice(index, 1);
+    res.status(204).end();
+  } else {
+    res.status(404).send({ msg: 'Story not found' });
+  }
+});
+
 
 // setAuthCookie in the HTTP response
 function setAuthCookie(res, authToken) {
