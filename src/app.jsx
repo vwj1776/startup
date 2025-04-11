@@ -1,14 +1,12 @@
 import React from 'react';
-// import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
 import Demo from './demo/demo';
 import Login from './login/login';
 import AuthorAccount from './authorAccount/authorAccount';
 import ManyStories from './manyStories/manyStories';
 import FirstStory from './1ststory/1ststory';
-import './app.css'; // Make sure to move styling here
+import './app.css';
 import logo from '../public/writing_logo.png'; // Adjust the path as necessary
-
 
 export default function App() {
   function NotFound() {
@@ -17,12 +15,11 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <div >
+      <div>
         <header>
-          <nav >
-          <img src={logo} alt="logo" />
-
-            <div >Greyhound Writing</div>
+          <nav>
+            <img src={logo} alt="logo" />
+            <div>Greyhound Writing</div>
             <menu>
               <li>
                 <NavLink to="/demo" className="highlighted-link">Demo</NavLink>
@@ -40,22 +37,27 @@ export default function App() {
                 <NavLink to="/manyStories" className="highlighted-link">Many Stories</NavLink>
               </li>
               <li>
-                <NavLink className="highlighted-link" to="https://github.com/vwj1776/startup.git">Repository</NavLink>
+                {/* Use <a> instead of <NavLink> for external links */}
+                <a className="highlighted-link" href="https://github.com/vwj1776/startup.git" target="_blank" rel="noopener noreferrer">
+                  Repository
+                </a>
               </li>
               <li>
-                <NavLink className="highlighted-link" to="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Repository</NavLink>
+                <a className="highlighted-link" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" rel="noopener noreferrer">
+                  Repository
+                </a>
               </li>
             </menu>
           </nav>
         </header>
 
         <Routes>
-          <Route path="/demo" element={<Demo />} exact />
+          <Route path="/demo" element={<Demo />} />
           <Route path="/authorAccount" element={<AuthorAccount />} />
           <Route path="/manyStories" element={<ManyStories />} />
           <Route path="/FirstStory" element={<FirstStory />} />
-          <Route path="*" element={<NotFound />} />
           <Route path="/" element={<Login />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
 
         <footer className="footer">
