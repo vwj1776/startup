@@ -31,9 +31,6 @@ export default function App() {
                 <NavLink to="/" className="highlighted-link">Login</NavLink>
               </li> 
               <li>
-                <NavLink to="/FirstStory" className="highlighted-link">1st Story</NavLink>
-              </li>
-              <li>
                 <NavLink to="/authorAccount" className="highlighted-link">Author Account</NavLink>
               </li>
               <li>
@@ -78,7 +75,7 @@ export default function App() {
           <Route path="/demo" element={<Demo />} />
           <Route path="/authorAccount" element={<AuthorAccount />} />
           <Route path="/manyStories" element={<ManyStories />} />
-          <Route path="/FirstStory" element={<FirstStory />} />
+          <Route path="/story/:id" element={<FirstStory />} />
           <Route path="/register" element={<Register />} />
           <Route path="/" element={<Login />} />
           <Route path="*" element={<NotFound />} />
