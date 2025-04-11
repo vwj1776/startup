@@ -6,9 +6,9 @@ const app = express();
 
 const authCookieName = 'token';
 
-// The comments and users are saved in memory and disappear whenever the service is restarted.
+// The reviews and users are saved in memory and disappear whenever the service is restarted.
 let users = [];
-let comments = [];
+let reviews = [];
 let stories = [];
 
 // The service port. In production the front-end code is statically hosted by the service on the same port.
@@ -74,16 +74,37 @@ const verifyAuth = async (req, res, next) => {
 };
 
 
-// Getcomments
-apiRouter.get('/comments', verifyAuth, (_req, res) => {
-  res.send(comments);
+apiRouter.get('/reviews', verifyAuth, (req, res) => {
+  const { storyId } = req.query;
+  if (!storyId) {
+    return res.status(400).json({ msg: 'Missing storyId in query' });
+  }
+
+  const storyReviews = reviews.filter((r) => r.storyId === storyId);
+  res.send(storyReviews);
 });
 
-// Submitcomment
-apiRouter.post('/comment', verifyAuth, (req, res) => {
-  comments = updatecomments(req.body);
-  res.send(comments);
+
+apiRouter.post('/review', verifyAuth, (req, res) => {
+  const { storyId, content } = req.body;
+
+  if (!storyId || !content) {
+    return res.status(400).json({ msg: 'Missing storyId or content' });
+  }
+
+  const newReview = {
+    id: uuid.v4(),
+    storyId,
+    content,
+    author: req.user.email,
+    createdAt: new Date().toISOString(),
+  };
+
+  reviews.push(newReview);
+
+  res.status(201).json({ msg: 'Review saved', review: newReview });
 });
+
 
 // Default error handler
 app.use(function (err, req, res, next) {
@@ -95,26 +116,26 @@ app.use(function (err, req, res, next) {
 //   res.sendFile('index.html', { root: 'public' });
 // });
 
-// updatecomments considers a new comment for inclusion in the high comments.
-function updatecomments(newcomment) {
+// updatereviews considers a new review for inclusion in the high reviews.
+function updatereviews(newreview) {
   let found = false;
-  for (const [i, prevcomment] of comments.entries()) {
-    if (newcomment.comment > prevcomment.comment) {
-      comments.splice(i, 0, newcomment);
+  for (const [i, prevreview] of reviews.entries()) {
+    if (newreview.review > prevreview.review) {
+      reviews.splice(i, 0, newreview);
       found = true;
       break;
     }
   }
 
   if (!found) {
-    comments.push(newcomment);
+    reviews.push(newreview);
   }
 
-  if (comments.length > 10) {
-    comments.length = 10;
+  if (reviews.length > 10) {
+    reviews.length = 10;
   }
 
-  return comments;
+  return reviews;
 }
 
 async function createUser(email, password) {

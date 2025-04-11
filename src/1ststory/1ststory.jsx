@@ -25,14 +25,37 @@ export default function FirstStory() {
       });
   }, [id]);
 
+  useEffect(() => {
+    fetch(`/api/reviews?storyId=${id}`, {
+      credentials: 'include',
+    })
+      .then((res) => res.json())
+      .then((data) => setReviews(data))
+      .catch((err) => console.error('Error loading reviews:', err));
+  }, [id]);
+  
+  
+
   const handleReviewSubmit = (event) => {
     event.preventDefault();
     const review = event.target.newReview.value.trim();
+  
     if (review) {
-      setReviews([...reviews, review]);
-      event.target.reset();
+      fetch('/api/review', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: review, storyId: id }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setReviews((prev) => [...prev, data.review]); // add new review
+          event.target.reset();
+        })
+        .catch((err) => console.error('Error submitting review:', err));
     }
   };
+  
 
   if (error) return <p>{error}</p>;
   if (!story) return <p>Loading story...</p>;
@@ -65,7 +88,11 @@ export default function FirstStory() {
             <p>No reviews yet.</p>
           ) : (
             reviews.map((review, index) => (
-              <p key={index}>{review}</p>
+              <div key={index} className="review">
+              <p><strong>{review.author}</strong> wrote:</p>
+              <p>{review.content}</p>
+              <small>{new Date(review.createdAt).toLocaleString()}</small>
+            </div>
             ))
           )}
         </div>
