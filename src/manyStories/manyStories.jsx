@@ -40,7 +40,7 @@ export default function ManyStories() {
           {!loading && stories.length === 0 && <p>No stories found.</p>}
           {!loading &&
             stories.map((story, index) => (
-              <NavLink to={`/story/${story.id}`} key={index} className="highlighted-link">
+              <NavLink to={`/story/${story._id}`} key={index} className="highlighted-link">
                 <div className="stories">
                   <p className="title">{story.title}</p>
                   <p>{story.content.slice(0, 120)}...</p>

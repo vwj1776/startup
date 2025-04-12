@@ -179,6 +179,7 @@ nav a:hover {
   width: 80%;
   max-height: 400px;
   overflow-y: auto;
+  overflow-x: hidden;         /* ✅ This hides horizontal scroll */
   padding: 15px;
   margin: 20px auto;
   border: 1px solid #00c800;
@@ -189,7 +190,13 @@ nav a:hover {
   color: #00ff00;
   word-break: break-word;
   white-space: pre-wrap;
+
+
+  white-space: pre-wrap;        /* ✅ Preserves line breaks & wraps long lines */
+  word-wrap: break-word;        /* ✅ Breaks long words if needed */
+  overflow-wrap: break-word;    /* ✅ Ensures consistent behavior */
 }
+
 
 /* Scrollable Div Styling */
 .scrollable-div {
