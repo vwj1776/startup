@@ -153,8 +153,8 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **User registration** - I did not complete this part of the deliverable.
-- [ ] **User login and logout** - I did not complete this part of the deliverable.
+- [x] **User registration** - I completed this part of the deliverable. Authors create accounts to be able to view other stories and post stories. You can't do anything else except for view the repository if you don't have an account.
+- [x] **User login and logout** - I completed this part of the deliverable. The logout button is included on the navlinks and they can sign out and sign back in once an account is made.
 - [ ] **Stores data in MongoDB** - I did not complete this part of the deliverable.
 - [ ] **Stores credentials in MongoDB** - I did not complete this part of the deliverable.
 - [ ] **Restricts functionality based on authentication** - I did not complete this part of the deliverable.
