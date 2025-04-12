@@ -128,7 +128,7 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [x] **Bundled using Vite** - I completed this part of the deliverable.
+- [x] **Bundled using Vite** - I completed this part of the deliverable. we used vite to tell the backend which port (localhost:3000) to connect to.
 - [x] **Components** - I completed this part of the deliverable.
 - [x] **Router** - Routing between login and different pages.
 
@@ -136,18 +136,18 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **All functionality implemented or mocked out** - I did not complete this part of the deliverable.
-- [ ] **Hooks** - I did not complete this part of the deliverable.
+- [x] **All functionality implemented or mocked out** - I completed this part of the deliverable.
+- [x] **Hooks** - I completed this part of the deliverable.
 
 ## 🚀 Service deliverable
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Node.js/Express HTTP service** - I did not complete this part of the deliverable.
-- [ ] **Static middleware for frontend** - I did not complete this part of the deliverable.
-- [ ] **Calls to third party endpoints** - I did not complete this part of the deliverable.
-- [ ] **Backend service endpoints** - I did not complete this part of the deliverable.
-- [ ] **Frontend calls service endpoints** - I did not complete this part of the deliverable.
+- [x] **Node.js/Express HTTP service** - I completed this part of the deliverable.
+- [x] **Static middleware for frontend** - I completed this part of the deliverable.
+- [x] **Calls to third party endpoints** - I completed this part of the deliverable.
+- [x] **Backend service endpoints** - I completed this part of the deliverable.
+- [x] **Frontend calls service endpoints** - I completed this part of the deliverable.
 
 ## 🚀 DB/Login deliverable
 
