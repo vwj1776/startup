@@ -128,7 +128,7 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [x] **Bundled using Vite** - I completed this part of the deliverable.
+- [x] **Bundled using Vite** - I completed this part of the deliverable. we used vite to tell the backend which port (localhost:3000) to connect to.
 - [x] **Components** - I completed this part of the deliverable.
 - [x] **Router** - Routing between login and different pages.
 
@@ -136,25 +136,25 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **All functionality implemented or mocked out** - I did not complete this part of the deliverable.
-- [ ] **Hooks** - I did not complete this part of the deliverable.
+- [x] **All functionality implemented or mocked out** - I completed this part of the deliverable.
+- [x] **Hooks** - I completed this part of the deliverable.
 
 ## 🚀 Service deliverable
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Node.js/Express HTTP service** - I did not complete this part of the deliverable.
-- [ ] **Static middleware for frontend** - I did not complete this part of the deliverable.
-- [ ] **Calls to third party endpoints** - I did not complete this part of the deliverable.
-- [ ] **Backend service endpoints** - I did not complete this part of the deliverable.
-- [ ] **Frontend calls service endpoints** - I did not complete this part of the deliverable.
+- [x] **Node.js/Express HTTP service** - I completed this part of the deliverable.
+- [x] **Static middleware for frontend** - I completed this part of the deliverable.
+- [x] **Calls to third party endpoints** - I completed this part of the deliverable.
+- [x] **Backend service endpoints** - I completed this part of the deliverable.
+- [x] **Frontend calls service endpoints** - I completed this part of the deliverable.
 
 ## 🚀 DB/Login deliverable
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **User registration** - I did not complete this part of the deliverable.
-- [ ] **User login and logout** - I did not complete this part of the deliverable.
+- [x] **User registration** - I completed this part of the deliverable. Authors create accounts to be able to view other stories and post stories. You can't do anything else except for view the repository if you don't have an account.
+- [x] **User login and logout** - I completed this part of the deliverable. The logout button is included on the navlinks and they can sign out and sign back in once an account is made.
 - [ ] **Stores data in MongoDB** - I did not complete this part of the deliverable.
 - [ ] **Stores credentials in MongoDB** - I did not complete this part of the deliverable.
 - [ ] **Restricts functionality based on authentication** - I did not complete this part of the deliverable.
