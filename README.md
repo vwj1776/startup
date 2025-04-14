@@ -117,12 +117,12 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [x] **Header, footer, and main content body** - I completed this part of the deliverable.
-- [x] **Navigation elements** - I  completed this part of the deliverable.
+- [x] **Header, footer, and main content body** - I completed this part of the deliverable. The structure of each page is laid out as seen in the pages listed under design (scroll up)
+- [x] **Navigation elements** - I  completed this part of the deliverable. Added navlinks that go to each page, on each page. 
 - [x] **Responsive to window resizing** - I completed this part of the deliverable. Added a meta tag.
 - [x] **Application elements** - I completed this part of the deliverable.
 - [x] **Application text content** - I completed this part of the deliverable.
-- [x] **Application images** - I completed this part of the deliverable.
+- [x] **Application images** - I completed this part of the deliverable. Added a website logo.
 
 ## 🚀 React part 1: Routing deliverable
 
@@ -155,9 +155,9 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 - [x] **User registration** - I completed this part of the deliverable. Authors create accounts to be able to view other stories and post stories. You can't do anything else except for view the repository if you don't have an account.
 - [x] **User login and logout** - I completed this part of the deliverable. The logout button is included on the navlinks and they can sign out and sign back in once an account is made.
-- [ ] **Stores data in MongoDB** - I did not complete this part of the deliverable.
-- [ ] **Stores credentials in MongoDB** - I did not complete this part of the deliverable.
-- [ ] **Restricts functionality based on authentication** - I did not complete this part of the deliverable.
+- [x] **Stores data in MongoDB** - I completed this part of the deliverable. you can close the server, repoen it, and all of the stories and author data is still there.
+- [x] **Stores credentials in MongoDB** - I completed this part of the deliverable. Author UN and PW are saved no matter whether or not the server is closed.
+- [x] **Restricts functionality based on authentication** - I completed this part of the deliverable. if you have the wrong PW, it will prevent you from logging in.
 
 ## 🚀 WebSocket deliverable
 
