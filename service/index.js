@@ -139,6 +139,8 @@ apiRouter.post('/review', verifyAuth, async (req, res) => {
   });
 
   await newReview.save();
+  await newReview.save();
+  broadcastReview(newReview); // ✅ notify all clients
   res.status(201).json({ msg: 'Review saved', review: newReview });
 });
 
@@ -152,9 +154,9 @@ function setAuthCookie(res, authToken) {
 }
 
 // Fallback route
-app.get('*', (_req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+// app.get('*', (_req, res) => {
+//   res.sendFile(path.join(__dirname, 'public', 'index.html'));
+// });
 
 // Error handler
 app.use((err, req, res, next) => {
@@ -163,7 +165,36 @@ app.use((err, req, res, next) => {
 });
 
 // Start server
-app.listen(port, () => {
-  console.log(`🚀 Listening on port ${port}`);
+// app.listen(port, () => {
+//   console.log(`🚀 Listening on port ${port}`);
+// });
+
+const http = require('http');
+const WebSocket = require('ws');
+
+const server = http.createServer(app);
+const wss = new WebSocket.Server({ server });
+
+const clients = [];
+
+wss.on('connection', (ws) => {
+  clients.push(ws);
+  ws.on('close', () => {
+    const index = clients.indexOf(ws);
+    if (index !== -1) clients.splice(index, 1);
+  });
+});
+
+function broadcastReview(review) {
+  const message = JSON.stringify({ type: 'newReview', data: review });
+  clients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(message);
+    }
+  });
+}
+
+server.listen(port, () => {
+  console.log(`🚀 Server + WebSocket listening on port ${port}`);
 });
 
