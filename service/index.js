@@ -1,4 +1,5 @@
-require('dotenv').config();
+require('dotenv').config({ path: '../.env' });
+
 
 const connectToDatabase = require('./db');
 connectToDatabase();
