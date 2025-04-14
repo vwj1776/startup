@@ -36,6 +36,25 @@ export default function FirstStory() {
       .then((data) => setReviews(data))
       .catch((err) => console.error('Error loading reviews:', err));
   }, [story]); // 🔁 depends on `story`
+
+  useEffect(() => {
+    const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+    const ws = new WebSocket(`${protocol}://${window.location.hostname}:3000`);
+  
+    ws.onmessage = (msg) => {
+      try {
+        const event = JSON.parse(msg.data);
+        if (event.type === 'newReview' && event.data.storyId === id) {
+          setReviews((prev) => [...prev, event.data]);
+        }
+      } catch (e) {
+        console.error('WebSocket parse error:', e);
+      }
+    };
+  
+    return () => ws.close();
+  }, [id]);
+  
   
   
 
