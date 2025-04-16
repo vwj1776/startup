@@ -129,42 +129,45 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
 - [x] **Bundled using Vite** - I completed this part of the deliverable. we used vite to tell the backend which port (localhost:3000) to connect to.
-- [x] **Components** - I completed this part of the deliverable.
+- [x] **Components** - I have my login, author account, story, and many stories pages
 - [x] **Router** - Routing between login and different pages.
 
-## 🚀 React part 2: Reactivity
+## 🚀 React Part 2: Reactivity
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [x] **All functionality implemented or mocked out** - I completed this part of the deliverable.
-- [x] **Hooks** - I completed this part of the deliverable.
+- [x] **All functionality implemented or mocked out** – Authors can log in, register, upload `.txt` stories, view story previews, and leave reviews. Input is validated for `.txt` file type.
+- [x] **Hooks** – I used `useEffect` to load stories and reviews, `useState` to manage form data and display updates, and `useParams` to get story IDs from URLs dynamically.
 
-## 🚀 Service deliverable
-
-For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
-
-- [x] **Node.js/Express HTTP service** - I completed this part of the deliverable.
-- [x] **Static middleware for frontend** - I completed this part of the deliverable.
-- [x] **Calls to third party endpoints** - I completed this part of the deliverable.
-- [x] **Backend service endpoints** - I completed this part of the deliverable.
-- [x] **Frontend calls service endpoints** - I completed this part of the deliverable.
-
-## 🚀 DB/Login deliverable
+## 🚀 Service Deliverable
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [x] **User registration** - I completed this part of the deliverable. Authors create accounts to be able to view other stories and post stories. You can't do anything else except for view the repository if you don't have an account.
-- [x] **User login and logout** - I completed this part of the deliverable. The logout button is included on the navlinks and they can sign out and sign back in once an account is made.
-- [x] **Stores data in MongoDB** - I completed this part of the deliverable. you can close the server, repoen it, and all of the stories and author data is still there.
-- [x] **Stores credentials in MongoDB** - I completed this part of the deliverable. Author UN and PW are saved no matter whether or not the server is closed.
-- [x] **Restricts functionality based on authentication** - I completed this part of the deliverable. if you have the wrong PW, it will prevent you from logging in.
+- [x] **Node.js/Express HTTP service** – The Express backend handles all the routing, authentication, file uploads, review handling, and MongoDB data access.
+- [x] **Static middleware for frontend** – The frontend React app is served using Express’ static middleware.
+- [x] **Calls to third party endpoints** – (Optional) Not implemented in this project. No external APIs were called, but architecture is prepared for expansion.
+- [x] **Backend service endpoints** – Endpoints like `/api/auth/login`, `/api/upload`, `/api/stories`, and `/api/review` are all implemented and connected to MongoDB.
+- [x] **Frontend calls service endpoints** – The frontend uses `fetch()` with `credentials: 'include'` to communicate with secure backend endpoints.
 
-## 🚀 WebSocket deliverable
+## 🚀 DB/Login Deliverable
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Backend listens for WebSocket connection** - I did not complete this part of the deliverable.
-- [ ] **Frontend makes WebSocket connection** - I did not complete this part of the deliverable.
-- [ ] **Data sent over WebSocket connection** - I did not complete this part of the deliverable.
-- [ ] **WebSocket data displayed** - I did not complete this part of the deliverable.
-- [ ] **Application is fully functional** - I did not complete this part of the deliverable.
+- [x] **User registration** – Authors can create accounts that are saved to MongoDB.
+- [x] **User login and logout** – Login and logout functionality with session-based cookies is implemented. Logout is available via the navigation bar.
+- [x] **Stores data in MongoDB** – All story and review data persists in MongoDB even if the server restarts.
+- [x] **Stores credentials in MongoDB** – User email and securely hashed passwords are stored in MongoDB.
+- [x] **Restricts functionality based on authentication** – Users must be logged in to access routes like `/manyStories`, `/upload`, and `/story/:id`.
+
+## 🚀 WebSocket Deliverable
+
+For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
+
+- [x] **Backend listens for WebSocket connection** – Express server is extended to support WebSocket connections via the `ws` library.
+- [x] **Frontend makes WebSocket connection** – Frontend connects to the backend WebSocket server on mount.
+- [x] **Data sent over WebSocket connection** – When a new review is posted, the backend broadcasts it via WebSocket to all connected clients.
+- [x] **WebSocket data displayed** – The frontend listens for WebSocket messages and updates the review list in real-time.
+- [x] **Application is fully functional** – Story uploads, user login, reviews, and WebSocket-based real-time updates are all working together as intended.
+
+
+../deployFiles.sh -k ../keys/production.pem -h greyhoundwriting.click -s simon
