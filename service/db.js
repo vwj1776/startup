@@ -1,19 +1,30 @@
-const mongoose = require('mongoose');
+const { MongoClient } = require('mongodb');
+const config = require('./dbConfig.json');
 
-const connectToDatabase = async () => {
-  const mongoUrl = process.env.MONGO_URL;
-  if (!mongoUrl) {
-    console.error('❌ Missing MONGO_URL in environment variables');
-    process.exit(1);
-  }
+const uri = `mongodb+srv://${config.userName}:${config.password}@${config.hostname}/?retryWrites=true&w=majority&appName=databasestorer`;
+const client = new MongoClient(uri);
 
+async function connectToDatabase() {
   try {
-    await mongoose.connect(mongoUrl);
+    await client.connect();
     console.log('✅ Connected to MongoDB');
   } catch (err) {
     console.error('❌ MongoDB connection error:', err);
     process.exit(1);
   }
-};
+}
 
-module.exports = connectToDatabase;
+async function getCollections() {
+  const db = client.db(config.database);
+  return {
+    User: db.collection('users'),
+    Story: db.collection('stories'),
+    Review: db.collection('reviews'),
+    ChatChunk: db.collection('airforce_chunks'),
+  };
+}
+
+module.exports = {
+  connectToDatabase,
+  getCollections,
+};

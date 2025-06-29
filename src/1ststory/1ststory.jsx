@@ -39,7 +39,9 @@ export default function FirstStory() {
 
   useEffect(() => {
     const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
-    const ws = new WebSocket(`${protocol}://${window.location.hostname}:3000`);
+    let port = window.location.port;
+
+    const ws = new WebSocket(`${protocol}://${window.location.hostname}:${port}`);
   
     ws.onmessage = (msg) => {
       try {

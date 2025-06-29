@@ -1,8 +1,7 @@
-/* General Styles */
+
 * {
   background-color: #040009; /* Dark background */
   color: #00c800; /* Lighter green for better contrast */
-  font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
   box-sizing: border-box;

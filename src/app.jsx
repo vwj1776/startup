@@ -8,6 +8,7 @@ import FirstStory from './1ststory/1ststory';
 import Register from './register';
 import './app.css';
 import logo from '../public/writing_logo.png';
+import Chatbot from "./chatbot/chatbot";
 
 function NavBar({ authorEmail, onLogout }) {
   return (
@@ -19,7 +20,9 @@ function NavBar({ authorEmail, onLogout }) {
           <>
             <li><NavLink to="/authorAccount" className="highlighted-link">Author Account</NavLink></li>
             <li><NavLink to="/manyStories" className="highlighted-link">Many Stories</NavLink></li>
-            <li>
+            <li><NavLink to="/chatbot" className="highlighted-link">Chatbot</NavLink></li>
+
+              <li>
               <button className="highlighted-link" onClick={onLogout}>Logout</button>
             </li>
           </>
@@ -72,6 +75,7 @@ function AppRouterWrapper() {
           <>
             <Route path="/authorAccount" element={<AuthorAccount />} />
             <Route path="/manyStories" element={<ManyStories />} />
+            <Route path="/chatbot" element={<Chatbot />} />
             <Route path="/story/:id" element={<FirstStory />} />
             <Route path="/demo" element={<Demo />} />
             <Route path="*" element={<NotFound />} />
