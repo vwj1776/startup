@@ -169,5 +169,83 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 - [x] **WebSocket data displayed** – The frontend listens for WebSocket messages and updates the review list in real-time.
 - [x] **Application is fully functional** – Story uploads, user login, reviews, and WebSocket-based real-time updates are all working together as intended.
 
+---
+
+## 📚 Comprehensive Project Summary & Documentation
+
+### Overview
+Greyhound Writing is a full-stack web platform for young and aspiring authors to publish, share, and receive feedback on their stories. The platform supports user registration, secure login, story uploads, real-time reviews via WebSockets, and robust admin controls for content moderation.
+
+### Features
+- **User Registration & Login:** Secure authentication with hashed passwords and session cookies.
+- **Story Management:**
+  - Authors can upload `.txt` stories.
+  - All users can browse and read stories.
+  - Admin users (`vwj1776`, `nodlev`, `vwj1776@gmail.com`) can delete any story.
+- **Reviews & Comments:**
+  - Users can leave reviews on stories.
+  - Reviews are broadcast in real-time to all connected clients using WebSockets.
+- **Admin Controls:**
+  - Only admin users can delete stories (both via UI and backend API).
+  - Admin check is enforced in both frontend and backend for security.
+- **Responsive UI:**
+  - Built with React and Vite for fast, modern user experience.
+  - Navigation, login, registration, and story browsing are all componentized.
+- **Backend Service:**
+  - Node.js/Express REST API for all data operations.
+  - MongoDB for persistent storage of users, stories, and reviews.
+  - WebSocket server for real-time review updates.
+- **Security:**
+  - All sensitive routes require authentication.
+  - Admin-only actions are double-checked on the server.
+  - Passwords are hashed with bcrypt.
+
+### API Endpoints
+- `POST /api/auth/create` – Register a new user
+- `POST /api/auth/login` – Login and receive session cookie
+- `DELETE /api/auth/logout` – Logout and clear session
+- `GET /api/stories` – Get all stories (auth required)
+- `POST /api/upload` – Upload a new story (auth required)
+- `DELETE /api/story/:id` – Delete a story (admin only)
+- `GET /api/reviews?storyId=...` – Get reviews for a story
+- `POST /api/review` – Add a review to a story
+- `POST /api/chat/ask` – (Experimental) Chatbot Q&A endpoint
+
+### Admin Users
+- Only the following users are considered admins and can delete stories:
+  - `vwj1776`
+  - `nodlev`
+  - `vwj1776@gmail.com`
+
+### Running the Project
+- **Frontend:**
+  - `npm run dev` (from project root)
+- **Backend:**
+  - `cd service && npm start` or `node index.js`
+- **MongoDB:**
+  - Ensure MongoDB is running and accessible as configured in `service/dbConfig.json`.
+
+### Deployment
+- The project is deployed at [https://greyhoundwriting.click](https://greyhoundwriting.click)
+- Deployment uses a shell script: `../deployFiles.sh -k ../keys/production.pem -h greyhoundwriting.click -s simon`
+
+### Technologies Used
+- React, Vite, HTML, CSS
+- Node.js, Express, MongoDB, bcrypt, ws (WebSocket)
+
+### Security & Best Practices
+- All API endpoints requiring authentication use a session cookie.
+- Only admins can delete stories, enforced on both frontend and backend.
+- Passwords are never stored in plain text.
+- All user input is validated on both client and server.
+
+### Contribution & Future Work
+- Add more granular user roles (e.g., moderators)
+- Expand messaging and chat features
+- Add story editing and version history
+- Improve mobile responsiveness and accessibility
+- Integrate third-party APIs for additional features
+
+---
 
 ../deployFiles.sh -k ../keys/production.pem -h greyhoundwriting.click -s simon
