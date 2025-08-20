@@ -17,10 +17,6 @@ export default function ManyStories() {
   const isAdmin = authorEmail && ADMIN_USERS.some(admin => 
     admin.toLowerCase().trim() === authorEmail.toLowerCase().trim()
   );
-  
-  console.log('Current user email:', authorEmail);
-  console.log('Is admin:', isAdmin);
-  console.log('Admin users list:', ADMIN_USERS);
 
   useEffect(() => {
     fetch('/api/stories', {
