@@ -10,6 +10,7 @@ const WebSocket = require('ws');
 
 const app = express();
 const authCookieName = 'token';
+console.log('this is just a test for git');
 const port = process.argv.length > 2 ? process.argv[2] : 4000;
 
 let User, Story, Review;
