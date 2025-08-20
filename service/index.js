@@ -184,41 +184,6 @@ let User, Story, Review;
     });
   }
 
-  apiRouter.post('/chat/ask', async (req, res) => {
-    const { question } = req.body;
-    const { ChatChunk } = await getCollections();
-
-    if (!question || question.trim() === "") {
-      return res.status(400).json({ answer: "Please ask a question." });
-    }
-
-    // Step 1: Smart split into keywords
-    const words = question
-        .toLowerCase()
-        .replace(/[^\w\s]/g, '')    // remove punctuation
-        .split(/\s+/)                // split by spaces
-        .filter(word => word.length > 2); // remove tiny words like "a", "is"
-
-    console.log("🧠 Searching for keywords:", words);
-
-    // Step 2: Build a Mongo $or search
-    const orConditions = words.map(word => ({
-      content: { $regex: word, $options: 'i' }  // case-insensitive
-    }));
-
-    const similarChunks = await ChatChunk.find({
-      $or: orConditions
-    }).limit(5).toArray();
-
-    const context = similarChunks.map(chunk => chunk.content).join("\n\n");
-
-    if (!context) {
-      return res.json({ answer: "Sorry, I couldn't find anything related to that question." });
-    }
-
-    res.json({ answer: context });
-  });
-
 
 
 

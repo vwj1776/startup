@@ -20,7 +20,6 @@ async function getCollections() {
     User: db.collection('users'),
     Story: db.collection('stories'),
     Review: db.collection('reviews'),
-    ChatChunk: db.collection('airforce_chunks'),
   };
 }
 
