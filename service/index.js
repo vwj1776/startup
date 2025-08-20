@@ -106,13 +106,33 @@ let User, Story, Review;
     const { ObjectId } = require('mongodb');
     // Only allow admin users to delete stories
     const adminUsers = ['vwj1776', 'nodlev', 'vwj1776@gmail.com'];
-    if (!adminUsers.includes(req.user.email)) {
+    
+    // Check if user is admin (case-insensitive and trim whitespace)
+    const userEmail = req.user.email?.toLowerCase().trim();
+    const isAdmin = adminUsers.some(admin => admin.toLowerCase().trim() === userEmail);
+    
+    console.log('Delete request from user:', req.user.email);
+    console.log('Normalized user email:', userEmail);
+    console.log('Is user admin?', isAdmin);
+    
+    if (!isAdmin) {
+      console.log('Access denied for user:', req.user.email);
       return res.status(403).json({ msg: 'Forbidden: Admins only' });
     }
+    
+    console.log('Admin access granted for:', req.user.email);
     const result = await Story.deleteOne({ _id: new ObjectId(req.params.id) });
     if (result.deletedCount === 1) {
       res.status(204).end();
     } else {
+      res.status(404).json({ msg: 'Story not found' });
+    }
+  });
+    if (result.deletedCount === 1) {
+      console.log('Story deleted successfully');
+      res.status(204).end();
+    } else {
+      console.log('Story not found');
       res.status(404).json({ msg: 'Story not found' });
     }
   });

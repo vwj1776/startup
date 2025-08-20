@@ -12,7 +12,15 @@ export default function ManyStories() {
 
   // Get current user from localStorage
   const authorEmail = localStorage.getItem('authorEmail');
-  const isAdmin = ADMIN_USERS.includes(authorEmail);
+  
+  // Check if user is admin (case-insensitive and trim whitespace)
+  const isAdmin = authorEmail && ADMIN_USERS.some(admin => 
+    admin.toLowerCase().trim() === authorEmail.toLowerCase().trim()
+  );
+  
+  console.log('Current user email:', authorEmail);
+  console.log('Is admin:', isAdmin);
+  console.log('Admin users list:', ADMIN_USERS);
 
   useEffect(() => {
     fetch('/api/stories', {
