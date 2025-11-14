@@ -8,6 +8,7 @@ import FirstStory from './1ststory/1ststory';
 import Register from './register';
 import './app.css';
 import logo from '../public/writing_logo.png';
+import Curriculum from './curriculum/curriculum';
 
 function NavBar({ authorEmail, onLogout }) {
   return (
@@ -23,6 +24,10 @@ function NavBar({ authorEmail, onLogout }) {
               <li>
               <button className="highlighted-link" onClick={onLogout}>Logout</button>
             </li>
+                    <li>
+            <li>
+              <NavLink to="/curriculum" className="highlighted-link">Curriculum</NavLink></li>
+        </li>
           </>
         ) : (
           <>
@@ -76,6 +81,7 @@ function AppRouterWrapper() {
             <Route path="/story/:id" element={<FirstStory />} />
             <Route path="/demo" element={<Demo />} />
             <Route path="*" element={<NotFound />} />
+            <Route path="/curriculum" element={<Curriculum />} />
           </>
         ) : (
           <>
