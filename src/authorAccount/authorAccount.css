@@ -1,12 +1,11 @@
-* {
-    background-color: #040009; /* Dark background */
-    color: #00c800; /* Lighter green for better contrast */
+#body-author-account {
+    background-color: #040009; 
+    color: #00c800; 
     margin: 0;
     padding: 0;
     box-sizing: border-box;
   }
   
-  /* Navigation */
 nav {
   display: flex;
   justify-content: space-around;
@@ -29,7 +28,7 @@ nav a:hover {
   background-color: rgba(0, 200, 0, 0.2);
 }
 
-/* Author Icon */
+
 #authorIcon {
   display: flex;
   align-items: center;
@@ -43,14 +42,14 @@ nav a:hover {
   border: 2px solid #00c800;
 }
   
-  /* File Upload Section */
+
   li {
     list-style-type: none;
     margin: 20px;
     padding: 15px;
     background-color: #111;
     border-radius: 8px;
-    border: 5px solid #00c800; /* Green border */
+    border: 5px solid #00c800; 
     width: 30%;
     margin-left: auto;
     margin-right: auto;
@@ -90,7 +89,7 @@ nav a:hover {
     background-color: #008f00;
   }
   
-  /* Error handling for invalid file type (message alert) */
+
   li input[type="file"]:invalid {
     border-color: red;
   }
@@ -100,14 +99,14 @@ nav a:hover {
     box-shadow: 0 0 5px red;
   }
   
-  /* Responsive Design */
+ 
   @media (max-width: 600px) {
     li {
-      width: 90%; /* Full width on smaller screens */
+      width: 90%; 
       margin: 10px auto;
     }
   
-    /* Adjust font sizes and padding for smaller screens */
+
     li label,
     li input[type="file"] {
       font-size: 1rem;

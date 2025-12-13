@@ -14,21 +14,21 @@ header {
 }
 
 header img {
-  max-width: 200px; /* Set max width for logo */
-  width: 100%; /* Make sure it is responsive */
+  max-width: 200px; 
+  width: 100%; 
   height: auto;
   border-radius: 10px;
   margin-bottom: 20px;
 }
 
-/* Introduction Section */
+
 #introduction {
   border: solid green 5px;
   font-size: 1.5rem;
   text-align: center;
   padding: 5%;
   margin-top: 3%;
-  background-color: #111; /* Slightly dark background for intro */
+  background-color: #111; 
   border-radius: 8px;
   color: #00d100;
 }
@@ -151,6 +151,6 @@ footer a:hover {
   margin: 0 !important;
   padding: 0 !important;
   position: relative;
-  display: inline-block; /* Ensures it behaves like a normal link */
+  display: inline-block; 
 }
 

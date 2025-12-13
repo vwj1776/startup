@@ -1,0 +1,28 @@
+
+
+#bodyCurriculum {
+    min-width: 375px;
+    background-color: #000000; 
+    color: #00FF00; 
+}
+
+.unitLinks {
+    margin: 1em;
+    padding: 0.3em; 
+    display: flex;
+    text-align: center;
+    border: 0.1em solid #00FF00;
+}
+
+.unitLInkBoxes {
+    margin: 0.1em;
+    padding: 0.3em; 
+    display: flex;
+} 
+
+.twoUnitLinks {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8em; /* Add space between vertical links */
+    text-align: center;
+}

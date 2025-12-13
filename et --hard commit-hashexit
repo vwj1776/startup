@@ -1,0 +1,118 @@
+[33m6115c9b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m added curriculum page
+[33m86b9961[m Fix syntax errors and remove redundant backend admin check for story deletion
+[33m2b2ce61[m Fix admin authentication for story deletion - make case-insensitive and robust
+[33m74748f7[m Remove chatbot functionality and clean up database storage
+[33mbd714fe[m main, cheking if git works
+[33m6caf4a5[m Update README with comprehensive project summary and documentation
+[33meab9e83[m Fix story delete endpoint to match backend route and restrict to admins only
+[33m17359e3[m added correct deploy
+[33mf4c80e3[m fixed readme
+[33m0972b1e[m fixing first story
+[33ma3ac1d2[m fixing .env
+[33m2904236[m env
+[33m4eed9e7[m Merge branch 'main' of https://github.com/vwj1776/startup
+[33m7caa3ac[m env
+[33mcbb78b7[m websocket
+[33m3a62428[m Update .env
+[33ma8da58b[m Merge branch 'main' of https://github.com/vwj1776/startup
+[33ma34a85a[m updated the reamde kinda
+[33m2ad7735[m Merge branch 'main' of https://github.com/vwj1776/startup
+[33m89659f3[m got mongodb working, no thanks to its docunemtation
+[33md98b3a3[m updated the reamde kinda
+[33m0a06c8e[m updated the reamde kinda
+[33m93f8df4[m just don't want the demo lonk in there
+[33m555e7e4[m changed a ton of stuff but it all loads and persists the data correctly
+[33m641a91b[m the story renders correctly
+[33mb856d13[m the added file is shows in manyStories
+[33me5e5793[m we can add a file with login and not with logout
+[33mbb485d3[m just saiving work from last night, dont code at midnight folks
+[33mfa745d9[m added register.jsx and added code to it.
+[33m3f35483[m added register.jsx and moved navlinks into it
+[33m3d60110[m Merge branch 'main' of https://github.com/vwj1776/startup
+[33m532ad55[m changed login to start to work
+[33m330d7ac[m added register.jsx and moved navlinks to it
+[33m3ea2fbe[m trying to uplaod files
+[33m679775d[m Merge branch 'main' of https://github.com/vwj1776/startup
+[33m275f694[m added testing for server
+[33mb3953a8[m added The Harken Manor.txt, The Mean One.txt, and The Solution.txt
+[33m937f018[m added The Post Office
+[33m3f85400[m making the service workish
+[33m2d3fbbb[m Merge branch 'main' of https://github.com/vwj1776/startup
+[33m211699b[m installed cookie parser
+[33m79fdb6a[m added simon index into here
+[33md3a48b5[m fixing index.js
+[33ma9ca3e8[m added service and index.js
+[33m63c913f[m got started on mongodb stuff
+[33m0d02b71[m tried fixing 1ststory.jsx to display the story, but didn't work
+[33mb67e9ce[m Merge branch 'main' of https://github.com/vwj1776/startup
+[33mfd328f7[m kind of fixed manystories link
+[33madfce45[m fixed logo bug
+[33m25b3e1c[m Merge branch 'main' of https://github.com/vwj1776/startup
+[33m55ccc86[m just fixing login
+[33md667d01[m got rid of nav bars where they weren't needed
+[33m5190381[m moved demo, manyStories, and 1ststory into old folder
+[33mc1e0db4[m basically tried to fix the text box to display the story in 1stStory but didn't work. installed axios to try and fix it.
+[33mcbaca04[m Added websocket code
+[33m013db34[m pulling from routing changes
+[33md0e8951[m fixing more a tags
+[33m3b1cca4[m updated README.md to include our work
+[33mf6a00a3[m added rick roll link
+[33m048384f[m added navlink for repository
+[33mf24235e[m main, fixed all of veldons mistakes 0.2
+[33me743b47[m main, fixed all of veldons mistakes 0.1
+[33me536e0f[m pulling from routing changes
+[33ma0689a9[m converted files to jsx
+[33m9ff5051[m created router
+[33m93526a0[m added nav bar to app.jsx
+[33mb09d016[m main, fixing react, uses base versions now
+[33m9f6b7cb[m main, adding react to our project and reorganized the folders into src and public
+[33m086153c[m Merge branch 'main' of https://github.com/vwj1776/startup
+[33mc65daab[m added better css
+[33m3ec8a2e[m added meta tags for viewport, moved nav in manyStories, and updated readme
+[33m83b9d9e[m fixed nav bars
+[33mc9f35ac[m Merge branch 'main' of https://github.com/vwj1776/startup
+[33m7068db1[m had chatgpt fix the css and make the layout and everything look good.
+[33m277d12a[m updatem html readme
+[33mbea357a[m Merge branch 'main' of https://github.com/vwj1776/startup
+[33mf0c9d2a[m made story1 stinking shorter
+[33m95b7eb7[m added username display
+[33mac6f94a[m added a repository link in index, and deleted all of the comments everywhere else
+[33m177b235[m updated navbar
+[33m612176b[m Merge branch 'main' of https://github.com/vwj1776/startup
+[33m3b5fdbc[m updated read me and added css
+[33m5743a91[m Fixed the nav bar so it had many stories and updated it to all pages
+[33m7d3cf17[m updated read me and added css
+[33maf9d48b[m Merge branch 'main' of https://github.com/vwj1776/startup
+[33mfd19d85[m updating readme
+[33m9e4144a[m updated readMe.md
+[33m7978b35[m starting anav bar
+[33medb8dcb[m pulling
+[33m1260b03[m renamed index.html to manyStories and loginPage to index.html
+[33m654bc98[m Merge branch 'main' of https://github.com/vwj1776/startup
+[33m3d44587[m added messages list and scroll bar for comments
+[33mad65e39[m Added a navbar with exsisting and new links.
+[33mee570a0[m merged with main
+[33m667f793[m Merge branch 'main' of https://github.com/vwj1776/startup
+[33m43d8ce2[m added text to 1ststory message boards, added loginPage.html and .css
+[33m7dcddba[m added the darn scrollbar.
+[33maac7573[m worked on page turning css animation
+[33m327a38d[m made authoracountopen in new tab, added css and html to 1ststory
+[33m4b5249c[m added file validation adn edited the aws deliverable in the readme
+[33m14269be[m made indexhtml actually reference its css sheet, put the image csss in the css file
+[33ma2acbde[m Merge branch 'main' of https://github.com/vwj1776/startup
+[33m91c203c[m starting the author account
+[33m87a7cde[m Update 1ststory.html
+[33m1eb804d[m added and edited story1.txt, tried making 1ststory.html open story1.txt, but it got an error in fetching the file so I think commiting this will make it work. I also renamed index.css
+[33m6a4dfc3[m changed stories to a 4 loop
+[33m03978ea[m starting to add Veldons work
+[33m2b2a9f9[m spec deliverable, added checkmarks
+[33m1bcae52[m spec deliverable, editied notes form the clone
+[33m96846ec[m spec diliverable, added desciption of sequencediagram
+[33m584f650[m spec diliverable, added sequence diagram
+[33m919ffac[m spec deliverable, added endlines
+[33m378e9ab[m spec deliverable, added breif outline and technologies
+[33m7fdd2bc[m Merge branch 'main' of https://github.com/vwj1776/startup
+[33ma0fddd5[m added images to readme
+[33mba879c2[m Update1README.md
+[33mcc52ac4[m Update README.md
+[33ma7bad95[m Initial commit

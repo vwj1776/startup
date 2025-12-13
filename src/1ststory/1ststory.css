@@ -219,7 +219,7 @@ nav a:hover {
     margin: 10px auto;
   }
 
-  /* Adjust form inputs and buttons for mobile */
+
   #messageAuthor input[type="text"], #reviews textarea {
     font-size: 1rem;
   }

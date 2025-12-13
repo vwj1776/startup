@@ -103,17 +103,18 @@ export default function FirstStory() {
       <div id="fileContent" className="scrollable-div">
         <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>{story.content}</pre>
       </div>
-
+{/* 
       <div id="reviews">
         <p><strong>Leave a Review:</strong></p>
         <form id="reviewForm" onSubmit={handleReviewSubmit}>
           <label htmlFor="newReview">Your Review:</label>
-          <textarea id="newReview" name="newReview" placeholder="Write your review here" rows="4" cols="50"></textarea>
+          <textarea id="newReview" name="newReview" placeholder="Write your review here..." rows="4" cols="50"></textarea>
           <br />
           <input type="submit" value="Submit" />
         </form>
 
-        <div id="reviewList" className="scrollable-div">
+       
+       <div id="reviewList" className="scrollable-div">
           {reviews.length === 0 ? (
             <p>No reviews yet.</p>
           ) : (
@@ -131,6 +132,8 @@ export default function FirstStory() {
           )}
         </div>
       </div>
+      */
+      }
     </div>
   );
 }

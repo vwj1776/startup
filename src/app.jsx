@@ -3,6 +3,7 @@ import { NavLink, Route, Routes, useNavigate } from 'react-router-dom';
 import Demo from './demo/demo';
 import Login from './login/login';
 import AuthorAccount from './authorAccount/authorAccount';
+import Curriculum from './curriculum/curriculum';
 import ManyStories from './manyStories/manyStories';
 import FirstStory from './1ststory/1ststory';
 import Register from './register';
@@ -18,6 +19,7 @@ function NavBar({ authorEmail, onLogout }) {
         {authorEmail ? (
           <>
             <li><NavLink to="/authorAccount" className="highlighted-link">Author Account</NavLink></li>
+            {/* <li><NavLink to="/pledge" className="highlighted-link">Pledge</NavLink></li> */}
             <li><NavLink to="/manyStories" className="highlighted-link">Many Stories</NavLink></li>
 
               <li>
@@ -63,7 +65,7 @@ function AppRouterWrapper() {
   };
 
   return (
-    <div>
+    <div id="bodyApp">
       <header>
         <NavBar authorEmail={authorEmail} onLogout={handleLogout} />
       </header>
@@ -72,6 +74,7 @@ function AppRouterWrapper() {
         {authorEmail ? (
           <>
             <Route path="/authorAccount" element={<AuthorAccount />} />
+            <Route path="/curriculum" element={<Curriculum />} />
             <Route path="/manyStories" element={<ManyStories />} />
             <Route path="/story/:id" element={<FirstStory />} />
             <Route path="/demo" element={<Demo />} />

@@ -43,7 +43,7 @@ export default function AuthorAccount() {
   };
 
   return (
-    <div>
+    <div id="body-author-account">
       <br />
       <JokeBanner />
       <li>
@@ -52,7 +52,7 @@ export default function AuthorAccount() {
           type="file"
           id="file"
           name="varFile"
-          accept="text/plain"
+          accept="text/plain" /*change to accept google doc goes here*/
           onChange={handleFileChange}
         />
       </li>

@@ -59,9 +59,7 @@ export default function ManyStories() {
     <div>
       <div id="introduction">
         <p>
-          Greyhound Writing is a platform for you to sell and buy stories online. Stories are mainly
-          written by youth, so by buying these stories you are supporting the rising generation of
-          our world’s next authors.
+          The mission of Greyhound is to increase the talent of its members. It will do so by creating a community of writers who will support and assist each other in their efforts.
         </p>
       </div>
 
