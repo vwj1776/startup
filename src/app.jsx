@@ -32,16 +32,7 @@ function NavBar({ authorEmail, onLogout }) {
             <li><NavLink to="/register" className="highlighted-link">Register</NavLink></li>
           </>
         )}
-        <li>
-          <a className="highlighted-link" href="https://github.com/vwj1776/startup.git" target="_blank" rel="noopener noreferrer">
-            NotTheRepository
-          </a>
-        </li>
-        <li>
-          <a className="highlighted-link" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" rel="noopener noreferrer">
-            Repository
-          </a>
-        </li>
+
       </menu>
     </nav>
   );
