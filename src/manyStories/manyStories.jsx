@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './manyStories.css';
 import { NavLink } from 'react-router-dom';
 
-const ADMIN_USERS = ['vwj1776', 'nodlev', 'vwj1776@gmail.com'];
+const ADMIN_USERS = ['vwj1776', 'nodlev', 'vwj1776@gmail.com', 'nodlev76@gmail.com'];
 
 export default function ManyStories() {
   const [stories, setStories] = useState([]);
