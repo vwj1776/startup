@@ -1,0 +1,395 @@
+body, html {
+  background-color: #121417; 
+  color: #00ff88; /* Everything defaults to Mint */
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Header */
+header {
+  text-align: center;
+  margin-top: 20px;
+}
+
+header img {
+  max-width: 200px; 
+  width: 100%; 
+  height: auto;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+#introduction {
+  border: solid #00ff88 5px !important;
+  background-color: #1c1f24; 
+  color: #00ff88 !important; /* The Mission Statement Text */
+  font-size:2em;
+  text-align:center;
+}
+
+
+/* Navigation */
+nav {
+  align-items: center;
+  padding: 15px;
+  background-color: #0a0c0e;
+  border-bottom: 2px solid #00ff88;
+}
+
+nav a {
+  color: #00ff88;
+  text-decoration: none;
+  font-size: 18px;
+  padding: 10px;
+  border-radius: 5px;
+  transition: background 0.3s;
+}
+
+nav a:hover {
+  background-color: rgba(0, 255, 136, 0.2);
+}
+
+#banner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 40vh;
+  padding: 2rem;
+}
+
+#banner img {
+  max-width: 90%;
+  max-height: 65vh; 
+  width: auto;
+  height: auto;
+}
+
+/* Author Icon */
+#authorIcon {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#authorIcon img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #00ff88;
+}
+
+/* Grid Container for Stories */
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+  gap: 20px;
+  padding: 10px;
+  margin-top: 20px;
+}
+
+/* Individual Story Box */
+.stories {
+    background-color: #1c1f24 !important;
+    border: 2px solid #00ff88 !important;
+    border-radius: 12px;
+    padding: 20px;
+    
+    /* THE FIX: Vertical stack with space between top and bottom */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    min-height: 250px; /* Adjust height as needed */
+}
+
+/* The Link containing the Title and Text */
+.stories .highlighted-link {
+    display: block;
+    text-decoration: none;
+    margin-bottom: 15px;
+    flex-grow: 1; /* Allows this section to take up available space */
+}
+
+.stories:hover {
+  transform: scale(1.05); 
+}
+
+/* Title Styles */
+.title {
+  color: #00ff88;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  border-bottom: solid #00ff88 2px; 
+}
+
+/* Story Content - NOW MINT */
+.stories p {
+  margin-bottom: 10px;
+  font-size: 1rem;
+  color: #00ff88; 
+}
+
+/* Buy/Action Button Styles */
+.buybutton {
+  color: #121417;
+  background-color: #00ff88; 
+  padding: 10px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-top: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.buybutton:hover {
+  background-color: #00cc6d; 
+}
+
+.delete-btn {
+    background-color: #ff4d4d !important; /* Red for danger */
+    color: white !important;
+    border: none !important;
+    padding: 10px !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
+    font-weight: bold;
+    width: 100% !important; /* Makes it a full-width bar at the bottom */
+    margin-top: auto !important; /* The "Spring" that pushes it to the bottom */
+}
+
+.delete-btn:hover {
+    background-color: #ff0000 !important;
+}
+
+.delete-btn:disabled {
+    background-color: #555 !important;
+    cursor: not-allowed;
+}
+
+/* Footer */
+footer {
+  border: solid #00ff88 5px;
+  font-size: 1.5rem;
+  text-align: center;
+  padding: 5%;
+  margin-top: 3%;
+  background-color: #1c1f24;
+  color: #00ff88;
+  border-radius: 8px;
+}
+
+footer a {
+  color: #00ff88;
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+.highlighted-link,
+.highlighted-link a {
+  margin: 0 !important;
+  padding: 0 !important;
+  position: relative;
+  display: inline-block; 
+}
+
+#authorAccountLink { 
+  margin: 0 !important;
+  padding: 0 !important;
+  position: relative;
+  display: inline-block; 
+  color: #00ff88;
+}
+
+.story-page-wrapper {
+    background-color: #121417 !important;
+    min-height: 100vh; /* Ensures it covers the whole screen height */
+    width: 100%;
+    display: block;
+    overflow: hidden; /* Stops margins from leaking out */
+}
+
+#monthlyGoalsBanner {
+    /* 1. Background (Keep this Charcoal) */
+    background-color: #121417 !important;
+
+    /* 2. The Border (Restoring the Mint Line) */
+    border: 2px solid #00ff88 !important; 
+    border-radius: 10px !important; /* Rounds the corners slightly */
+
+    /* 3. The Size & Position */
+    width: 80% !important;       /* Keeps it from touching the screen edges */
+    max-width: 800px !important; /* Stops it from getting too wide on big screens */
+    margin: 30px auto !important;/* Centers it in the middle of the page */
+    padding: 20px !important;    /* Gives the text some breathing room */
+
+    /* 4. Text Alignment */
+    text-align: center !important;
+    color: #00ff88 !important;
+    
+    /* 5. Shadow (Optional: makes it pop off the background) */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5) !important;
+}
+.collection-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 4%;
+}
+
+.search-container {
+  position: relative;
+  width: 100%;
+  max-width: 400px; 
+  margin-top: 2%;
+}
+
+.search-bar {
+  width: 100%;
+  padding: 12px 40px 12px 15px;
+  background: #1c1f24;
+  border: 1px solid #2d333b;
+  color: #00ff88; 
+  border-radius: 25px; 
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.search-bar:focus {
+  outline: none;
+  border-color: #00ff88;
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+}
+
+.clear-search {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #00ff88;
+  font-size: 1.2rem;
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.clear-search:hover {
+  opacity: 1;
+}
+
+.no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #00ff88;
+  margin-top: 5%;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .collection-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .search-container {
+    max-width: 100%;
+  }
+}
+
+/* storyCollection.css */
+
+/* Target the main wrappers from your JSX */
+#banner, 
+#introduction, 
+#monthlyGoalsBanner, 
+#allstories,
+main {
+    background-color: #121417 !important;
+    color: #00ff88 !important;
+    border-color: #00ff88 !important;
+}
+
+/* Fix the Story Cards */
+.stories {
+    background-color: #1c1f24 !important; /* Slightly lighter charcoal for contrast */
+    border: 2px solid #00ff88 !important;
+    border-radius: 12px;
+    padding: 15px;
+    transition: transform 0.2s;
+}
+
+.stories:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 255, 136, 0.2);
+}
+
+/* Ensure all text inside cards is Mint */
+.stories p, 
+.stories .title {
+    background: transparent !important;
+    color: #00ff88 !important;
+}
+
+/* Target the div that contains the search input */
+div[style*="text-align: center"] {
+    background-color: #121417 !important;
+    margin: 0 !important;
+    padding-top: 20px !important;
+    padding-bottom: 20px !important;
+}
+
+/* Also ensure the search bar itself doesn't have a black 'halo' */
+input[type="text"] {
+    background-color: #1c1f24 !important; /* Lighter charcoal for the input box */
+    border: 2px solid #00ff88 !important;
+    color: #00ff88 !important;
+}
+
+.genre-selection-area {
+  text-align: center;
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #1c1f24; /* Lighter charcoal */
+  border-top: 2px solid #00ff88;
+  border-bottom: 2px solid #00ff88;
+}
+
+.genre-nav-container {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.genre-link {
+  color: #00ff88;
+  text-decoration: none;
+  padding: 10px 20px;
+  border: 1px solid #00ff88;
+  border-radius: 30px;
+  font-weight: bold;
+  transition: all 0.2s ease-in-out;
+}
+
+.genre-link:hover {
+  background-color: rgba(0, 255, 136, 0.2);
+  transform: translateY(-2px);
+}
+
+.genre-link.active {
+  background-color: #00ff88;
+  color: #121417; /* Dark text for contrast on mint background */
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+}

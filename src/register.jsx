@@ -2,29 +2,33 @@ import React, { useState } from 'react';
 
 const Register = () => {
   const [email, setEmail] = useState('');
+  const [username, setUsername] = useState(''); 
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   const handleRegister = async (event) => {
     event.preventDefault();
+    setError('');
 
     try {
-      const res = await fetch('/api/auth/create', {
+      // Changed /api/auth/create to /api/auth/register to match index.js
+      const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include', // save the cookie
-        body: JSON.stringify({ email, password }),
+        credentials: 'include', 
+        body: JSON.stringify({ email, username, password }), 
       });
 
+      const data = await res.json();
+
       if (res.ok) {
-        const data = await res.json();
-        localStorage.setItem('authorEmail', data.email);
-        window.location.href = '/authorAccount'; // redirect to main page
+        localStorage.setItem('authorName', data.username);
+        window.location.href = '/pledge'; 
       } else {
-        const err = await res.json();
-        setError(err.msg || 'Registration failed');
+        // This will now catch the "Email already exists" message from the server
+        setError(data.msg || 'Registration failed');
       }
     } catch (err) {
       console.error('Registration error:', err);
@@ -37,7 +41,19 @@ const Register = () => {
       <h2>Register</h2>
       <form id="registerForm" onSubmit={handleRegister}>
         <div className="input-group">
-          <label htmlFor="email">Email</label>
+          <label htmlFor="username">Username (Publicly Displayed)</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+            placeholder="e.g. GreyhoundWriter76"
+          />
+        </div>
+        <div className="input-group">
+          <label htmlFor="email">Email (Private)</label>
           <input
             type="email"
             id="email"
@@ -58,7 +74,7 @@ const Register = () => {
             required
           />
         </div>
-        {error && <p className="error-msg">{error}</p>}
+        {error && <p className="error-msg" style={{color: '#ff4444', marginTop: '10px'}}>{error}</p>}
         <button type="submit">Create Account</button>
       </form>
     </div>

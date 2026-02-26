@@ -1,28 +1,94 @@
-
-
 #bodyCurriculum {
-    min-width: 375px;
-    background-color: #000000; 
-    color: #00FF00; 
+    background-color: #121417 !important;
+    color: #00ff88 !important;
+    padding: 50px !important;
+    min-height: 100vh;
 }
 
-.unitLinks {
-    margin: 1em;
-    padding: 0.3em; 
-    display: flex;
-    text-align: center;
-    border: 0.1em solid #00FF00;
+/* 1. Kill the black 'halo' behind the header text */
+.curriculum-header h1, 
+.curriculum-header p,
+#bodyCurriculum h1,
+#bodyCurriculum p {
+    background-color: transparent !important;
+    background: transparent !important;
 }
 
-.unitLInkBoxes {
-    margin: 0.1em;
-    padding: 0.3em; 
-    display: flex;
-} 
+/* 2. Fix the background directly behind/inside the buttons */
+.unit-btn, .quiz-btn {
+    /* Change the button's internal color to match the page or a slightly lighter gray */
+    background-color: #1c1f24 !important; 
+    
+    /* Ensure no text-highlighting is happening inside the button */
+    color: #00ff88 !important;
+}
 
-.twoUnitLinks {
-    display: flex;
-    flex-direction: column;
-    gap: 0.8em; /* Add space between vertical links */
-    text-align: center;
+/* 3. Target any 'span' or 'div' that might be wrapping the text tightly */
+#bodyCurriculum * {
+    background-color: transparent !important;
+}
+
+/* 4. EXCEPT the buttons (we want them to have their own shade of gray) */
+#bodyCurriculum .unit-btn, 
+#bodyCurriculum .quiz-btn {
+    background-color: #1c1f24 !important;
+}
+
+/* Ensure the container isn't squashing its children */
+.curriculum-container {
+    display: block !important; 
+    width: 100% !important;
+}
+
+/* Specifically target the H1 to break the "Everything is Green" look */
+.curriculum-header h1 {
+    color: #00ff88 !important; /* Pure White */
+    font-size: 2rem;           /* Make it nice and big */
+    margin-bottom: 20px;
+    font-weight: 800;
+}
+
+/* If you want the description text to stay Mint but be a bit softer */
+.curriculum-header p {
+    color: #00ff88 !important;
+    opacity: 0.9;              /* Makes it slightly less "neon" than the buttons */
+    max-width: 700px;
+}
+
+.unit-group {
+    margin-bottom: 60px !important;
+    display: block !important;
+}
+
+/* THE BUTTONS - The "Un-Squashable" Version */
+.unit-btn, .quiz-btn {
+    /* 1. Reset everything to a basic block first */
+    display: block !important;
+    position: relative !important;
+    visibility: visible !important;
+    
+    /* 2. Set the size */
+    width: 400px !important;
+    min-height: 60px !important;
+    margin: 15px 0 !important;
+    
+    /* 3. The Text Fixes */
+    color: #00ff88 !important;
+    text-align: center !important;
+    line-height: 60px !important; /* Matches height to center text vertically */
+    text-decoration: none !important;
+    font-weight: bold !important;
+    overflow: visible !important; /* Prevents text from being hidden */
+    
+    /* 4. The Visuals */
+    border: 2px solid #00ff88 !important;
+    background-color: #1c1f24 !important; /* Darker grey so you can see it */
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    z-index: 999 !important; /* Bring to the very front */
+}
+
+.unit-btn:hover, .quiz-btn:hover {
+    background-color: #00ff88 !important;
+    color: #121417 !important; /* Invert colors on hover to prove it's working */
 }
