@@ -1,7 +1,7 @@
 body, html {
-  background-color: #121417; 
-  color: #00ff88; /* Everything defaults to Mint */
-  font-family: Arial, sans-serif;
+  background-color: #1B1411; /* Deep Espresso */
+  color: #F5EFE0; /* Creamy Silk */
+  font-family: 'Georgia', 'Times New Roman', serif; /* Serif for stories */
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -23,36 +23,40 @@ header img {
   height: auto;
   border-radius: 10px;
   margin-bottom: 20px;
+  filter: sepia(0.8) hue-rotate(350deg); /* Warm vintage filter */
 }
 
 #introduction {
-  border: solid #00ff88 5px !important;
-  background-color: #1c1f24; 
-  color: #00ff88 !important; /* The Mission Statement Text */
-  font-size:2em;
-  text-align:center;
+  border: solid #C19A6B 4px !important; /* Burnished Gold */
+  background-color: #2D1E17; /* Dark Mahogany */
+  color: #F5EFE0 !important; 
+  font-size: 1.5em; /* Slightly smaller for elegance */
+  text-align: center;
+  padding: 20px;
+  border-radius: 8px;
+  font-family: 'Georgia', serif;
 }
-
 
 /* Navigation */
 nav {
   align-items: center;
   padding: 15px;
-  background-color: #0a0c0e;
-  border-bottom: 2px solid #00ff88;
+  background-color: #2D1E17; /* Mahogany */
+  border-bottom: 2px solid #C19A6B;
 }
 
 nav a {
-  color: #00ff88;
+  color: #F5EFE0;
   text-decoration: none;
   font-size: 18px;
   padding: 10px;
   border-radius: 5px;
-  transition: background 0.3s;
+  transition: all 0.3s;
 }
 
 nav a:hover {
-  background-color: rgba(0, 255, 136, 0.2);
+  background-color: rgba(193, 154, 107, 0.2); /* Gold tint */
+  color: #C19A6B;
 }
 
 #banner {
@@ -61,6 +65,7 @@ nav a:hover {
   align-items: center;
   min-height: 40vh;
   padding: 2rem;
+  background-color: #1B1411 !important;
 }
 
 #banner img {
@@ -81,30 +86,38 @@ nav a:hover {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 2px solid #00ff88;
+  border: 2px solid #C19A6B;
 }
 
 /* Grid Container for Stories */
 .container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-  gap: 20px;
+  gap: 25px;
   padding: 10px;
   margin-top: 20px;
 }
 
 /* Individual Story Box */
 .stories {
-    background-color: #1c1f24 !important;
-    border: 2px solid #00ff88 !important;
-    border-radius: 12px;
-    padding: 20px;
+    background-color: #2D1E17 !important; /* Mahogany Card */
+    border: 1px solid #C19A6B !important; /* Gold Border */
+    border-radius: 6px;
+    padding: 25px;
     
     /* THE FIX: Vertical stack with space between top and bottom */
     display: flex !important;
     flex-direction: column !important;
     justify-content: space-between !important;
-    min-height: 250px; /* Adjust height as needed */
+    min-height: 250px; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.stories:hover {
+  transform: translateY(-5px); 
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+  border-color: #e0b075 !important; /* Lighter gold on hover */
 }
 
 /* The Link containing the Title and Text */
@@ -112,34 +125,33 @@ nav a:hover {
     display: block;
     text-decoration: none;
     margin-bottom: 15px;
-    flex-grow: 1; /* Allows this section to take up available space */
-}
-
-.stories:hover {
-  transform: scale(1.05); 
+    flex-grow: 1; 
 }
 
 /* Title Styles */
 .title {
-  color: #00ff88;
-  font-size: 1.5rem;
+  color: #C19A6B; /* Gold Title */
+  font-size: 1.6rem;
   font-weight: bold;
-  margin-bottom: 10px;
-  border-bottom: solid #00ff88 2px; 
+  margin-bottom: 15px;
+  border-bottom: 1px solid rgba(193, 154, 107, 0.3); 
+  padding-bottom: 10px;
+  font-family: 'Georgia', serif;
 }
 
-/* Story Content - NOW MINT */
+/* Story Content */
 .stories p {
   margin-bottom: 10px;
   font-size: 1rem;
-  color: #00ff88; 
+  color: #dcd6c8; /* Soft Silk (not pure white) */
+  line-height: 1.5;
 }
 
 /* Buy/Action Button Styles */
 .buybutton {
-  color: #121417;
-  background-color: #00ff88; 
-  padding: 10px;
+  color: #1B1411; /* Dark Text */
+  background-color: #C19A6B; /* Gold Button */
+  padding: 12px;
   border-radius: 4px;
   display: inline-block;
   margin-top: 10px;
@@ -147,47 +159,48 @@ nav a:hover {
   text-decoration: none;
   font-size: 1.1rem;
   font-weight: bold;
+  transition: background-color 0.3s;
+  text-align: center;
 }
 
 .buybutton:hover {
-  background-color: #00cc6d; 
+  background-color: #a8855b; 
 }
 
 .delete-btn {
-    background-color: #ff4d4d !important; /* Red for danger */
-    color: white !important;
-    border: none !important;
+    background-color: #3e2b22 !important; /* Dark Brown */
+    color: #cc5555 !important; /* Rust Red text */
+    border: 1px solid #cc5555 !important;
     padding: 10px !important;
-    border-radius: 6px !important;
+    border-radius: 4px !important;
     cursor: pointer !important;
     font-weight: bold;
-    width: 100% !important; /* Makes it a full-width bar at the bottom */
-    margin-top: auto !important; /* The "Spring" that pushes it to the bottom */
+    width: 100% !important; 
+    margin-top: auto !important; 
+    transition: all 0.3s;
 }
 
 .delete-btn:hover {
-    background-color: #ff0000 !important;
-}
-
-.delete-btn:disabled {
-    background-color: #555 !important;
-    cursor: not-allowed;
+    background-color: #cc5555 !important;
+    color: #F5EFE0 !important;
 }
 
 /* Footer */
 footer {
-  border: solid #00ff88 5px;
-  font-size: 1.5rem;
+  border-top: 2px solid #C19A6B;
+  border-bottom: none;
+  border-left: none;
+  border-right: none;
+  font-size: 1.2rem;
   text-align: center;
-  padding: 5%;
-  margin-top: 3%;
-  background-color: #1c1f24;
-  color: #00ff88;
-  border-radius: 8px;
+  padding: 40px;
+  margin-top: 50px;
+  background-color: #2D1E17;
+  color: #8a7b70;
 }
 
 footer a {
-  color: #00ff88;
+  color: #C19A6B;
   text-decoration: none;
 }
 
@@ -208,38 +221,32 @@ footer a:hover {
   padding: 0 !important;
   position: relative;
   display: inline-block; 
-  color: #00ff88;
+  color: #C19A6B;
+  font-weight: bold;
 }
 
 .story-page-wrapper {
-    background-color: #121417 !important;
-    min-height: 100vh; /* Ensures it covers the whole screen height */
+    background-color: #1B1411 !important;
+    min-height: 100vh; 
     width: 100%;
     display: block;
-    overflow: hidden; /* Stops margins from leaking out */
+    overflow: hidden; 
 }
 
 #monthlyGoalsBanner {
-    /* 1. Background (Keep this Charcoal) */
-    background-color: #121417 !important;
-
-    /* 2. The Border (Restoring the Mint Line) */
-    border: 2px solid #00ff88 !important; 
-    border-radius: 10px !important; /* Rounds the corners slightly */
-
-    /* 3. The Size & Position */
-    width: 80% !important;       /* Keeps it from touching the screen edges */
-    max-width: 800px !important; /* Stops it from getting too wide on big screens */
-    margin: 30px auto !important;/* Centers it in the middle of the page */
-    padding: 20px !important;    /* Gives the text some breathing room */
-
-    /* 4. Text Alignment */
+    background-color: #2D1E17 !important; /* Mahogany */
+    border: 1px solid #C19A6B !important; 
+    border-radius: 6px !important;
+    width: 80% !important;     
+    max-width: 800px !important; 
+    margin: 30px auto !important;
+    padding: 25px !important;    
     text-align: center !important;
-    color: #00ff88 !important;
-    
-    /* 5. Shadow (Optional: makes it pop off the background) */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5) !important;
+    color: #F5EFE0 !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5) !important;
+    font-family: 'Georgia', serif;
 }
+
 .collection-header {
   display: flex;
   justify-content: space-between;
@@ -258,19 +265,20 @@ footer a:hover {
 .search-bar {
   width: 100%;
   padding: 12px 40px 12px 15px;
-  background: #1c1f24;
-  border: 1px solid #2d333b;
-  color: #00ff88; 
+  background: #1B1411; /* Deep Espresso Input */
+  border: 1px solid #5d4037;
+  color: #F5EFE0; 
   border-radius: 25px; 
   font-size: 1rem;
   box-sizing: border-box;
   transition: border-color 0.3s, box-shadow 0.3s;
+  font-family: inherit;
 }
 
 .search-bar:focus {
   outline: none;
-  border-color: #00ff88;
-  box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+  border-color: #C19A6B;
+  box-shadow: 0 0 10px rgba(193, 154, 107, 0.2);
 }
 
 .clear-search {
@@ -280,7 +288,7 @@ footer a:hover {
   transform: translateY(-50%);
   background: none;
   border: none;
-  color: #00ff88;
+  color: #C19A6B;
   font-size: 1.2rem;
   cursor: pointer;
   opacity: 0.7;
@@ -293,7 +301,7 @@ footer a:hover {
 .no-results {
   grid-column: 1 / -1;
   text-align: center;
-  color: #00ff88;
+  color: #8a7b70;
   margin-top: 5%;
   font-style: italic;
 }
@@ -308,62 +316,46 @@ footer a:hover {
   }
 }
 
-/* storyCollection.css */
+/* storyCollection.css Overrides */
 
-/* Target the main wrappers from your JSX */
 #banner, 
 #introduction, 
 #monthlyGoalsBanner, 
 #allstories,
 main {
-    background-color: #121417 !important;
-    color: #00ff88 !important;
-    border-color: #00ff88 !important;
+    background-color: #1B1411 !important;
+    color: #F5EFE0 !important;
+    border-color: #C19A6B !important;
 }
 
-/* Fix the Story Cards */
-.stories {
-    background-color: #1c1f24 !important; /* Slightly lighter charcoal for contrast */
-    border: 2px solid #00ff88 !important;
-    border-radius: 12px;
-    padding: 15px;
-    transition: transform 0.2s;
-}
-
-.stories:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0, 255, 136, 0.2);
-}
-
-/* Ensure all text inside cards is Mint */
+/* Ensure all text inside cards is handled */
 .stories p, 
 .stories .title {
     background: transparent !important;
-    color: #00ff88 !important;
 }
 
 /* Target the div that contains the search input */
 div[style*="text-align: center"] {
-    background-color: #121417 !important;
+    background-color: #1B1411 !important;
     margin: 0 !important;
     padding-top: 20px !important;
     padding-bottom: 20px !important;
 }
 
-/* Also ensure the search bar itself doesn't have a black 'halo' */
 input[type="text"] {
-    background-color: #1c1f24 !important; /* Lighter charcoal for the input box */
-    border: 2px solid #00ff88 !important;
-    color: #00ff88 !important;
+    background-color: #1B1411 !important; 
+    border: 1px solid #5d4037 !important;
+    color: #F5EFE0 !important;
 }
 
+/* GENRE FILTER BAR */
 .genre-selection-area {
   text-align: center;
-  margin: 20px 0;
-  padding: 15px;
-  background-color: #1c1f24; /* Lighter charcoal */
-  border-top: 2px solid #00ff88;
-  border-bottom: 2px solid #00ff88;
+  margin: 30px 0;
+  padding: 20px;
+  background-color: #2D1E17; /* Mahogany Strip */
+  border-top: 1px solid #C19A6B;
+  border-bottom: 1px solid #C19A6B;
 }
 
 .genre-nav-container {
@@ -374,22 +366,23 @@ input[type="text"] {
 }
 
 .genre-link {
-  color: #00ff88;
+  color: #C19A6B;
   text-decoration: none;
   padding: 10px 20px;
-  border: 1px solid #00ff88;
+  border: 1px solid #C19A6B;
   border-radius: 30px;
   font-weight: bold;
-  transition: all 0.2s ease-in-out;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
 }
 
 .genre-link:hover {
-  background-color: rgba(0, 255, 136, 0.2);
+  background-color: rgba(193, 154, 107, 0.1);
   transform: translateY(-2px);
 }
 
 .genre-link.active {
-  background-color: #00ff88;
-  color: #121417; /* Dark text for contrast on mint background */
-  box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+  background-color: #C19A6B;
+  color: #1B1411; /* Dark Text */
+  box-shadow: 0 0 15px rgba(193, 154, 107, 0.4);
 }

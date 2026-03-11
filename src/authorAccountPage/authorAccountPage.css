@@ -1,16 +1,19 @@
 /* --- 1. GLOBAL PAGE LAYOUT --- */
 #body-author-account {
-    background-color: #121417 !important;
-    color: #00ff88 !important;
+    background-color: #1B1411 !important; /* Deep Espresso */
+    color: #F5EFE0 !important; /* Creamy Silk */
     min-height: 100vh;
     padding: 40px;
     box-sizing: border-box;
     max-width: 1200px;
     margin: 0 auto;
+    font-family: 'Courier New', serif; /* Writer's Font */
 }
 
 h2, h3, h4 {
-    color: #00ff88;
+    color: #C19A6B; /* Burnished Gold */
+    font-weight: normal;
+    letter-spacing: 0.5px;
 }
 
 /* --- 2. UPLOAD SECTION --- */
@@ -22,165 +25,219 @@ h2, h3, h4 {
 
 .import-box {
     flex: 1;
-    background: #1c1f24;
-    border: 1px solid #2d333b;
-    padding: 20px;
-    border-radius: 12px;
-    transition: border-color 0.3s;
+    background: #2D1E17; /* Dark Mahogany */
+    border: 1px solid #3e2b22;
+    padding: 25px;
+    border-radius: 6px;
+    transition: all 0.3s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
 .import-box:hover {
-    border-color: #00ff88;
+    border-color: #C19A6B; /* Gold Glow */
+    transform: translateY(-2px);
+}
+
+.import-box h4 {
+    margin-top: 0;
+    border-bottom: 1px solid #5d4037;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
 }
 
 .import-box input {
     width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    background: #121417;
-    border: 1px solid #2d333b;
-    color: white;
+    padding: 12px;
+    margin-bottom: 15px;
+    background: #1B1411; /* Deep Espresso Input */
+    border: 1px solid #5d4037;
+    color: #F5EFE0;
     border-radius: 4px;
     box-sizing: border-box;
+    font-family: inherit;
+}
+
+.import-box input:focus {
+    outline: none;
+    border-color: #C19A6B;
 }
 
 /* --- 3. LIBRARY SECTION & CARD FIX --- */
 .story-grid-author {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
+    gap: 25px;
     margin-top: 20px;
 }
 
 .story-card-mini {
-    background: #1c1f24 !important;
-    border: 1px solid #00ff88 !important;
+    background: #2D1E17 !important;
+    border: 1px solid #3e2b22 !important;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    border-radius: 6px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
     
     /* FIX: Force vertical stack so titles and buttons never overlap */
     display: flex !important;
     flex-direction: column !important;
     justify-content: space-between !important;
-    min-height: 140px; 
+    min-height: 150px; 
+    border-left: 4px solid #C19A6B !important; /* Gold Accent Bar */
+    transition: transform 0.2s;
+}
+
+.story-card-mini:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
 }
 
 .story-card-mini h4 {
     margin: 0 0 15px 0;
-    width: 100%; /* Give title full width */
-    color: #00ff88;
+    width: 100%; 
+    color: #F5EFE0; /* Silk Title */
+    font-size: 1.1rem;
     word-wrap: break-word;
+    font-weight: bold;
 }
 
 /* Button Row Layout */
 .story-card-actions-row {
     display: flex !important;
     gap: 10px;
-    margin-top: auto; /* Pushes to bottom */
-    position: relative !important; /* Removes 'absolute' ghosting */
+    margin-top: auto; 
+    position: relative !important; 
     top: 0 !important;
     right: 0 !important;
+    border-top: 1px solid #3e2b22;
+    padding-top: 15px;
 }
 
 .btn-reupload {
-    background-color: #1c1f24;
-    color: #00ff88;
-    border: 1px solid #00ff88;
-    padding: 6px 12px;
+    background-color: transparent;
+    color: #C19A6B;
+    border: 1px solid #C19A6B;
+    padding: 8px 12px;
     border-radius: 4px;
     cursor: pointer;
     font-size: 0.8rem;
     text-transform: uppercase;
     text-align: center;
     flex: 1;
+    transition: all 0.3s;
+    font-family: inherit;
+}
+
+.btn-reupload:hover {
+    background-color: #C19A6B;
+    color: #1B1411;
 }
 
 .btn-delete-small {
-    background-color: #00ff88 !important; /* Red for Delete */
-    color: white !important;
-    border: none !important;
-    padding: 6px 12px !important;
+    background-color: #3e2b22 !important; 
+    color: #cc5555 !important; /* Muted Red */
+    border: 1px solid #cc5555 !important;
+    padding: 8px 12px !important;
     border-radius: 4px !important;
     cursor: pointer !important;
     font-size: 0.8rem !important;
     font-weight: bold;
     flex: 1;
+    transition: all 0.3s;
+    font-family: inherit;
 }
 
 .btn-delete-small:hover {
-    background-color: #ff0000 !important;
+    background-color: #cc5555 !important;
+    color: #F5EFE0 !important;
 }
 
 /* --- 4. STREAK & CULTURE --- */
 #streakAndCultureGoals {
-    background-color: #121417 !important;
+    background-color: #1B1411 !important;
     display: flex;
     justify-content: center;
     align-items: flex-start;
     gap: 2rem; 
     margin-top: 4rem;
-    padding: 20px;
-    border: 1px solid #00ff88;
-    border-radius: 12px;
+    padding: 30px;
+    border: 1px solid #3e2b22;
+    border-radius: 8px;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
 }
 
 .streak-card, .culture-card {
     max-width: 350px;
     flex: 1;
-    padding: 1.5rem;
-    border-radius: 12px;
-    background: #1c1f24 !important;
-    border: 1px solid #00ff88 !important;
+    padding: 2rem;
+    border-radius: 6px;
+    background: #2D1E17 !important;
+    border: 1px solid #3e2b22 !important;
+    text-align: center;
+}
+
+.streak-card h3, .culture-card h3 {
+    border-bottom: 1px solid #5d4037;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .streak-count {
-    font-size: 1.8rem;
-    color: #00ff88;
+    font-size: 2.2rem;
+    color: #C19A6B;
     margin: 1rem 0;
+    font-family: 'Courier New', serif;
 }
 
 .confirm-btn {
     width: 100%;
     margin-top: 15px;
-    padding: 0.75rem;
-    background: #00ff88;
-    color: #121417;
+    padding: 12px;
+    background: #C19A6B;
+    color: #1B1411;
     font-weight: bold;
-    border-radius: 8px;
+    border-radius: 4px;
     cursor: pointer;
     border: none;
+    font-size: 1rem;
+    transition: transform 0.2s, background 0.3s;
+    font-family: inherit;
+}
+
+.confirm-btn:hover {
+    background-color: #a8855b;
+    transform: translateY(-2px);
 }
 
 /* --- 5. PRIVATE FEEDBACK --- */
 .reviews-container {
-    background-color: #121417 !important;
+    background-color: #1B1411 !important;
     padding: 20px;
-    margin-top: 30px;
-    border: 1px solid #00ff88;
-    border-radius: 12px;
+    margin-top: 40px;
+    border-top: 2px solid #C19A6B;
 }
 
 .story-group {
-    background-color: #1c1f24 !important;
-    border: 1px solid #333;
-    border-radius: 12px;
-    margin-bottom: 20px;
+    background-color: #2D1E17 !important;
+    border: 1px solid #3e2b22;
+    border-radius: 6px;
+    margin-bottom: 25px;
     overflow: hidden;
 }
 
 .story-group h3 {
-    background: #121417;
+    background: #241915;
     margin: 0;
-    padding: 15px;
-    border-bottom: 1px solid #00ff88;
+    padding: 15px 20px;
+    border-bottom: 1px solid #C19A6B;
+    color: #F5EFE0;
 }
 
 .review-card {
-    background: #1c1f24;
+    background: #1B1411;
     margin: 15px;
-    padding: 15px;
-    border-left: 4px solid #00ff88;
+    padding: 20px;
+    border-left: 3px solid #C19A6B;
+    color: #dcd6c8;
 }
 
 /* --- RESPONSIVE --- */

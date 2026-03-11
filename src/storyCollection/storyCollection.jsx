@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './storyCollection.css';
 import { NavLink } from 'react-router-dom';
 
-const ADMIN_USERS = ['vwj1776', 'nodlev', 'vwj1776@gmail.com', 'nodlev76@gmail.com'];
+const ADMIN_USERS = ['vwj1776', 'nodlev', 'vwj1776@gmail.com', 'nodlev76@gmail.com', 'shepardnlyman22@gmail.com'];
 
 export default function StoryCollection() {
   const [stories, setStories] = useState([]);
@@ -22,8 +22,8 @@ export default function StoryCollection() {
   );
 
   useEffect(() => {
-    // 1. Get current user info - POINTED TO PORT 4000
-    fetch('http://localhost:4000/api/user/me', { credentials: 'include' })
+    // FIXED: Removed localhost:4000 to use relative routing
+    fetch('/api/user/me', { credentials: 'include' })
       .then((res) => {
         if (res.ok) return res.json();
         return null;
@@ -36,8 +36,8 @@ export default function StoryCollection() {
       })
       .catch((err) => console.error("User check failed:", err));
 
-    // 2. Fetch stories using the TRENDING algorithm endpoint - POINTED TO PORT 4000
-    fetch('http://localhost:4000/api/stories/trending', { credentials: 'include' })
+    // FIXED: Removed localhost:4000
+    fetch('/api/stories/trending', { credentials: 'include' })
       .then((res) => {
         if (!res.ok) throw new Error('Error loading stories');
         return res.json();
@@ -57,8 +57,8 @@ export default function StoryCollection() {
     if (!window.confirm('Are you sure you want to delete this story?')) return;
     setDeleting(storyId);
     try {
-      // DELETE POINTED TO PORT 4000
-      const res = await fetch(`http://localhost:4000/api/story/${storyId}`, {
+      // FIXED: Removed localhost:4000
+      const res = await fetch(`/api/story/${storyId}`, {
         method: 'DELETE',
         credentials: 'include',
       });
@@ -87,7 +87,6 @@ export default function StoryCollection() {
   return (
     <div className="story-page-wrapper">
       <div id="banner">
-        {/* FIXED: Added leading slash so image loads on sub-routes like /genre/Fiction */}
         <img src="/writing_logo.png" alt="Logo" />
       </div>
 
@@ -113,11 +112,11 @@ export default function StoryCollection() {
         alignItems: 'center',
         width: '100%',
         overflowX: 'auto',
-        padding: '10px 0',
+        padding: '15px 0',
         marginBottom: '20px',
-        borderTop: '1px solid rgba(0, 255, 136, 0.3)',
-        borderBottom: '1px solid rgba(0, 255, 136, 0.3)',
-        background: 'rgba(28, 31, 36, 0.5)' 
+        borderTop: '1px solid rgba(193, 154, 107, 0.3)', /* Gold */
+        borderBottom: '1px solid rgba(193, 154, 107, 0.3)', /* Gold */
+        background: '#2D1E17' /* Dark Mahogany */
       }}>
         <div style={{ display: 'flex', gap: '20px', padding: '0 20px' }}>
           {genres.map(genre => (
@@ -127,16 +126,17 @@ export default function StoryCollection() {
               style={{
                 background: 'none',
                 border: 'none',
-                color: selectedGenre === genre ? '#00ff88' : '#888',
+                color: selectedGenre === genre ? '#C19A6B' : '#8a7b70', /* Gold vs Muted Silk */
                 cursor: 'pointer',
                 fontWeight: 'bold',
                 fontSize: '1rem',
                 textTransform: 'uppercase',
                 letterSpacing: '1px',
                 padding: '5px 0',
-                borderBottom: selectedGenre === genre ? '2px solid #00ff88' : '2px solid transparent',
+                borderBottom: selectedGenre === genre ? '2px solid #C19A6B' : '2px solid transparent',
                 transition: 'all 0.3s ease',
-                whiteSpace: 'nowrap'
+                whiteSpace: 'nowrap',
+                fontFamily: 'Georgia, serif'
               }}
             >
               {genre}
@@ -155,11 +155,12 @@ export default function StoryCollection() {
             width: '60%',
             padding: '12px 20px',
             borderRadius: '25px',
-            border: '2px solid #00ff88',
-            background: '#1c1f24',
-            color: '#00ff88',
+            border: '2px solid #C19A6B', /* Gold Border */
+            background: '#1B1411', /* Deep Espresso */
+            color: '#F5EFE0', /* Silk Text */
             fontSize: '1rem',
-            outline: 'none'
+            outline: 'none',
+            fontFamily: 'inherit'
           }}
         />
       </div>
@@ -169,7 +170,7 @@ export default function StoryCollection() {
           {loading && <p>Loading stories...</p>}
           {error && <p className="error-msg">{error}</p>}
           {!loading && filteredStories.length === 0 && (
-            <p style={{ color: '#888', textAlign: 'center', width: '100%' }}>
+            <p style={{ color: '#8a7b70', textAlign: 'center', width: '100%' }}>
               No {selectedGenre !== 'All' ? selectedGenre : ''} stories match your search.
             </p>
           )}
@@ -179,9 +180,9 @@ export default function StoryCollection() {
               <div key={story._id} className="stories">
                 <NavLink to={`/story/${story._id}`} className="highlighted-link">
                   <p className="title">{story.title}</p>
-                  <p>{story.content.slice(0, 120)}...</p>
+                  <p>{story.content ? story.content.slice(0, 120) : ''}...</p>
                   <p>Author: {story.author}</p>
-                  <p style={{fontStyle: 'italic', fontSize: '0.8rem'}}>Genre: {story.genre || 'General'}</p>
+                  <p style={{fontStyle: 'italic', fontSize: '0.8rem', color: '#8a7b70'}}>Genre: {story.genre || 'General'}</p>
                 </NavLink>
                 {isAdmin && (
                   <button
@@ -191,6 +192,7 @@ export default function StoryCollection() {
                       handleDelete(story._id);
                     }}
                     disabled={deleting === story._id}
+                    style={{ background: '#cc5555', color: '#fff', border: 'none', marginTop: '10px' }}
                   >
                     {deleting === story._id ? 'Deleting...' : 'Delete'}
                   </button>

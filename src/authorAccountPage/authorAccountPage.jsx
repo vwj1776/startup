@@ -1,8 +1,7 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './authorAccountPage.css';
 
-// MODIFIED: WritingStreak now takes userEmail to keep data separate
 function WritingStreak({ userEmail }) {
   const [minMinutes, setMinMinutes] = useState(5);
   const [streak, setStreak] = useState(0);
@@ -42,18 +41,16 @@ function WritingStreak({ userEmail }) {
     <div className="streak-card">
       <h2>✍️ Writing Streak</h2>
       <div className="streak-count">🔥 {streak} day{streak !== 1 && "s"}</div>
-      <label className="time-setting">
+      <label className="time-setting" style={{color: '#8a7b70', fontSize: '0.9rem'}}>
         Minimum writing time (minutes)
         <input 
-          type="number" 
-          min="5" 
-          value={minMinutes} 
+          type="number" min="5" value={minMinutes} 
           onChange={(e) => setMinMinutes(Math.max(5, Number(e.target.value)))} 
+          style={{marginLeft: '10px', background: '#1B1411', border: '1px solid #C19A6B', color: '#F5EFE0', padding: '5px'}}
         />
       </label>
       <button 
-        className="confirm-btn" 
-        onClick={handleConfirmWriting} 
+        className="confirm-btn" onClick={handleConfirmWriting} 
         disabled={lastCompletedDate === today || !userEmail}
       >
         {lastCompletedDate === today ? "Already logged today" : `I wrote for ${minMinutes}+ minutes`}
@@ -67,6 +64,7 @@ export default function AuthorAccountPage() {
   const [myStories, setMyStories] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [currentUsername, setCurrentUsername] = useState('');
+  const [userPoints, setUserPoints] = useState(0);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
   const [docLink, setDocLink] = useState('');
@@ -82,46 +80,21 @@ export default function AuthorAccountPage() {
   const [newPwConfirm, setNewPwConfirm] = useState('');
 
   useEffect(() => {
-    const checkNotifications = async () => {
-      try {
-        const res = await fetch('/api/notifications', { credentials: 'include' });
-        if (res.status === 404) return; 
-
-        if (res.ok) {
-          const notes = await res.json();
-          if (notes && notes.length > 0) {
-            const alertMessage = notes.map(n => n.message).join('\n\n');
-            alert("⚠️ MODERATION NOTICE:\n\n" + alertMessage);
-            await fetch('/api/notifications/clear', { 
-              method: 'POST', 
-              credentials: 'include' 
-            });
-          }
-        }
-      } catch (err) {
-        console.error("Failed to fetch notifications:", err);
-      }
-    };
-
-    if (!loading && currentUser) {
-      checkNotifications();
-    }
-  }, [loading, currentUser]);
-
-  useEffect(() => {
     const fetchData = async () => {
       try {
         const userRes = await fetch('/api/user/me', { credentials: 'include' });
         if (!userRes.ok) throw new Error('Not logged in');
         const user = await userRes.json();
         
-        if (!user.hasPledged) {
+        // RESTORED REDIRECT: Only triggers if hasPledged is explicitly false
+        if (user.hasPledged === false) {
           navigate('/pledge');
           return;
         }
 
         setCurrentUser(user.email);
         setCurrentUsername(user.username || user.email);
+        setUserPoints(user.points || 0);
         setIsAdmin(user.isAdmin || false);
 
         const storyRes = await fetch('/api/stories/trending', { credentials: 'include' });
@@ -206,21 +179,12 @@ export default function AuthorAccountPage() {
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this story forever?")) return;
     try {
-      const res = await fetch(`/api/story/${id}`, { 
-        method: 'DELETE', 
-        credentials: 'include' 
-      });
+      const res = await fetch(`/api/story/${id}`, { method: 'DELETE', credentials: 'include' });
       if (res.ok) {
         setMyStories(myStories.filter(s => s._id !== id));
         alert("Story deleted successfully.");
-      } else {
-        const err = await res.json();
-        alert("Failed to delete: " + (err.msg || "Unknown error"));
       }
-    } catch (err) {
-      console.error("Delete error:", err);
-      alert("Network error.");
-    }
+    } catch (err) { alert("Network error."); }
   };
 
   const groupedReviews = privateReviews.reduce((acc, rev) => {
@@ -230,37 +194,43 @@ export default function AuthorAccountPage() {
     return acc;
   }, {});
 
-  if (loading) return <p style={{color: '#00ff88', padding: '20px'}}>Loading your account...</p>;
-  if (!currentUser) return <p style={{color: '#00ff88', padding: '20px'}}>Please log in.</p>;
+  if (loading) return <p style={{color: '#C19A6B', padding: '50px', textAlign: 'center', fontFamily: 'Georgia, serif'}}>Loading your account...</p>;
+  if (!currentUser) return <p style={{color: '#C19A6B', padding: '50px', textAlign: 'center', fontFamily: 'Georgia, serif'}}>Please log in.</p>;
 
   return (
     <div id="body-author-account">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h3>Welcome, {currentUsername}</h3>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #3e2b22', paddingBottom: '20px', marginBottom: '30px' }}>
+        <h3 style={{margin: 0}}>Welcome, {currentUsername} | <span style={{color: '#C19A6B'}}>🏆 {userPoints} Points</span></h3>
         <div style={{ display: 'flex', gap: '10px' }}>
           {isAdmin && (
             <button 
               onClick={() => navigate('/admin')} 
-              style={{ background: '#ff4444', color: 'white', border: 'none', padding: '5px 15px', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' }}
+              style={{ background: '#cc5555', color: 'white', border: 'none', padding: '8px 15px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontFamily: 'Georgia, serif' }}
             >
               🛠️ Admin Dashboard
             </button>
           )}
-          <button onClick={() => setShowSettings(true)} style={{ background: 'none', border: '1px solid #00ff88', color: '#00ff88', padding: '5px 10px', borderRadius: '5px', cursor: 'pointer' }}>
+          <button onClick={() => navigate('/authorInfo')} style={{ background: '#2D1E17', border: '1px solid #C19A6B', color: '#C19A6B', padding: '8px 15px', borderRadius: '4px', cursor: 'pointer', fontFamily: 'Georgia, serif', fontWeight: 'bold' }}>
+            👤 Author Info
+          </button>
+          <button onClick={() => setShowSettings(true)} style={{ background: 'none', border: '1px solid #C19A6B', color: '#C19A6B', padding: '8px 15px', borderRadius: '4px', cursor: 'pointer', fontFamily: 'Georgia, serif' }}>
             ⚙️ Settings
           </button>
         </div>
       </div>
 
       {showSettings && (
-        <div className="modal-overlay" style={{position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.85)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000}}>
-          <div className="modal-content" style={{backgroundColor: '#1a1a1a', padding: '30px', borderRadius: '10px', border: '2px solid #00ff88', width: '400px'}}>
-             <h2 style={{color: '#00ff88'}}>Account Settings</h2>
-             <input type="password" placeholder="Old Password" value={oldPw} onChange={e => setOldPw(e.target.value)} style={{width: '100%', marginBottom: '10px'}} />
-             <input type="password" placeholder="New Password" value={newPw} onChange={e => setNewPw(e.target.value)} style={{width: '100%', marginBottom: '10px'}} />
-             <input type="password" placeholder="Confirm New Password" value={newPwConfirm} onChange={e => setNewPwConfirm(e.target.value)} style={{width: '100%', marginBottom: '20px'}} />
-             <button onClick={handlePasswordChange} className="confirm-btn">Update</button>
-             <button onClick={() => setShowSettings(false)} style={{marginLeft: '10px'}}>Cancel</button>
+        <div className="modal-overlay" style={{position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.9)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000}}>
+          <div className="modal-content" style={{backgroundColor: '#2D1E17', padding: '40px', borderRadius: '8px', border: '1px solid #C19A6B', width: '400px', boxShadow: '0 0 30px rgba(0,0,0,0.5)'}}>
+             <h2 style={{color: '#C19A6B', marginTop: 0}}>Account Settings</h2>
+             <p style={{color: '#8a7b70', fontSize: '0.8rem', marginBottom: '20px'}}>Update your security credentials below.</p>
+             <input type="password" placeholder="Old Password" value={oldPw} onChange={e => setOldPw(e.target.value)} style={{width: '100%', marginBottom: '15px', padding: '12px', background: '#1B1411', border: '1px solid #3e2b22', color: '#F5EFE0'}} />
+             <input type="password" placeholder="New Password" value={newPw} onChange={e => setNewPw(e.target.value)} style={{width: '100%', marginBottom: '15px', padding: '12px', background: '#1B1411', border: '1px solid #3e2b22', color: '#F5EFE0'}} />
+             <input type="password" placeholder="Confirm New Password" value={newPwConfirm} onChange={e => setNewPwConfirm(e.target.value)} style={{width: '100%', marginBottom: '25px', padding: '12px', background: '#1B1411', border: '1px solid #3e2b22', color: '#F5EFE0'}} />
+             <div style={{display: 'flex', gap: '10px'}}>
+                <button onClick={handlePasswordChange} className="confirm-btn" style={{flex: 2}}>Update Password</button>
+                <button onClick={() => setShowSettings(false)} style={{flex: 1, background: 'none', border: '1px solid #8a7b70', color: '#8a7b70', cursor: 'pointer', borderRadius: '4px'}}>Cancel</button>
+             </div>
           </div>
         </div>
       )}
@@ -283,21 +253,20 @@ export default function AuthorAccountPage() {
                <option value="" disabled>-- Genre --</option>
                {genres.map(g => <option key={g} value={g}>{g}</option>)}
             </select>
-            <input type="file" accept="text/plain" onChange={handleFileChange} />
+            <input type="file" accept="text/plain" onChange={handleFileChange} style={{color: '#8a7b70', fontSize: '0.8rem'}} />
           </div>
       </div>
 
       <div className="author-library-section">
         <h2>📚 My Library ({myStories.length})</h2>
         <div className="story-grid-author">
-          {myStories.length === 0 ? <p style={{color: '#888'}}>No stories found.</p> : myStories.map((story) => (
+          {myStories.length === 0 ? <p style={{color: '#8a7b70', fontStyle: 'italic'}}>Your library is currently empty.</p> : myStories.map((story) => (
             <div key={story._id} className="story-card-mini">
               <div>
                 <h4>{story.title}</h4>
                 <span className="genre-label">{story.genre || 'General'}</span>
               </div>
               <div className="story-card-actions-row">
-                {/* FIXED: Using /write/ to match App.jsx routes */}
                 <button className="btn-reupload" onClick={() => navigate(`/write/${story._id}`)}>Edit</button>
                 <button className="btn-delete-small" onClick={() => handleDelete(story._id)}>Delete</button>
               </div>
@@ -310,25 +279,40 @@ export default function AuthorAccountPage() {
         <WritingStreak userEmail={currentUser} />
         <div className="culture-card">
           <h2>📌 Monthly Goal</h2>
-          <p>Write a thousand words!</p>
+          <p style={{fontSize: '1.2rem', color: '#F5EFE0'}}>Write a thousand words!</p>
+          <p style={{fontSize: '0.9rem', color: '#8a7b70', marginTop: '10px'}}>You're part of a community of active writers.</p>
         </div>
       </div>
 
       <div className="reviews-container">
         <h2>📬 Private Feedback</h2>
         {privateReviews.length === 0 ? (
-          <p style={{color: '#888', padding: '10px'}}>No feedback yet. Keep writing!</p>
+          <p style={{color: '#8a7b70', padding: '20px', fontStyle: 'italic'}}>No feedback received yet. Keep sharing your work!</p>
         ) : (
           Object.entries(groupedReviews).map(([title, reviews]) => (
-            <div key={title} className="story-group" style={{ marginBottom: '20px' }}>
-              <h3 style={{ borderBottom: '1px solid #00ff88', color: '#00ff88', paddingBottom: '5px' }}>
-                Story: {title}
+            <div key={title} className="story-group" style={{ marginBottom: '30px' }}>
+              <h3 style={{ borderBottom: '1px solid #C19A6B', color: '#F5EFE0', paddingBottom: '10px' }}>
+                Story: <span style={{color: '#C19A6B'}}>{title}</span>
               </h3>
               {reviews.map((rev, i) => (
-                <div key={i} className="review-card" style={{ background: '#1c1f24', margin: '10px 0', padding: '15px', borderRadius: '8px' }}>
-                  <p style={{ fontStyle: 'italic', marginBottom: '10px' }}>"{rev.content}"</p>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: '#888' }}>
-                    <span>From: {rev.author}</span>
+                <div key={i} className="review-card" style={{ background: '#1B1411', margin: '15px 0', padding: '20px', borderRadius: '4px', borderLeft: `4px solid ${rev.tier === 3 ? '#C19A6B' : rev.tier === 2 ? '#a8855b' : '#3e2b22'}` }}>
+                  <p style={{ fontWeight: 'bold', color: '#C19A6B', marginBottom: '15px', textTransform: 'uppercase', letterSpacing: '1px', fontSize: '0.8rem' }}>Level {rev.tier || 1} Feedback</p>
+                  
+                  {rev.content && typeof rev.content === 'object' ? (
+                    <div style={{ fontSize: '1rem', color: '#dcd6c8', lineHeight: '1.6' }}>
+                      {Object.entries(rev.content).map(([key, val]) => (
+                        <div key={key} style={{ marginBottom: '12px' }}>
+                          <strong style={{ color: '#C19A6B', display: 'block', fontSize: '0.8rem', textTransform: 'uppercase' }}>{key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}</strong> 
+                          <span style={{display: 'block', marginTop: '4px'}}>{val}</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p style={{ fontStyle: 'italic', marginBottom: '10px', color: '#dcd6c8' }}>"{rev.content}"</p>
+                  )}
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: '#8a7b70', marginTop: '20px', borderTop: '1px solid #2D1E17', paddingTop: '10px' }}>
+                    <span>From: {rev.author || rev.reviewerEmail}</span>
                     <span>{rev.date ? new Date(rev.date).toLocaleDateString() : ''}</span>
                   </div>
                 </div>

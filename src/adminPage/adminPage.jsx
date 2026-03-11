@@ -5,8 +5,7 @@ export default function AdminPage() {
   const [stats, setStats] = useState({ userCount: 0, storyCount: 0, totalWords: 0, flagCount: 0 });
   const [users, setUsers] = useState([]);
   const [flags, setFlags] = useState([]); 
-  const [bannedWords, setBannedWords] = useState([]);
-  const [newWord, setNewWord] = useState('');
+  const [allReviews, setAllReviews] = useState([]); 
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('stats');
   const [accessDenied, setAccessDenied] = useState(false);
@@ -24,21 +23,20 @@ export default function AdminPage() {
         return;
       }
 
-      const [usersRes, settingsRes, flagsRes] = await Promise.all([
-        fetch('/api/admin/users', { credentials: 'include' }),
-        fetch('/api/admin/settings', { credentials: 'include' }),
-        fetch('/api/admin/flags', { credentials: 'include' })
+      const [usersRes, flagsRes, reviewsRes] = await Promise.all([
+        fetch('/api/admin/users', { credentials: 'include' }).catch(() => null),
+        fetch('/api/admin/flags', { credentials: 'include' }).catch(() => null),
+        fetch('/api/admin/reviews', { credentials: 'include' }).catch(() => null) 
       ]);
 
       if (statsRes.ok) setStats(await statsRes.json());
-      if (usersRes.ok) {
+      if (usersRes && usersRes.ok) {
         const allUsers = await usersRes.json();
         setUsers(allUsers.filter(u => u.status !== 'deleted'));
       }
-      if (flagsRes.ok) setFlags(await flagsRes.json());
-      if (settingsRes.ok) {
-        const settings = await settingsRes.json();
-        setBannedWords(settings.bannedWords || []);
+      if (flagsRes && flagsRes.ok) setFlags(await flagsRes.json());
+      if (reviewsRes && reviewsRes.ok) {
+        setAllReviews(await reviewsRes.json()); 
       }
       setLoading(false);
     } catch (err) {
@@ -77,75 +75,199 @@ export default function AdminPage() {
     if (res.ok) fetchAdminData();
   };
 
-  if (loading) return <div className="admin-container">Loading Admin Dashboard...</div>;
-  if (accessDenied) return <div className="admin-container">⛔ Access Denied</div>;
+  const handleDeleteReview = async (reviewId) => {
+    if (!window.confirm(`Delete this review?`)) return;
+    const res = await fetch(`/api/admin/review/${reviewId}`, { method: 'DELETE', credentials: 'include' });
+    if (res.ok) {
+      setAllReviews(allReviews.filter(r => r._id !== reviewId));
+      alert("Review deleted.");
+      fetchAdminData(); // Refresh flags in case the deleted review was flagged
+    }
+  };
+
+  // --- NEW FLAG ACTIONS ---
+
+  const handleDismissFlag = async (flagId) => {
+    if (!window.confirm(`Dismiss this flag? It will be removed from the queue.`)) return;
+    const res = await fetch(`/api/admin/flag/${flagId}`, { method: 'DELETE', credentials: 'include' });
+    if (res.ok) {
+      setFlags(flags.filter(f => f._id !== flagId));
+    }
+  };
+
+  const handleDeleteStory = async (storyId, flagId) => {
+    if (!window.confirm("DELETE this story permanently?")) return;
+    const res = await fetch(`/api/story/${storyId}`, { method: 'DELETE', credentials: 'include' });
+    if (res.ok) {
+      alert("Story destroyed.");
+      // Automatically dismiss the flag since the content is gone
+      if (flagId) await handleDismissFlag(flagId);
+      fetchAdminData();
+    }
+  };
+
+  if (loading) return <div className="admin-container" style={{fontFamily: "'Courier New', Courier, monospace", color: '#C19A6B', padding: '50px', textAlign: 'center'}}>Loading Admin Dashboard...</div>;
+  if (accessDenied) return <div className="admin-container" style={{fontFamily: "'Courier New', Courier, monospace", color: '#cc5555', padding: '50px', textAlign: 'center'}}>⛔ Access Denied</div>;
 
   return (
-    <div className="admin-container">
-      <h1>🛠️ Admin Control Panel</h1>
+    <div className="admin-container" style={{fontFamily: "'Courier New', Courier, monospace", padding: '20px', maxWidth: '1200px', margin: '0 auto'}}>
+      <h1 style={{color: '#C19A6B'}}>🛠️ Admin Control Panel</h1>
       
-      <div className="admin-tabs">
-        <button onClick={() => setActiveTab('stats')} className={activeTab === 'stats' ? 'active' : ''}>Stats</button>
-        <button onClick={() => setActiveTab('users')} className={activeTab === 'users' ? 'active' : ''}>Users</button>
-        <button onClick={() => setActiveTab('flags')} className={activeTab === 'flags' ? 'active' : ''}>Flags ({flags.length})</button>
-        <button onClick={() => setActiveTab('content')} className={activeTab === 'content' ? 'active' : ''}>Moderation</button>
+      <div className="admin-tabs" style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+        <button onClick={() => setActiveTab('stats')} style={{ padding: '10px 20px', background: activeTab === 'stats' ? '#C19A6B' : '#2D1E17', color: activeTab === 'stats' ? '#1B1411' : '#C19A6B', border: '1px solid #C19A6B', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 'bold' }}>Stats</button>
+        <button onClick={() => setActiveTab('users')} style={{ padding: '10px 20px', background: activeTab === 'users' ? '#C19A6B' : '#2D1E17', color: activeTab === 'users' ? '#1B1411' : '#C19A6B', border: '1px solid #C19A6B', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 'bold' }}>Users</button>
+        <button onClick={() => setActiveTab('reviews')} style={{ padding: '10px 20px', background: activeTab === 'reviews' ? '#C19A6B' : '#2D1E17', color: activeTab === 'reviews' ? '#1B1411' : '#C19A6B', border: '1px solid #C19A6B', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 'bold' }}>Reviews ({allReviews.length})</button>
+        <button onClick={() => setActiveTab('flags')} style={{ padding: '10px 20px', background: activeTab === 'flags' ? '#cc5555' : '#2D1E17', color: activeTab === 'flags' ? '#fff' : '#cc5555', border: '1px solid #cc5555', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 'bold' }}>
+          Flags ({flags.length}) {flags.length > 0 && '⚠️'}
+        </button>
       </div>
 
-      <hr />
+      <hr style={{ borderColor: '#3e2b22', marginBottom: '20px' }} />
 
+      {/* STATS TAB */}
       {activeTab === 'stats' && (
-        <div className="admin-stats-grid">
-          <div className="stat-card"><h3>Users</h3><p>{stats.userCount}</p></div>
-          <div className="stat-card"><h3>Stories</h3><p>{stats.storyCount}</p></div>
-          <div className="stat-card"><h3>Total Words</h3><p>{stats.totalWords.toLocaleString()}</p></div>
-          <div className="stat-card"><h3>Flagged</h3><p style={{color: 'red'}}>{flags.length}</p></div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
+          <div style={{ background: '#2D1E17', padding: '20px', borderRadius: '8px', border: '1px solid #C19A6B', textAlign: 'center' }}>
+            <h3 style={{ color: '#8a7b70', margin: '0 0 10px 0' }}>Users</h3>
+            <p style={{ fontSize: '2rem', color: '#F5EFE0', margin: 0 }}>{stats.userCount}</p>
+          </div>
+          <div style={{ background: '#2D1E17', padding: '20px', borderRadius: '8px', border: '1px solid #C19A6B', textAlign: 'center' }}>
+            <h3 style={{ color: '#8a7b70', margin: '0 0 10px 0' }}>Stories</h3>
+            <p style={{ fontSize: '2rem', color: '#F5EFE0', margin: 0 }}>{stats.storyCount}</p>
+          </div>
+          <div style={{ background: '#2D1E17', padding: '20px', borderRadius: '8px', border: '1px solid #cc5555', textAlign: 'center' }}>
+            <h3 style={{ color: '#cc5555', margin: '0 0 10px 0' }}>Active Flags</h3>
+            <p style={{ fontSize: '2rem', color: '#cc5555', margin: 0, fontWeight: 'bold' }}>{flags.length}</p>
+          </div>
         </div>
       )}
 
+      {/* USERS TAB */}
       {activeTab === 'users' && (
-        <table className="admin-table">
-          <thead>
-            <tr>
-              <th>Username</th>
-              <th>Email</th>
-              <th>Karma (EZ/Deep)</th>
-              <th>Curriculum</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map(u => (
-              <tr key={u.email}>
-                <td>{u.username}</td>
-                <td>{u.email}</td>
-                <td>{u.reviewsEZ || 0} / {u.reviewsDeep || 0}</td>
-                <td>
-                  <input 
-                    type="checkbox" 
-                    checked={u.curriculumCompleted || false} 
-                    onChange={(e) => handleToggleCurriculum(u.email, e.target.checked)}
-                  />
-                </td>
-                <td className={u.status === 'blocked' ? 'status-blocked' : 'status-active'}>
-                  {u.status || 'active'}
-                </td>
-                <td>
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    <button onClick={() => handleToggleUserStatus(u.email, u.status)} className="admin-btn block-btn">
-                      {u.status === 'blocked' ? 'Unblock' : 'Block'}
-                    </button>
-                    <button onClick={() => handleDeleteUser(u.email)} className="admin-btn delete-btn">
-                      Delete/Ban
-                    </button>
-                  </div>
-                </td>
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{width: '100%', borderCollapse: 'collapse', marginTop: '10px', background: '#2D1E17', border: '1px solid #3e2b22'}}>
+            <thead>
+              <tr style={{borderBottom: '2px solid #C19A6B', color: '#C19A6B', background: '#1B1411'}}>
+                <th style={{padding: '12px', textAlign: 'left'}}>Username</th>
+                <th style={{padding: '12px', textAlign: 'left'}}>Email</th>
+                <th style={{padding: '12px', textAlign: 'left'}}>Points</th>
+                <th style={{padding: '12px', textAlign: 'left'}}>Curriculum</th>
+                <th style={{padding: '12px', textAlign: 'left'}}>Status</th>
+                <th style={{padding: '12px', textAlign: 'left'}}>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {users.map(u => (
+                <tr key={u.email} style={{borderBottom: '1px solid #3e2b22', color: '#F5EFE0'}}>
+                  <td style={{padding: '12px'}}>{u.username}</td>
+                  <td style={{padding: '12px'}}>{u.email}</td>
+                  <td style={{padding: '12px'}}>{u.points || 0}</td>
+                  <td style={{padding: '12px'}}>
+                    <input 
+                      type="checkbox" 
+                      checked={u.curriculumCompleted || false} 
+                      onChange={(e) => handleToggleCurriculum(u.email, e.target.checked)}
+                      style={{ accentColor: '#C19A6B', cursor: 'pointer' }}
+                    />
+                  </td>
+                  <td style={{padding: '12px', color: u.status === 'blocked' ? '#cc5555' : '#8a7b70', fontWeight: 'bold'}}>
+                    {u.status === 'blocked' ? 'BLOCKED' : 'ACTIVE'}
+                  </td>
+                  <td style={{padding: '12px'}}>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <button onClick={() => handleToggleUserStatus(u.email, u.status)} style={{ background: '#1B1411', color: '#C19A6B', border: '1px solid #C19A6B', padding: '6px 12px', cursor: 'pointer', fontFamily: 'inherit', borderRadius: '4px' }}>
+                        {u.status === 'blocked' ? 'Unblock' : 'Block'}
+                      </button>
+                      <button onClick={() => handleDeleteUser(u.email)} style={{ background: '#cc5555', color: '#fff', border: 'none', padding: '6px 12px', cursor: 'pointer', fontFamily: 'inherit', borderRadius: '4px' }}>
+                        Ban
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
-      {/* Rest of component (flags/content) remains same... */}
+
+      {/* REVIEWS TAB */}
+      {activeTab === 'reviews' && (
+        <div>
+          <p style={{ color: '#8a7b70', marginBottom: '20px' }}>Global review log. Monitor for bullying or low-effort farming.</p>
+          {allReviews.map(rev => (
+            <div key={rev._id} style={{ background: '#2D1E17', padding: '20px', margin: '15px 0', borderRadius: '8px', border: '1px solid #3e2b22', textAlign: 'left' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px', borderBottom: '1px solid #3e2b22', paddingBottom: '10px' }}>
+                <strong style={{ color: '#C19A6B', fontSize: '1.1rem' }}>Tier {rev.tier} Review for "{rev.storyTitle}"</strong>
+                <button onClick={() => handleDeleteReview(rev._id)} style={{ background: '#cc5555', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 'bold' }}>Delete Review</button>
+              </div>
+              <p style={{ fontSize: '0.9rem', color: '#8a7b70', marginBottom: '15px' }}><strong>Reviewer:</strong> {rev.reviewerEmail} | <strong>Author:</strong> {rev.storyAuthorEmail}</p>
+              
+              <div style={{ fontSize: '0.95rem', color: '#dcd6c8', lineHeight: '1.6' }}>
+                {rev.content && typeof rev.content === 'object' ? (
+                  Object.entries(rev.content).map(([key, val]) => (
+                    <div key={key} style={{ marginBottom: '8px' }}>
+                      <strong style={{ color: '#C19A6B' }}>{key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}:</strong> {val}
+                    </div>
+                  ))
+                ) : (
+                  <p style={{ fontStyle: 'italic' }}>"{rev.content}"</p>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* NEW: FLAGS TAB */}
+      {activeTab === 'flags' && (
+        <div>
+          <p style={{ color: '#8a7b70', marginBottom: '20px' }}>Content reported by the community. Please review and take action.</p>
+          {flags.length === 0 ? (
+            <div style={{ background: '#1B1411', padding: '40px', textAlign: 'center', border: '1px dashed #C19A6B', borderRadius: '8px', color: '#C19A6B' }}>
+              <p>🎉 The queue is empty. Good job, team!</p>
+            </div>
+          ) : flags.map(flag => (
+            <div key={flag._id} style={{ background: '#2D1E17', padding: '20px', margin: '15px 0', borderRadius: '8px', border: '2px solid #cc5555', textAlign: 'left', position: 'relative' }}>
+              
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '15px' }}>
+                <div>
+                  <h3 style={{ color: '#cc5555', margin: '0 0 5px 0' }}>🚩 Flagged {flag.type.toUpperCase()}</h3>
+                  <strong style={{ color: '#F5EFE0', fontSize: '1.1rem' }}>Target: "{flag.targetTitle || 'Unknown'}"</strong>
+                </div>
+                
+                {/* ACTION BUTTONS */}
+                <div style={{display: 'flex', gap: '10px'}}>
+                  {flag.type === 'story' && (
+                     <button onClick={() => handleDeleteStory(flag.targetId, flag._id)} style={{ background: '#cc5555', color: 'white', border: 'none', padding: '8px 15px', borderRadius: '4px', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 'bold' }}>Delete Story</button>
+                  )}
+                  {flag.type === 'review' && (
+                     <button onClick={() => handleDeleteReview(flag.targetId)} style={{ background: '#cc5555', color: 'white', border: 'none', padding: '8px 15px', borderRadius: '4px', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 'bold' }}>Delete Review</button>
+                  )}
+                  <button onClick={() => handleDismissFlag(flag._id)} style={{ background: '#C19A6B', color: '#1B1411', border: 'none', padding: '8px 15px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontFamily: 'inherit' }}>Dismiss Flag</button>
+                </div>
+              </div>
+
+              <div style={{ background: '#1B1411', padding: '15px', borderRadius: '4px', border: '1px solid #3e2b22', marginBottom: '15px' }}>
+                <p style={{ fontSize: '1rem', color: '#F5EFE0', margin: '0 0 10px 0' }}><strong style={{color: '#cc5555'}}>Reason provided:</strong> {flag.reason}</p>
+              </div>
+              
+              {/* Context Snippet */}
+              {flag.content && (
+                <div style={{ background: '#1B1411', padding: '15px', borderLeft: '4px solid #8a7b70', fontSize: '0.9rem', color: '#dcd6c8', marginBottom: '15px', fontStyle: 'italic', borderRadius: '0 4px 4px 0' }}>
+                   <strong>Content Snippet:</strong><br/><br/>
+                   {flag.content}
+                </div>
+              )}
+
+              <div style={{ fontSize: '0.85rem', color: '#8a7b70', borderTop: '1px solid #3e2b22', paddingTop: '10px', display: 'flex', justifyContent: 'space-between' }}>
+                <span><strong>Flagged by:</strong> {flag.flaggedBy}</span>
+                <span><strong>Date:</strong> {new Date(flag.date).toLocaleString()}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
     </div>
   );
 }

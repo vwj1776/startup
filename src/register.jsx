@@ -11,24 +11,24 @@ const Register = () => {
     setError('');
 
     try {
-      // Changed /api/auth/create to /api/auth/register to match index.js
       const res = await fetch('/api/auth/register', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         credentials: 'include', 
         body: JSON.stringify({ email, username, password }), 
       });
 
-      const data = await res.json();
-
-      if (res.ok) {
-        localStorage.setItem('authorName', data.username);
-        window.location.href = '/pledge'; 
+      const contentType = res.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        const data = await res.json();
+        if (res.ok) {
+          localStorage.setItem('authorName', data.username);
+          window.location.href = '/pledge'; 
+        } else {
+          setError(data.msg || 'Registration failed');
+        }
       } else {
-        // This will now catch the "Email already exists" message from the server
-        setError(data.msg || 'Registration failed');
+        setError(`Server Error: ${res.status}. Verify the backend route.`);
       }
     } catch (err) {
       console.error('Registration error:', err);
@@ -36,46 +36,84 @@ const Register = () => {
     }
   };
 
+  const inputStyle = {
+    width: '100%',
+    padding: '10px',
+    borderRadius: '5px',
+    border: '2px solid #C19A6B',
+    backgroundColor: '#1B1411',
+    color: '#F5EFE0',
+    fontSize: '16px',
+    fontFamily: "'Courier New', Courier, monospace"
+  };
+
+  const labelStyle = {
+    fontSize: '16px',
+    display: 'block',
+    marginBottom: '5px',
+    color: '#C19A6B',
+    fontFamily: "'Courier New', Courier, monospace"
+  };
+
   return (
-    <div className="login-container">
-      <h2>Register</h2>
-      <form id="registerForm" onSubmit={handleRegister}>
-        <div className="input-group">
-          <label htmlFor="username">Username (Publicly Displayed)</label>
+    <div className="login-container" style={{ 
+      backgroundColor: '#2D1E17', 
+      padding: '30px', 
+      borderRadius: '10px', 
+      border: '2px solid #C19A6B', 
+      width: '350px', 
+      margin: '50px auto', 
+      textAlign: 'center',
+      fontFamily: "'Courier New', Courier, monospace"
+    }}>
+      <h2 style={{ color: '#C19A6B', marginBottom: '20px' }}>Register</h2>
+      <form onSubmit={handleRegister}>
+        <div style={{ marginBottom: '20px', textAlign: 'left' }}>
+          <label style={labelStyle}>Username</label>
           <input
             type="text"
-            id="username"
-            name="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
             placeholder="e.g. GreyhoundWriter76"
+            style={inputStyle}
           />
         </div>
-        <div className="input-group">
-          <label htmlFor="email">Email (Private)</label>
+        <div style={{ marginBottom: '20px', textAlign: 'left' }}>
+          <label style={labelStyle}>Email</label>
           <input
             type="email"
-            id="email"
-            name="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            style={inputStyle}
           />
         </div>
-        <div className="input-group">
-          <label htmlFor="password">Password</label>
+        <div style={{ marginBottom: '20px', textAlign: 'left' }}>
+          <label style={labelStyle}>Password</label>
           <input
             type="password"
-            id="password"
-            name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            style={inputStyle}
           />
         </div>
-        {error && <p className="error-msg" style={{color: '#ff4444', marginTop: '10px'}}>{error}</p>}
-        <button type="submit">Create Account</button>
+        {error && <p style={{color: '#cc5555', marginTop: '10px', fontSize: '0.8rem'}}>{error}</p>}
+        <button type="submit" style={{ 
+          width: '100%', 
+          padding: '12px', 
+          backgroundColor: '#C19A6B', 
+          color: '#1B1411', 
+          border: 'none', 
+          borderRadius: '5px', 
+          fontSize: '18px', 
+          cursor: 'pointer', 
+          fontWeight: 'bold',
+          fontFamily: "'Courier New', Courier, monospace"
+        }}>
+          Create Account
+        </button>
       </form>
     </div>
   );

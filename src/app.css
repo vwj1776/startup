@@ -1,14 +1,13 @@
-
-/* App.css */
+/* App.css - Dark Academia Theme */
 
 /* 1. Target the Header and Nav tags directly */
 header, 
 nav, 
 .nav-container,
 #banner {
-    background-color: #121417 !important;
-    background-image: none !important; /* Removes any black gradients */
-    border-bottom: 1px solid #00ff88;  /* Optional: adds a thin mint line under the header */
+    background-color: #2D1E17 !important; /* Dark Mahogany Header */
+    background-image: none !important;
+    border-bottom: 2px solid #C19A6B;  /* Burnished Gold Line */
 }
 
 /* 2. Target the specific Banner ID used in StoryCollection */
@@ -18,29 +17,31 @@ nav,
     margin: 0 !important;
     padding: 20px 0 !important;
     text-align: center;
+    background-color: #1B1411 !important; /* Espresso background for banner area */
 }
 
 /* 3. Ensure the Logo area isn't black */
 #banner img {
     background-color: transparent !important;
+    filter: sepia(100%) hue-rotate(350deg) saturate(90%); /* Optional: Tints logo to match */
 }
 
 html, body, #root {
-    background-color: #121417 !important; /* Forces the Deep Charcoal everywhere */
-    color: #00ff88;           /* Sets default text to Mint */
-    min-height: 100vh;        /* Ensures the color goes all the way to the bottom */
+    background-color: #1B1411 !important; /* Forces Deep Espresso everywhere */
+    color: #F5EFE0;           /* Sets default text to Creamy Silk */
+    min-height: 100vh;
     margin: 0;
     padding: 0;
     width: 100%;
+    font-family: 'Georgia', serif; /* Enforce Serif font */
 }
 
 /* 2. The "Cleanup" Crew */
-/* This targets any main page wrappers you might have named variously */
 .App, 
 .page-container, 
 #main-content,
 main {
-    background-color: #121417 !important;
+    background-color: #1B1411 !important;
     min-height: 100vh;
 }
 
@@ -49,22 +50,20 @@ main {
     flex-direction: column;
     min-width: 375px;
     width: 100%;
-    /* Swapped Black for Deep Charcoal */
-    background-color: #121417; 
-    /* Swapped Green for Mint Green */
-    color: #00ff88; 
+    background-color: #1B1411; 
+    color: #F5EFE0; 
 }
 
 header {
   display: inline-block;
-  background-color: #121417;
+  background-color: #2D1E17; /* Mahogany */
 }
 
 nav {
   display: flex;
   align-items: center;
   width: 100%;
-  height: 80px; /* adjust height as needed */
+  height: 80px; 
   top: 0;
 }
 
@@ -83,30 +82,44 @@ nav menu {
 }
 
 .highlighted-link {
-  /* Swapped Green for Mint Green */
-  color: #00ff88; 
-  /* Swapped Green for Mint Green */
-  border: #00ff88 solid 0.3em;
+  color: #F5EFE0; 
+  border: #C19A6B solid 0.3em; /* Gold Border */
+  background-color: #2D1E17;
+  padding: 5px 10px;
+  text-decoration: none;
+  font-weight: bold;
 }
 
-/* Update these in your App.css */
+.highlighted-link:hover {
+    color: #C19A6B;
+    background-color: #1B1411;
+}
 
-/* Global Loading Text */
+/* Global Text Colors */
 p, div {
-  /* This ensures general loading messages use the Mint color */
-  color: #00ff88; 
+  color: #F5EFE0; /* Creamy Silk for general text */
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #C19A6B !important; /* Gold for headings */
 }
 
 /* Login/Signup Borders and Buttons */
 .login-container, .signup-container {
-  border: 1px solid #00ff88 !important;
+  border: 1px solid #C19A6B !important;
+  background-color: #2D1E17 !important;
 }
 
 .login-btn, .signup-btn, button {
-  background-color: #00ff88 !important;
-  color: #121417 !important; /* Dark text on mint button */
+  background-color: #C19A6B !important; /* Gold Button */
+  color: #1B1411 !important; /* Espresso Text */
   border: none;
   font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+    background-color: #a8855b !important;
 }
 
 /* The Nuclear Footer Fix */
@@ -117,19 +130,20 @@ footer,
 footer *, 
 #footer *, 
 .footer * {
-    background-color: #121417 !important; /* Force Charcoal Background */
-    color: #00ff88 !important;            /* Force Mint Text */
-    border-color: #00ff88 !important;      /* Force Mint Borders */
+    background-color: #2D1E17 !important; /* Mahogany Background */
+    color: #F5EFE0 !important;            /* Silk Text */
+    border-color: #C19A6B !important;      /* Gold Borders */
 }
 
 /* Specifically targets links inside the footer */
 footer a, 
 #footer a, 
 .footer a {
-    color: #00ff88 !important;
+    color: #C19A6B !important;
     text-decoration: underline !important;
 }
 
+/* SECTIONS & CARDS */
 .library-container, 
 .upload-section, 
 .story-upload,
@@ -138,31 +152,31 @@ footer a,
 .monthly-goal,
 .goal-element,
 .streak-card {
-    background-color: #121417;
-    border: 1px solid #00ff88;
+    background-color: #2D1E17; /* Mahogany Cards */
+    border: 1px solid #3e2b22; /* Subtle brown border */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
 }
 
 .author-account-page, 
 #aap-container,
 .aap-element {
-    background-color: #121417;
+    background-color: #1B1411;
 }
 
 div[class*="card"], 
 div[class*="section"], 
 div[class*="box"] {
-    background-color: #121417;
+    background-color: #2D1E17;
 }
 
-/* Target the text elements directly to kill the black background behind words */
+/* Target the text elements directly to kill the background behind words */
 p, span, h1, h2, h3, h4, h5, h6, li, b, i {
     background-color: transparent !important;
     background: transparent !important;
-    /* In case there's a black text-shadow making it look muddy */
     text-shadow: none !important; 
 }
 
-/* Specifically for the Library and Goal sections where text might be inside a 'label' or 'value' div */
+/* Specifically for the Library and Goal sections */
 .library-container *, 
 .monthly-goal *, 
 .writing-streak *, 
@@ -170,34 +184,40 @@ p, span, h1, h2, h3, h4, h5, h6, li, b, i {
     background-color: transparent !important;
 }
 
-/* If you are using inputs or textareas in those upload sections */
+/* Inputs / Textareas */
 input, textarea, select {
-    background-color: #1c1f24 !important; /* Slightly lighter than the page so you can see the field */
-    color: #00ff88 !important;
-    border: 1px solid #00ff88 !important;
+    background-color: #1B1411 !important; /* Deep Espresso Input */
+    color: #F5EFE0 !important; /* Silk Text */
+    border: 1px solid #5d4037 !important;
+    font-family: inherit;
 }
 
-/* Target the Story Collection container and its immediate parent */
+input:focus, textarea:focus, select:focus {
+    border-color: #C19A6B !important;
+    outline: none;
+}
+
+/* Target the Story Collection container */
 .story-collection, 
 .story-grid, 
 .collection-container,
 .my-stories {
-    background-color: #121417 !important;
-    display: flex; /* or grid, depending on your setup */
-    gap: 20px;     /* Ensure the space between boxes is clean */
+    background-color: #1B1411 !important;
+    display: flex; 
+    gap: 20px;    
     padding: 20px;
 }
 
 /* This targets the 'inner floor' of the collection area */
 .story-collection-wrapper, 
 #story-collection-page {
-    background-color: #121417 !important;
+    background-color: #1B1411 !important;
 }
 
-/* If there is a 'no stories yet' or 'loading' box, fix that too */
+/* 'No stories' or 'loading' box */
 .no-stories, .loading-box {
     background-color: transparent !important;
-    color: #00ff88 !important;
+    color: #C19A6B !important;
 }
 
 /* Target the Story Collection and EVERY child element inside it */
@@ -205,23 +225,17 @@ input, textarea, select {
 .story-collection *, 
 #story-collection, 
 #story-collection * {
-    /* Kill background colors, images, and gradients */
-    background-color: #121417 !important;
+    background-color: #1B1411 !important;
     background-image: none !important;
-    background: #121417 !important;
-    
-    /* Kill any black shadows that look like backgrounds */
+    background: #1B1411 !important;
     box-shadow: none !important;
     text-shadow: none !important;
-    
-    /* Ensure borders don't hide the background */
-    border-color: #00ff88 !important;
+    border-color: #3e2b22 !important;
 }
 
 /* Specifically for the 'Story Boxes' themselves */
-/* They need to be slightly different so they don't disappear into the floor */
 .story-box, .story-card, .collection-item {
-    background-color: #1c1f24 !important; /* Lighter charcoal so you can see the cards */
-    border: 1px solid #00ff88 !important;
+    background-color: #2D1E17 !important; /* Mahogany Card */
+    border: 1px solid #C19A6B !important; /* Gold Border */
+    color: #F5EFE0 !important;
 }
-

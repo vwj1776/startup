@@ -2,7 +2,7 @@
     padding: 40px;
     max-width: 1000px;
     margin: 0 auto;
-    color: #00ff88;
+    color: #F5EFE0; /* Creamy Silk for text */
     font-family: 'Courier New', Courier, monospace;
 }
 
@@ -13,16 +13,16 @@
 }
 
 .admin-tabs button {
-    background: #1a1a1a;
-    color: #00ff88;
-    border: 1px solid #00ff88;
+    background: #2D1E17; /* Dark Mahogany */
+    color: #C19A6B; /* Burnished Gold */
+    border: 1px solid #C19A6B;
     padding: 10px 20px;
     cursor: pointer;
 }
 
 .admin-tabs button.active {
-    background: #00ff88;
-    color: #1a1a1a;
+    background: #C19A6B; /* Gold Active */
+    color: #1B1411; /* Espresso Text */
 }
 
 .admin-stats-grid {
@@ -32,27 +32,33 @@
 }
 
 .stat-card {
-    background: #1a1a1a;
-    border: 1px solid #333;
+    background: #2D1E17; /* Dark Mahogany */
+    border: 1px solid #3e2b22;
     padding: 20px;
     text-align: center;
     border-radius: 8px;
+    color: #F5EFE0;
 }
 
 .admin-table {
     width: 100%;
     border-collapse: collapse;
-    background: #1a1a1a;
+    background: #2D1E17; /* Dark Mahogany */
 }
 
 .admin-table th, .admin-table td {
-    border: 1px solid #333;
+    border: 1px solid #3e2b22;
     padding: 12px;
     text-align: left;
+    color: #F5EFE0;
 }
 
-.status-blocked { color: #ff4444; font-weight: bold; }
-.status-active { color: #00ff88; }
+.admin-table th {
+    color: #C19A6B; /* Gold Headers */
+}
+
+.status-blocked { color: #cc5555; font-weight: bold; } /* Rust Red */
+.status-active { color: #C19A6B; } /* Gold */
 
 .word-chips {
     display: flex;
@@ -62,8 +68,10 @@
 }
 
 .word-chip {
-    background: #333;
+    background: #3e2b22; /* Lighter Brown */
     padding: 5px 10px;
     border-radius: 15px;
     font-size: 0.9rem;
+    color: #F5EFE0;
+    border: 1px solid #C19A6B;
 }
