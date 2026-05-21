@@ -45,7 +45,23 @@ async function getUsers() {
 async function getSystemSettings() {
   const { System } = await getCollections();
   const settings = await System.findOne({ name: 'main' });
-  return settings || { bannedWords: [], aiFlags: 0 };
+  const defaultGoals = {
+    januaryReviews: 15,
+    februaryWords: 1000,
+    marchMinutes: 30,
+    aprilLines: 200,
+    mayReviews: 15,
+    juneWords: 1000,
+    julyStories: 15,
+    augustGenre: "Competition",
+    septemberReviews: 15,
+    octoberWords: 1400,
+    novemberWords: 50000, // Default for NaNoWriMo
+    decemberWords: 1400
+  };
+  if (!settings) return { bannedWords: [], aiFlags: 0, monthlyGoals: defaultGoals };
+  if (!settings.monthlyGoals) settings.monthlyGoals = defaultGoals;
+  return settings;
 }
 
 async function blockWord(word) {
@@ -127,6 +143,15 @@ async function incrementReviewCount(email, type) {
   );
 }
 
+async function updateMonthlyGoals(goals) {
+  const { System } = await getCollections();
+  return await System.updateOne(
+    { name: 'main' },
+    { $set: { monthlyGoals: goals } },
+    { upsert: true }
+  );
+}
+
 module.exports = {
   connectToDatabase,
   getCollections,
@@ -139,5 +164,6 @@ module.exports = {
   resolveReport,
   toggleFavorite,
   updateCurriculumStatus,
-  incrementReviewCount
+  incrementReviewCount,
+  updateMonthlyGoals
 };

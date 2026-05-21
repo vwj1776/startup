@@ -87,10 +87,10 @@ export default function AuthorAccountPage() {
         const user = await userRes.json();
         
         // RESTORED REDIRECT: Only triggers if hasPledged is explicitly false
-        if (user.hasPledged === false) {
-          navigate('/pledge');
-          return;
-        }
+        // if (user.hasPledged === false) {
+        //   navigate('/pledge');
+        //   return;
+        // }
 
         setCurrentUser(user.email);
         setCurrentUsername(user.username || user.email);

@@ -10,6 +10,7 @@ export default function StoryCollection() {
   const [error, setError] = useState('');
   const [deleting, setDeleting] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
+  const [monthlyGoals, setMonthlyGoals] = useState(null);
   
   // Filtering States
   const [searchTerm, setSearchTerm] = useState('');
@@ -35,6 +36,12 @@ export default function StoryCollection() {
         }
       })
       .catch((err) => console.error("User check failed:", err));
+
+    // Fetch dynamic monthly goals
+    fetch('/api/system/settings')
+      .then(res => res.ok ? res.json() : null)
+      .then(data => { if (data && data.monthlyGoals) setMonthlyGoals(data.monthlyGoals); })
+      .catch(err => console.error("Settings fetch error:", err));
 
     // FIXED: Removed localhost:4000
     fetch('/api/stories/trending', { credentials: 'include' })
@@ -84,6 +91,26 @@ export default function StoryCollection() {
     return searchMatch && genreMatch;
   });
 
+  const renderMonthlyGoal = () => {
+    if (!monthlyGoals) return "Loading monthly goal...";
+    const month = new Date().getMonth();
+    switch (month) {
+      case 0: return `January Goal: Leave ${monthlyGoals.januaryReviews} thoughtful reviews!`;
+      case 1: return `February Goal: Write ${monthlyGoals.februaryWords} words this month!`;
+      case 2: return `March Goal: Spend ${monthlyGoals.marchMinutes} minutes writing every day!`;
+      case 3: return `April Goal: Poetry month! Aim for ${monthlyGoals.aprilLines} lines of poetry.`;
+      case 4: return `May Goal: Leave ${monthlyGoals.mayReviews} thoughtful reviews!`;
+      case 5: return `June Goal: Write ${monthlyGoals.juneWords} words this month!`;
+      case 6: return `July Goal: Upload ${monthlyGoals.julyStories} new stories!`;
+      case 7: return `August Goal: Genre Competition! Which genre will get the most uploads?`;
+      case 8: return `September Goal: Leave ${monthlyGoals.septemberReviews} thoughtful reviews!`;
+      case 9: return `October Goal: Spooky stuff! Write ${monthlyGoals.octoberWords} words.`;
+      case 10: return `November Goal (NaNoWriMo): Write ${monthlyGoals.novemberWords} words!`;
+      case 11: return `December Goal: Write ${monthlyGoals.decemberWords} words of Christmas-themed stories!`;
+      default: return "Write 1,000 words a month!";
+    }
+  };
+
   return (
     <div className="story-page-wrapper">
       <div id="banner">
@@ -96,13 +123,37 @@ export default function StoryCollection() {
         </p>
       </div>
 
-      <div id="monthlyGoalsBanner">
-        <p>
-          As a website our goal is to write 1,000 words a month. Help us with that goal by going to your{' '}
-          <NavLink to="/authorAccountPage" id="authorAccountLink">
-            author account
-          </NavLink>{' '}
-          and uploading your latest stories!
+      {/* VIBRANT DYNAMIC GOALS BANNER */}
+      <div id="monthlyGoalsBanner" style={{
+        background: 'linear-gradient(135deg, #C19A6B, #8a7b70)',
+        color: '#1B1411',
+        padding: '25px',
+        textAlign: 'center',
+        fontSize: '1.4rem',
+        fontWeight: 'bold',
+        borderRadius: '12px',
+        margin: '25px 5%',
+        border: '3px solid #F5EFE0',
+        boxShadow: '0 8px 15px rgba(0,0,0,0.6)'
+      }}>
+        <p style={{ margin: 0, textShadow: '1px 1px 2px rgba(255,255,255,0.3)' }}>
+          <span style={{ fontSize: '1.8rem', display: 'block', marginBottom: '10px' }}>🌟 Monthly Challenge 🌟</span>
+          {renderMonthlyGoal()}
+        </p>
+        <p style={{ fontSize: '1rem', marginTop: '15px', fontWeight: 'normal' }}>
+          {[0, 4, 8].includes(new Date().getMonth()) ? (
+            <>
+              Help us achieve this by picking a story below to read and leaving a thoughtful review!
+            </>
+          ) : (
+            <>
+              Help us achieve this by visiting your{' '}
+              <NavLink to="/authorAccountPage" style={{ color: '#1B1411', textDecoration: 'underline', fontWeight: 'bold' }}>
+                author account
+              </NavLink>{' '}
+              and participating!
+            </>
+          )}
         </p>
       </div>
 

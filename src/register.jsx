@@ -23,7 +23,7 @@ const Register = () => {
         const data = await res.json();
         if (res.ok) {
           localStorage.setItem('authorName', data.username);
-          window.location.href = '/pledge'; 
+          window.location.href = '/authorAccountPage'; // temporarily bypassing /pledge 
         } else {
           setError(data.msg || 'Registration failed');
         }

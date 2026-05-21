@@ -1,4 +1,4 @@
-const { connectToDatabase, getCollections } = require('./db');
+const { connectToDatabase, getCollections, getSystemSettings, updateMonthlyGoals } = require('./db');
 const cookieParser = require('cookie-parser');
 const bcrypt = require('bcryptjs');
 const express = require('express');
@@ -104,6 +104,25 @@ let User, Story, Review, Flag;
       } catch (err) { res.status(500).json({ msg: "Error updating profile" }); }
     });
 
+    // --- REFERRAL SYSTEM ---
+    apiRouter.post('/user/credit', verifyUser, async (req, res) => {
+      try {
+        const { referrerEmail } = req.body;
+        if (req.user.referredBy) return res.status(400).json({ msg: "You have already credited someone." });
+        
+        // Find referrer by email (case-insensitive)
+        const referrer = await User.findOne({ email: { $regex: new RegExp(`^${referrerEmail}$`, 'i') } });
+        if (!referrer) return res.status(404).json({ msg: "Referred user not found." });
+        
+        if (req.user.email.toLowerCase() === referrer.email.toLowerCase()) return res.status(400).json({ msg: "You cannot credit yourself." });
+
+        await User.updateOne({ _id: req.user._id }, { $set: { referredBy: referrer.email }, $inc: { points: 1 } });
+        await User.updateOne({ email: referrer.email }, { $inc: { points: 15 } });
+
+        res.json({ msg: "Credit successfully applied!" });
+      } catch (err) { res.status(500).json({ msg: "Error applying credit" }); }
+    });
+
     // --- REVIEWS & POINTS ---
     apiRouter.post('/review', verifyUser, async (req, res) => {
       try {
@@ -117,6 +136,11 @@ let User, Story, Review, Flag;
         });
         let pts = (tier === 3) ? 5 : (tier === 2) ? 3 : 1;
         await User.updateOne({ _id: req.user._id }, { $inc: { points: pts } });
+
+        if (req.user.referredBy) {
+          await User.updateOne({ email: req.user.referredBy }, { $inc: { points: 1 } });
+        }
+
         res.status(201).json({ msg: "Points awarded!" });
       } catch (err) { res.status(500).json({ msg: "Error" }); }
     });
@@ -126,6 +150,14 @@ let User, Story, Review, Flag;
         const reviews = await Review.find({ storyAuthorEmail: req.user.email }).sort({ date: -1 }).toArray();
         res.json(reviews);
       } catch (err) { res.status(500).json({ msg: "Error fetching reviews" }); }
+    });
+
+    // --- SYSTEM SETTINGS & GOALS ---
+    apiRouter.get('/system/settings', async (req, res) => {
+      try {
+        const settings = await getSystemSettings();
+        res.json(settings);
+      } catch (err) { res.status(500).json({ msg: "Error fetching settings" }); }
     });
 
     // --- FLAGS (NEW) ---
@@ -168,13 +200,49 @@ let User, Story, Review, Flag;
           { $unwind: { path: '$authorData', preserveNullAndEmptyArrays: true } },
           { $sort: { "authorData.points": -1, "date": -1 } }
         ]).toArray();
-        res.json(stories);
+
+        // Group stories by author
+        const storiesByAuthor = {};
+        stories.forEach(story => {
+            if (!storiesByAuthor[story.authorEmail]) {
+                storiesByAuthor[story.authorEmail] = {
+                    score: story.authorData ? story.authorData.points : 0,
+                    stories: []
+                };
+            }
+            storiesByAuthor[story.authorEmail].stories.push(story);
+        });
+
+        // Sort author groups from highest score to lowest
+        const sortedAuthorGroups = Object.values(storiesByAuthor).sort((a, b) => b.score - a.score);
+
+        // Mix stories (Chunked round-robin: taking up to 2 stories per author at a time)
+        const mixedStories = [];
+        const STORIES_PER_AUTHOR_CHUNK = 2; // Change this number to control how many stories show at a time
+        let storiesRemaining = true;
+        while (storiesRemaining) {
+            storiesRemaining = false;
+            for (const group of sortedAuthorGroups) {
+                const chunk = group.stories.splice(0, STORIES_PER_AUTHOR_CHUNK);
+                if (chunk.length > 0) {
+                    mixedStories.push(...chunk);
+                    storiesRemaining = true;
+                }
+            }
+        }
+
+        res.json(mixedStories);
       } catch (err) { res.status(500).json({ msg: "Trending failed" }); }
     });
 
     apiRouter.post('/story', verifyUser, async (req, res) => {
       const { title, content, genre } = req.body;
       await Story.insertOne({ title, content, genre, author: req.user.username, authorEmail: req.user.email, date: new Date() });
+      
+      if (req.user.referredBy) {
+        await User.updateOne({ email: req.user.referredBy }, { $inc: { points: 3 } });
+      }
+      
       res.status(201).json({ msg: "Published" });
     });
 
@@ -241,6 +309,13 @@ let User, Story, Review, Flag;
     apiRouter.post('/admin/user/status', verifyUser, async (req, res) => {
        try { await User.updateOne({ email: req.body.email }, { $set: { status: req.body.status } }); res.json({ msg: "Status updated" }); }
        catch (err) { res.status(500).json({ error: "Update failed" }); }
+    });
+
+    apiRouter.put('/admin/goals', verifyUser, async (req, res) => {
+      try {
+        await updateMonthlyGoals(req.body);
+        res.json({ msg: "Goals updated" });
+      } catch (err) { res.status(500).json({ msg: "Error updating goals" }); }
     });
 
     // --- STATIC FILES ---

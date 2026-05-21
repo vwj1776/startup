@@ -9,6 +9,7 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('stats');
   const [accessDenied, setAccessDenied] = useState(false);
+  const [goals, setGoals] = useState({});
 
   useEffect(() => {
     fetchAdminData();
@@ -23,10 +24,11 @@ export default function AdminPage() {
         return;
       }
 
-      const [usersRes, flagsRes, reviewsRes] = await Promise.all([
+      const [usersRes, flagsRes, reviewsRes, settingsRes] = await Promise.all([
         fetch('/api/admin/users', { credentials: 'include' }).catch(() => null),
         fetch('/api/admin/flags', { credentials: 'include' }).catch(() => null),
-        fetch('/api/admin/reviews', { credentials: 'include' }).catch(() => null) 
+        fetch('/api/admin/reviews', { credentials: 'include' }).catch(() => null),
+        fetch('/api/system/settings').catch(() => null) 
       ]);
 
       if (statsRes.ok) setStats(await statsRes.json());
@@ -37,6 +39,10 @@ export default function AdminPage() {
       if (flagsRes && flagsRes.ok) setFlags(await flagsRes.json());
       if (reviewsRes && reviewsRes.ok) {
         setAllReviews(await reviewsRes.json()); 
+      }
+      if (settingsRes && settingsRes.ok) {
+        const settings = await settingsRes.json();
+        if (settings.monthlyGoals) setGoals(settings.monthlyGoals);
       }
       setLoading(false);
     } catch (err) {
@@ -106,6 +112,21 @@ export default function AdminPage() {
     }
   };
 
+  // --- MONTHLY GOALS ACTIONS ---
+  const handleSaveGoals = async () => {
+    const res = await fetch('/api/admin/goals', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(goals),
+      credentials: 'include'
+    });
+    if (res.ok) alert("Monthly goals updated successfully!");
+    else alert("Failed to update goals.");
+  };
+
+  const inputStyle = { padding: '8px', background: '#1B1411', color: '#F5EFE0', border: '1px solid #C19A6B', borderRadius: '4px', width: '100%', fontFamily: 'inherit', boxSizing: 'border-box' };
+  const labelStyle = { display: 'block', color: '#8a7b70', marginBottom: '5px', fontWeight: 'bold' };
+
   if (loading) return <div className="admin-container" style={{fontFamily: "'Courier New', Courier, monospace", color: '#C19A6B', padding: '50px', textAlign: 'center'}}>Loading Admin Dashboard...</div>;
   if (accessDenied) return <div className="admin-container" style={{fontFamily: "'Courier New', Courier, monospace", color: '#cc5555', padding: '50px', textAlign: 'center'}}>⛔ Access Denied</div>;
 
@@ -120,6 +141,7 @@ export default function AdminPage() {
         <button onClick={() => setActiveTab('flags')} style={{ padding: '10px 20px', background: activeTab === 'flags' ? '#cc5555' : '#2D1E17', color: activeTab === 'flags' ? '#fff' : '#cc5555', border: '1px solid #cc5555', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 'bold' }}>
           Flags ({flags.length}) {flags.length > 0 && '⚠️'}
         </button>
+        <button onClick={() => setActiveTab('goals')} style={{ padding: '10px 20px', background: activeTab === 'goals' ? '#C19A6B' : '#2D1E17', color: activeTab === 'goals' ? '#1B1411' : '#C19A6B', border: '1px solid #C19A6B', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 'bold' }}>Goals</button>
       </div>
 
       <hr style={{ borderColor: '#3e2b22', marginBottom: '20px' }} />
@@ -265,6 +287,33 @@ export default function AdminPage() {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* NEW: GOALS TAB */}
+      {activeTab === 'goals' && (
+        <div style={{ background: '#2D1E17', padding: '20px', borderRadius: '8px', border: '1px solid #C19A6B' }}>
+          <h2 style={{ color: '#C19A6B', margin: '0 0 10px 0' }}>📅 Edit Monthly Goals</h2>
+          <p style={{ color: '#8a7b70', marginBottom: '20px' }}>Set the target values for each month's community challenge. These update live on the Story Collection banner!</p>
+          
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '20px' }}>
+            <div><label style={labelStyle}>January (Reviews)</label><input type="number" style={inputStyle} value={goals.januaryReviews || ''} onChange={e => setGoals({...goals, januaryReviews: parseInt(e.target.value) || 0})} /></div>
+            <div><label style={labelStyle}>February (Words)</label><input type="number" style={inputStyle} value={goals.februaryWords || ''} onChange={e => setGoals({...goals, februaryWords: parseInt(e.target.value) || 0})} /></div>
+            <div><label style={labelStyle}>March (Minutes)</label><input type="number" style={inputStyle} value={goals.marchMinutes || ''} onChange={e => setGoals({...goals, marchMinutes: parseInt(e.target.value) || 0})} /></div>
+            <div><label style={labelStyle}>April (Poetry Lines)</label><input type="number" style={inputStyle} value={goals.aprilLines || ''} onChange={e => setGoals({...goals, aprilLines: parseInt(e.target.value) || 0})} /></div>
+            <div><label style={labelStyle}>May (Reviews)</label><input type="number" style={inputStyle} value={goals.mayReviews || ''} onChange={e => setGoals({...goals, mayReviews: parseInt(e.target.value) || 0})} /></div>
+            <div><label style={labelStyle}>June (Words)</label><input type="number" style={inputStyle} value={goals.juneWords || ''} onChange={e => setGoals({...goals, juneWords: parseInt(e.target.value) || 0})} /></div>
+            <div><label style={labelStyle}>July (Stories Uploaded)</label><input type="number" style={inputStyle} value={goals.julyStories || ''} onChange={e => setGoals({...goals, julyStories: parseInt(e.target.value) || 0})} /></div>
+            <div><label style={labelStyle}>August (Theme)</label><input type="text" style={inputStyle} value={goals.augustGenre || ''} onChange={e => setGoals({...goals, augustGenre: e.target.value})} /></div>
+            <div><label style={labelStyle}>September (Reviews)</label><input type="number" style={inputStyle} value={goals.septemberReviews || ''} onChange={e => setGoals({...goals, septemberReviews: parseInt(e.target.value) || 0})} /></div>
+            <div><label style={labelStyle}>October (Spooky Words)</label><input type="number" style={inputStyle} value={goals.octoberWords || ''} onChange={e => setGoals({...goals, octoberWords: parseInt(e.target.value) || 0})} /></div>
+            <div><label style={labelStyle}>November (NaNoWriMo Words)</label><input type="number" style={inputStyle} value={goals.novemberWords || ''} onChange={e => setGoals({...goals, novemberWords: parseInt(e.target.value) || 0})} /></div>
+            <div><label style={labelStyle}>December (Christmas Words)</label><input type="number" style={inputStyle} value={goals.decemberWords || ''} onChange={e => setGoals({...goals, decemberWords: parseInt(e.target.value) || 0})} /></div>
+          </div>
+
+          <button onClick={handleSaveGoals} style={{ marginTop: '20px', padding: '10px 20px', background: '#C19A6B', color: '#1B1411', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontFamily: 'inherit', fontSize: '1.1rem' }}>
+            💾 Save Monthly Goals
+          </button>
         </div>
       )}
 
