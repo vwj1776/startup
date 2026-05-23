@@ -135,8 +135,16 @@ export default function AuthorAccountPage() {
       if (res.ok) {
         alert("Password updated!");
         setShowSettings(false);
+        setOldPw('');
+        setNewPw('');
+        setNewPwConfirm('');
+      } else {
+        const data = await res.json().catch(() => ({}));
+        alert(`Failed to update password: ${data.msg || 'Invalid old password or server error.'}`);
       }
-    } catch (err) { alert("Error."); }
+    } catch (err) { 
+      alert("Server error."); 
+    }
   };
 
   const handleLinkUpload = async () => {
@@ -199,8 +207,10 @@ export default function AuthorAccountPage() {
 
   return (
     <div id="body-author-account">
+      <BroadcastPopup />
+      
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #3e2b22', paddingBottom: '20px', marginBottom: '30px' }}>
-        <h3 style={{margin: 0}}>Welcome, {currentUsername} | <span style={{color: '#C19A6B'}}>🏆 {userPoints} Points</span></h3>
+        <h3 style={{margin: 0}}>Welcome, {currentUsername}</h3>
         <div style={{ display: 'flex', gap: '10px' }}>
           {isAdmin && (
             <button 
@@ -320,6 +330,58 @@ export default function AuthorAccountPage() {
             </div>
           ))
         )}
+      </div>
+    </div>
+  );
+}
+
+function BroadcastPopup() {
+  const [broadcast, setBroadcast] = useState(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const fetchBroadcast = async () => {
+      try {
+        const res = await fetch('/api/broadcast');
+        if (res.ok) {
+          const data = await res.json();
+          // Check if there is an active message
+          if (data.message && data.messageId) {
+            const dismissedId = localStorage.getItem('dismissedBroadcastId');
+            // If the user hasn't dismissed this specific message ID yet, show it
+            if (dismissedId !== data.messageId) {
+              setBroadcast(data);
+              setIsVisible(true);
+            }
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch broadcast", err);
+      }
+    };
+    fetchBroadcast();
+  }, []);
+
+  const handleDismiss = () => {
+    if (broadcast) {
+      // Save the ID so they never see THIS specific message again
+      localStorage.setItem('dismissedBroadcastId', broadcast.messageId);
+      setIsVisible(false);
+    }
+  };
+
+  if (!isVisible || !broadcast) return null;
+
+  return (
+    <div className="modal-overlay" style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.8)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 9999 }}>
+      <div className="modal-content" style={{ backgroundColor: '#2D1E17', border: '2px solid #C19A6B', borderRadius: '10px', padding: '30px', maxWidth: '500px', width: '90%', textAlign: 'center', boxShadow: '0 4px 20px rgba(0,0,0,0.6)' }}>
+        <h2 style={{ color: '#C19A6B', marginTop: 0 }}>Admin Announcement</h2>
+        <p style={{ color: '#F5EFE0', fontSize: '1.1rem', lineHeight: '1.5', margin: '20px 0' }}>
+          {broadcast.message}
+        </p>
+        <button onClick={handleDismiss} className="confirm-btn" style={{ padding: '10px 30px', width: 'auto' }}>
+          Got it!
+        </button>
       </div>
     </div>
   );

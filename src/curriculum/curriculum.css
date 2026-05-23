@@ -35,7 +35,9 @@
 
 /* Ensure the container isn't squashing its children */
 .curriculum-container {
-    display: block !important; 
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
     width: 100% !important;
 }
 
@@ -51,13 +53,14 @@
 .curriculum-header p {
     color: #F5EFE0 !important;
     opacity: 0.85;              
-    max-width: 700px;
     line-height: 1.6;
 }
 
 .unit-group {
     margin-bottom: 60px !important;
-    display: block !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
 }
 
 /* THE BUTTONS - Dark Academia Style */

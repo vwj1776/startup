@@ -15,6 +15,8 @@ const port = process.argv.length > 2 ? process.argv[2] : 4000;
 // ADDED Flag collection
 let User, Story, Review, Flag;
 
+let currentBroadcast = { message: '', messageId: null }; // Added for global popup broadcasts
+
 (async () => {
   try {
     await connectToDatabase();
@@ -102,6 +104,19 @@ let User, Story, Review, Flag;
         await User.updateOne({ _id: req.user._id }, { $set: { bio: bio } });
         res.json({ msg: "Profile updated successfully" });
       } catch (err) { res.status(500).json({ msg: "Error updating profile" }); }
+    });
+
+    // --- CHANGE PASSWORD ---
+    apiRouter.post('/user/change-password', verifyUser, async (req, res) => {
+      try {
+        const { oldPw, newPw } = req.body;
+        const match = await bcrypt.compare(oldPw, req.user.password); // req.user is set by verifyUser
+        if (!match) return res.status(400).json({ msg: 'Incorrect old password.' });
+
+        const newPasswordHash = await bcrypt.hash(newPw, 10);
+        await User.updateOne({ _id: req.user._id }, { $set: { password: newPasswordHash } });
+        res.json({ msg: 'Password updated successfully!' });
+      } catch (error) { res.status(500).json({ msg: 'Server error' }); }
     });
 
     // --- REFERRAL SYSTEM ---
@@ -316,6 +331,20 @@ let User, Story, Review, Flag;
         await updateMonthlyGoals(req.body);
         res.json({ msg: "Goals updated" });
       } catch (err) { res.status(500).json({ msg: "Error updating goals" }); }
+    });
+
+    // --- BROADCAST ENDPOINTS ---
+    apiRouter.get('/broadcast', (req, res) => {
+      res.json(currentBroadcast);
+    });
+
+    apiRouter.post('/admin/broadcast', verifyUser, async (req, res) => {
+      const { message } = req.body;
+      currentBroadcast = {
+        message: message,
+        messageId: Date.now().toString()
+      };
+      res.json({ success: true, broadcast: currentBroadcast });
     });
 
     // --- STATIC FILES ---

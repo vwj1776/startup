@@ -174,21 +174,7 @@ export default function StoryCollection() {
             <button 
               key={genre}
               onClick={() => setSelectedGenre(genre)}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: selectedGenre === genre ? '#C19A6B' : '#8a7b70', /* Gold vs Muted Silk */
-                cursor: 'pointer',
-                fontWeight: 'bold',
-                fontSize: '1rem',
-                textTransform: 'uppercase',
-                letterSpacing: '1px',
-                padding: '5px 0',
-                borderBottom: selectedGenre === genre ? '2px solid #C19A6B' : '2px solid transparent',
-                transition: 'all 0.3s ease',
-                whiteSpace: 'nowrap',
-                fontFamily: 'Georgia, serif'
-              }}
+              className={`genre-link ${selectedGenre === genre ? 'active' : ''}`}
             >
               {genre}
             </button>

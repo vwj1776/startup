@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import TermsOfService from '../TermsOfService';
 
 export default function AuthorInfo() {
   const navigate = useNavigate();
@@ -78,6 +79,9 @@ export default function AuthorInfo() {
       <p style={{ marginBottom: '15px', lineHeight: '1.6' }}>
         Finally is you have any questions, concerns, comments, feedback, ideas, or literally anything you want us to know tell us all about it at <a href="mailto:Gavin.Jones.Greyhound@gmail.com" style={{ color: '#C19A6B' }}>Gavin.Jones.Greyhound@gmail.com</a>
       </p>
+
+      <h2 style={{ marginTop: '30px', textAlign: 'left' }}>Terms of Service</h2>
+      <TermsOfService />
 
       <div style={{ textAlign: 'center', marginTop: '40px' }}>
         <button onClick={() => navigate('/authorAccountPage')} style={{ background: 'none', border: '1px solid #C19A6B', color: '#C19A6B', padding: '10px 20px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontFamily: 'inherit' }}>

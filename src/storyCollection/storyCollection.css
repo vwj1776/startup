@@ -366,23 +366,25 @@ input[type="text"] {
 }
 
 .genre-link {
-  color: #C19A6B;
-  text-decoration: none;
-  padding: 10px 20px;
-  border: 1px solid #C19A6B;
-  border-radius: 30px;
-  font-weight: bold;
-  transition: all 0.3s ease;
-  font-size: 0.9rem;
+  color: #C19A6B !important;
+  text-decoration: none !important;
+  padding: 10px 20px !important;
+  border: 1px solid #C19A6B !important;
+  border-radius: 30px !important;
+  font-weight: bold !important;
+  transition: all 0.3s ease !important;
+  font-size: 0.9rem !important;
+  background: transparent !important;
+  cursor: pointer !important;
 }
 
 .genre-link:hover {
-  background-color: rgba(193, 154, 107, 0.1);
-  transform: translateY(-2px);
+  background-color: rgba(193, 154, 107, 0.1) !important;
+  transform: translateY(-2px) !important;
 }
 
 .genre-link.active {
-  background-color: #C19A6B;
-  color: #1B1411; /* Dark Text */
-  box-shadow: 0 0 15px rgba(193, 154, 107, 0.4);
+  background-color: #C19A6B !important;
+  color: #1B1411 !important; /* Dark Text */
+  box-shadow: 0 0 15px rgba(193, 154, 107, 0.4) !important;
 }

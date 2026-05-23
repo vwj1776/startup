@@ -142,6 +142,7 @@ export default function AdminPage() {
           Flags ({flags.length}) {flags.length > 0 && '⚠️'}
         </button>
         <button onClick={() => setActiveTab('goals')} style={{ padding: '10px 20px', background: activeTab === 'goals' ? '#C19A6B' : '#2D1E17', color: activeTab === 'goals' ? '#1B1411' : '#C19A6B', border: '1px solid #C19A6B', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 'bold' }}>Goals</button>
+        <button onClick={() => setActiveTab('broadcast')} style={{ padding: '10px 20px', background: activeTab === 'broadcast' ? '#C19A6B' : '#2D1E17', color: activeTab === 'broadcast' ? '#1B1411' : '#C19A6B', border: '1px solid #C19A6B', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 'bold' }}>Broadcast</button>
       </div>
 
       <hr style={{ borderColor: '#3e2b22', marginBottom: '20px' }} />
@@ -317,6 +318,55 @@ export default function AdminPage() {
         </div>
       )}
 
+      {/* NEW: BROADCAST TAB */}
+      {activeTab === 'broadcast' && (
+        <AdminBroadcast />
+      )}
+
+    </div>
+  );
+}
+
+function AdminBroadcast() {
+  const [message, setMessage] = useState('');
+  const [status, setStatus] = useState('');
+
+  const handleSendBroadcast = async () => {
+    try {
+      const res = await fetch('/api/admin/broadcast', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ message })
+      });
+      if (res.ok) {
+        setStatus('Broadcast sent successfully to all writers!');
+        setMessage(''); // clear the form
+      } else {
+        setStatus('Failed to send broadcast.');
+      }
+    } catch (err) {
+      setStatus('Server error.');
+    }
+  };
+
+  return (
+    <div style={{ backgroundColor: '#2D1E17', padding: '20px', borderRadius: '8px', border: '1px solid #C19A6B', marginBottom: '20px' }}>
+      <h3 style={{ color: '#C19A6B', marginTop: 0 }}>Broadcast Popup to Writers</h3>
+      <p style={{ color: '#8a7b70', marginBottom: '15px' }}>This message will pop up on every author's screen. They must click "Got it!" to dismiss it.</p>
+      <textarea 
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        placeholder="Type the message you want every writer to see..."
+        style={{ width: '100%', height: '100px', padding: '10px', backgroundColor: '#1B1411', color: '#F5EFE0', border: '1px solid #C19A6B', borderRadius: '4px', fontFamily: "'Courier New', Courier, monospace", boxSizing: 'border-box' }}
+      />
+      <button 
+        onClick={handleSendBroadcast}
+        style={{ marginTop: '10px', backgroundColor: '#C19A6B', color: '#1B1411', padding: '10px 20px', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontFamily: 'inherit' }}
+      >
+        Send Popup Message
+      </button>
+      {status && <p style={{ color: status.includes('Failed') || status.includes('error') ? '#cc5555' : '#4CAF50', marginTop: '10px', fontWeight: 'bold' }}>{status}</p>}
     </div>
   );
 }
