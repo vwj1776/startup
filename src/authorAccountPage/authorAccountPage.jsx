@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import './authorAccountPage.css';
 
 function WritingStreak({ userEmail }) {
@@ -59,13 +59,207 @@ function WritingStreak({ userEmail }) {
   );
 }
 
+function PromptExchange({ userEmail, navigate, projects }) {
+  const [recommendedPrompts, setRecommendedPrompts] = useState([]);
+  const [newPromptText, setNewPromptText] = useState('');
+  const [loadingPrompts, setLoadingPrompts] = useState(true);
+
+  const fetchRecommendedPrompts = async () => {
+    setLoadingPrompts(true);
+    try {
+      const res = await fetch('/api/prompts/recommended', { credentials: 'include' });
+      if (res.ok) {
+        const data = await res.json();
+        setRecommendedPrompts(data);
+      } else {
+        setRecommendedPrompts([]);
+      }
+    } catch (err) { 
+      console.error("Failed to fetch prompts", err); 
+      setRecommendedPrompts([]);
+    } finally {
+      setLoadingPrompts(false);
+    }
+  };
+
+  useEffect(() => {
+    if (userEmail) fetchRecommendedPrompts();
+  }, [userEmail]);
+
+  const handleAcceptPrompt = async (prompt) => {
+    if (!prompt || !prompt._id) return;
+    try {
+      const res = await fetch('/api/story', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          title: prompt.text,
+          content: `\n\n---\nPrompt: ${prompt.text}`,
+          genre: 'Fiction', // Default genre
+          status: 'draft',
+          promptId: prompt._id.toString()
+        })
+      });
+      if (res.ok) {
+        const { story } = await res.json();
+        navigate(`/write/${story._id}`);
+      } else { 
+        const errorData = await res.json().catch(() => ({}));
+        alert(`Could not start prompt project: ${errorData.msg || 'Server error'}`);
+      }
+    } catch (err) { 
+      console.error("Error accepting prompt:", err);
+      alert("Error accepting prompt. Check console for details."); 
+    }
+  };
+
+  const handleDenyPrompt = async (prompt) => {
+    if (!prompt || !prompt._id) return;
+    try {
+      await fetch(`/api/prompts/${prompt._id}/deny`, { method: 'POST', credentials: 'include' });
+      fetchRecommendedPrompts(); // Refetch to get a new list
+    } catch (err) { 
+      console.error("Error denying prompt:", err);
+      alert("Error denying prompt."); 
+    }
+  };
+
+  const handleSubmitPrompt = async () => {
+    const trimmedText = newPromptText.trim();
+    if (!trimmedText) return alert("Prompt cannot be empty.");
+    
+    const wordCount = trimmedText.split(/\s+/).filter(Boolean).length;
+    if (wordCount > 100) {
+      return alert("Prompt cannot exceed 100 words.");
+    }
+
+    try {
+      const res = await fetch('/api/prompts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ text: trimmedText })
+      });
+      if (res.ok) {
+        alert("Prompt submitted!");
+        setNewPromptText('');
+      } else { 
+        const errorData = await res.json().catch(() => ({}));
+        alert(`Failed to submit prompt: ${errorData.msg || 'Server error'}`);
+      }
+    } catch (err) { 
+      console.error("Error submitting prompt:", err);
+      alert("Error submitting prompt."); 
+    }
+  };
+
+  const workingOnPrompts = projects.filter(p => p.promptId);
+
+  return (
+    <div className="prompt-exchange-container">
+      <h3>💡 Prompt Exchange</h3>
+      <div className="prompt-exchange-card">
+        <div className="prompt-left">
+          <h4>Recommended Prompts</h4>
+          <div className="prompt-recommendation-list">
+            {loadingPrompts ? <p>Loading prompts...</p> : 
+             recommendedPrompts.length > 0 ? recommendedPrompts.map(prompt => (
+              <div key={prompt._id} className="prompt-recommendation-box">
+                <p className="prompt-text">{prompt.text}</p>
+                <div className="prompt-actions">
+                  <button onClick={() => handleDenyPrompt(prompt)}>Deny</button>
+                  <button onClick={() => handleAcceptPrompt(prompt)}>Accept</button>
+                </div>
+              </div>
+            )) : <p className="wip-empty">No new prompts available right now. Check back later!</p>}
+          </div>
+        </div>
+        <div className="prompt-right">
+          <div className="prompt-wip">
+            <h5>Working On</h5>
+            <div className="wip-list">
+              {workingOnPrompts.length > 0 ? (
+                workingOnPrompts.map(p => <Link key={p._id} to={`/write/${p._id}`} className="wip-item">{p.title}</Link>)
+              ) : (
+                <span className="wip-empty">No active prompts.</span>
+              )}
+            </div>
+          </div>
+          <div className="prompt-submission">
+            <h5>Add a Prompt (100 word limit)</h5>
+            <textarea 
+              placeholder="Share a story idea..." 
+              value={newPromptText} 
+              onChange={e => setNewPromptText(e.target.value)} 
+              maxLength="600"
+            />
+            <button onClick={handleSubmitPrompt}>Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function StoriesFromMyPrompts({ userEmail }) {
+  const [stories, setStories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!userEmail) return;
+
+    const fetchStories = async () => {
+      try {
+        const res = await fetch('/api/author/stories-from-my-prompts', { credentials: 'include' });
+        if (res.ok) {
+          const data = await res.json();
+          setStories(data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch stories from your prompts:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStories();
+  }, [userEmail]);
+
+  return (
+    <div className="author-library-section">
+      <h2>📣 Stories From Your Prompts ({stories.length})</h2>
+      <div className="story-grid-author">
+        {loading ? (
+          <p style={{ color: '#8a7b70', fontStyle: 'italic' }}>Loading stories...</p>
+        ) : stories.length === 0 ? (
+          <p style={{ color: '#8a7b70', fontStyle: 'italic' }}>No stories have been published from your prompts yet.</p>
+        ) : (
+          stories.map((story) => (
+            <div key={story._id} className="story-card-mini" onClick={() => navigate(`/story/${story._id}`)} style={{cursor: 'pointer'}}>
+              <div>
+                <h4>{story.title}</h4>
+                <p style={{fontSize: '0.8rem', color: '#8a7b70', margin: '5px 0 0 0'}}>Written by: {story.author}</p>
+              </div>
+              <span className="genre-label">{story.genre || 'General'}</span>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function AuthorAccountPage() {
   const [privateReviews, setPrivateReviews] = useState([]);
   const [myStories, setMyStories] = useState([]);
+  const [myProjects, setMyProjects] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [currentUsername, setCurrentUsername] = useState('');
   const [userPoints, setUserPoints] = useState(0);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [dismissedBroadcastId, setDismissedBroadcastId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [docLink, setDocLink] = useState('');
   const [docTitle, setDocTitle] = useState('');
@@ -96,16 +290,23 @@ export default function AuthorAccountPage() {
         setCurrentUsername(user.username || user.email);
         setUserPoints(user.points || 0);
         setIsAdmin(user.isAdmin || false);
-
-        const storyRes = await fetch('/api/stories/trending', { credentials: 'include' });
-        const allStories = await storyRes.json();
+        setDismissedBroadcastId(user.dismissedBroadcastId || null);
         
-        const filtered = allStories.filter(s => 
-          s.author === user.username || 
-          s.author === user.email || 
-          s.authorEmail === user.email
-        );
-        setMyStories(filtered);
+        const storyRes = await fetch('/api/author/my-stories', { credentials: 'include' });
+        if (!storyRes.ok) {
+          console.error('Failed to fetch stories, server responded with:', storyRes.status);
+          // Set to empty arrays to prevent crash
+          setMyStories([]);
+          setMyProjects([]);
+        } else {
+          const allUserStories = await storyRes.json();
+          if (Array.isArray(allUserStories)) {
+            const published = allUserStories.filter(s => s.status !== 'draft');
+            const drafts = allUserStories.filter(s => s.status === 'draft');
+            setMyStories(published);
+            setMyProjects(drafts);
+          }
+        }
 
         const reviewRes = await fetch('/api/author/private-reviews', { credentials: 'include' });
         if (reviewRes.ok) {
@@ -120,7 +321,7 @@ export default function AuthorAccountPage() {
       }
     };
     fetchData();
-  }, [navigate]);
+  }, []);
 
   const handlePasswordChange = async (e) => {
     e.preventDefault();
@@ -190,6 +391,7 @@ export default function AuthorAccountPage() {
       const res = await fetch(`/api/story/${id}`, { method: 'DELETE', credentials: 'include' });
       if (res.ok) {
         setMyStories(myStories.filter(s => s._id !== id));
+        setMyProjects(myProjects.filter(p => p._id !== id));
         alert("Story deleted successfully.");
       }
     } catch (err) { alert("Network error."); }
@@ -207,7 +409,7 @@ export default function AuthorAccountPage() {
 
   return (
     <div id="body-author-account">
-      <BroadcastPopup />
+      <BroadcastPopup initialDismissedId={dismissedBroadcastId} />
       
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #3e2b22', paddingBottom: '20px', marginBottom: '30px' }}>
         <h3 style={{margin: 0}}>Welcome, {currentUsername}</h3>
@@ -267,6 +469,19 @@ export default function AuthorAccountPage() {
           </div>
       </div>
 
+      <div id="streakAndCultureGoals">
+        <WritingStreak userEmail={currentUser} />
+        <div className="culture-card">
+          <h2>📌 Monthly Goal</h2>
+          <p style={{fontSize: '1.2rem', color: '#F5EFE0'}}>Write a thousand words!</p>
+          <p style={{fontSize: '0.9rem', color: '#8a7b70', marginTop: '10px'}}>You're part of a community of active writers.</p>
+        </div>
+      </div>
+
+      <PromptExchange userEmail={currentUser} navigate={navigate} projects={myProjects} />
+
+      <StoriesFromMyPrompts userEmail={currentUser} />
+
       <div className="author-library-section">
         <h2>📚 My Library ({myStories.length})</h2>
         <div className="story-grid-author">
@@ -282,15 +497,6 @@ export default function AuthorAccountPage() {
               </div>
             </div>
           ))}
-        </div>
-      </div>
-
-      <div id="streakAndCultureGoals">
-        <WritingStreak userEmail={currentUser} />
-        <div className="culture-card">
-          <h2>📌 Monthly Goal</h2>
-          <p style={{fontSize: '1.2rem', color: '#F5EFE0'}}>Write a thousand words!</p>
-          <p style={{fontSize: '0.9rem', color: '#8a7b70', marginTop: '10px'}}>You're part of a community of active writers.</p>
         </div>
       </div>
 
@@ -331,11 +537,28 @@ export default function AuthorAccountPage() {
           ))
         )}
       </div>
+      <div className="author-library-section">
+        <h2>📝 My Projects ({myProjects.length})</h2>
+        <div className="story-grid-author">
+          {myProjects.length === 0 ? <p style={{color: '#8a7b70', fontStyle: 'italic'}}>No active projects. Start one from a prompt!</p> : myProjects.map((story) => (
+            <div key={story._id} className="story-card-mini project-card">
+              <div>
+                <h4>{story.title}</h4>
+                <span className="genre-label">{story.genre || 'Draft'}</span>
+              </div>
+              <div className="story-card-actions-row">
+                <button className="btn-reupload" onClick={() => navigate(`/write/${story._id}`)}>Edit</button>
+                <button className="btn-delete-small" onClick={() => handleDelete(story._id)}>Delete</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
 
-function BroadcastPopup() {
+function BroadcastPopup({ initialDismissedId }) {
   const [broadcast, setBroadcast] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -349,7 +572,7 @@ function BroadcastPopup() {
           if (data.message && data.messageId) {
             const dismissedId = localStorage.getItem('dismissedBroadcastId');
             // If the user hasn't dismissed this specific message ID yet, show it
-            if (dismissedId !== data.messageId) {
+            if (dismissedId !== data.messageId && initialDismissedId !== data.messageId) {
               setBroadcast(data);
               setIsVisible(true);
             }
@@ -360,13 +583,25 @@ function BroadcastPopup() {
       }
     };
     fetchBroadcast();
-  }, []);
+  }, [initialDismissedId]);
 
-  const handleDismiss = () => {
+  const handleDismiss = async () => {
     if (broadcast) {
       // Save the ID so they never see THIS specific message again
       localStorage.setItem('dismissedBroadcastId', broadcast.messageId);
       setIsVisible(false);
+
+      // Also persist it to the database so it survives logouts
+      try {
+        await fetch('/api/user/dismiss-broadcast', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ messageId: broadcast.messageId })
+        });
+      } catch (err) {
+        console.error("Failed to persist dismissal", err);
+      }
     }
   };
 

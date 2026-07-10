@@ -14,6 +14,15 @@ async function connectToDatabase() {
   }
 }
 
+async function closeDatabase() {
+  try {
+    await client.close();
+    console.log('🔌 Disconnected from MongoDB');
+  } catch (err) {
+    console.error('❌ Error closing MongoDB connection:', err);
+  }
+}
+
 async function getCollections() {
   const db = client.db(config.database);
   return {
@@ -22,7 +31,8 @@ async function getCollections() {
     Review: db.collection('reviews'),
     System: db.collection('system'),
     Report: db.collection('reports'),
-    Notification: db.collection('notifications') 
+    Notification: db.collection('notifications'),
+    Prompt: db.collection('prompts')
   };
 }
 
@@ -154,6 +164,7 @@ async function updateMonthlyGoals(goals) {
 
 module.exports = {
   connectToDatabase,
+  closeDatabase,
   getCollections,
   getAdminStats,
   getUsers,

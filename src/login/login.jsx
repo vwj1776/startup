@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import './login.css';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
@@ -14,7 +13,7 @@ const Login = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ email, username, password }),
+        body: JSON.stringify({ identifier, password }),
       });
 
       if (res.ok) {
@@ -34,9 +33,12 @@ const Login = () => {
     <div className="login-container">
       <h2>Login</h2>
       <form onSubmit={handleLogin}>
-        <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required placeholder="Username" />
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="Email" />
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required placeholder="Password" />
+        <div className="input-group">
+          <input type="text" value={identifier} onChange={(e) => setIdentifier(e.target.value)} required placeholder="Username or Email" />
+        </div>
+        <div className="input-group">
+          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required placeholder="Password" />
+        </div>
         {error && <p className="error-msg">{error}</p>}
         <button type="submit">Login</button>
       </form>

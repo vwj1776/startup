@@ -1,4 +1,4 @@
-const { connectToDatabase, getCollections, getSystemSettings, updateMonthlyGoals } = require('./db');
+const { connectToDatabase, closeDatabase, getCollections, getSystemSettings, updateMonthlyGoals } = require('./db');
 const cookieParser = require('cookie-parser');
 const bcrypt = require('bcryptjs');
 const express = require('express');
@@ -11,11 +11,18 @@ const { ObjectId } = require('mongodb');
 const app = express();
 const authCookieName = 'token';
 const port = process.argv.length > 2 ? process.argv[2] : 4000;
-
 // ADDED Flag collection
-let User, Story, Review, Flag;
+let User, Story, Review, Flag, Prompt;
 
 let currentBroadcast = { message: '', messageId: null }; // Added for global popup broadcasts
+
+// --- Centralized Admin List ---
+const ADMIN_USERS = ['vwj1776', 'nodlev', 'vwj1776@gmail.com', 'nodlev76@gmail.com', 'shepardnlyman22@gmail.com'];
+const checkIsAdmin = (user) => {
+  return user.isAdmin === true || 
+    (user.email && ADMIN_USERS.includes(user.email.toLowerCase().trim())) || 
+    (user.username && ADMIN_USERS.includes(user.username.toLowerCase().trim()));
+};
 
 (async () => {
   try {
@@ -25,6 +32,7 @@ let currentBroadcast = { message: '', messageId: null }; // Added for global pop
     Story = collections.Story;
     Review = collections.Review;
     Flag = collections.Report; // Initialize Flag (mapped to 'Report' collection in db.js)
+    Prompt = collections.Prompt; // Initialize Prompt
 
     app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
     app.use(express.json());
@@ -34,10 +42,31 @@ let currentBroadcast = { message: '', messageId: null }; // Added for global pop
     app.use('/api', apiRouter);
 
     const verifyUser = async (req, res, next) => {
-      const token = req.cookies[authCookieName];
-      if (!token) return res.status(401).send({ msg: 'Unauthorized' });
-      const user = await User.findOne({ token });
-      if (user) { req.user = user; next(); } 
+      try {
+        const token = req.cookies[authCookieName];
+        if (!token) return res.status(401).send({ msg: 'Unauthorized' });
+        const user = await User.findOne({ token });
+        if (user) { 
+          user.isAdmin = checkIsAdmin(user);
+          req.user = user; 
+          next(); 
+        } else { res.status(401).send({ msg: 'Unauthorized' }); }
+      } catch (err) {
+        res.status(500).json({ msg: "Authentication middleware error. Your database might be disconnected or a collection is missing." });
+      }
+    };
+
+  const verifyAdmin = async (req, res, next) => {
+    const token = req.cookies[authCookieName];
+    if (!token) return res.status(401).send({ msg: 'Unauthorized' });
+    const user = await User.findOne({ token });
+    if (user && checkIsAdmin(user)) { 
+      user.isAdmin = true;
+      req.user = user; 
+      next(); 
+    } else if (user) {
+      res.status(403).send({ msg: 'Forbidden: Admins only' });
+    }
       else { res.status(401).send({ msg: 'Unauthorized' }); }
     };
 
@@ -61,20 +90,28 @@ let currentBroadcast = { message: '', messageId: null }; // Added for global pop
     });
 
     apiRouter.post('/auth/login', async (req, res) => {
-      const { email, password } = req.body;
-      const user = await User.findOne({ email });
-      if (user && await bcrypt.compare(password, user.password)) {
-        user.token = uuid.v4();
-        await User.updateOne({ _id: user._id }, { $set: { token: user.token } });
-        res.cookie(authCookieName, user.token, { secure: true, httpOnly: true, sameSite: 'lax' });
-        return res.send({ email: user.email, username: user.username });
+      try {
+        const { identifier, password } = req.body;
+        const user = await User.findOne({ $or: [{ email: identifier }, { username: identifier }] });
+        if (user && await bcrypt.compare(password, user.password)) {
+          user.token = uuid.v4();
+          await User.updateOne({ _id: user._id }, { $set: { token: user.token } });
+          res.cookie(authCookieName, user.token, { secure: true, httpOnly: true, sameSite: 'lax' });
+          return res.send({ email: user.email, username: user.username });
+        }
+        res.status(401).send({ msg: 'Unauthorized' });
+      } catch (err) {
+        res.status(500).json({ msg: "Login failed. Your database might be disconnected or a collection is missing." });
       }
-      res.status(401).send({ msg: 'Unauthorized' });
     });
 
     apiRouter.post('/auth/logout', (req, res) => {
-      res.clearCookie(authCookieName);
-      res.status(204).end();
+      try {
+        res.clearCookie(authCookieName);
+        res.status(204).end();
+      } catch (err) {
+        res.status(500).json({ msg: "Logout failed." });
+      }
     });
 
     apiRouter.post('/auth/accept-pledge', verifyUser, async (req, res) => {
@@ -85,15 +122,20 @@ let currentBroadcast = { message: '', messageId: null }; // Added for global pop
     });
 
     apiRouter.get('/user/me', async (req, res) => {
-      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
-      const token = req.cookies[authCookieName];
-      if (!token) return res.status(401).send({ msg: 'Unauthorized' });
-      const user = await User.findOne({ token });
-      if (user) {
-        const { password, ...safeUser } = user;
-        return res.send(safeUser);
+      try {
+        res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+        const token = req.cookies[authCookieName];
+        if (!token) return res.status(401).send({ msg: 'Unauthorized' });
+        const user = await User.findOne({ token });
+        if (user) {
+          user.isAdmin = checkIsAdmin(user);
+          const { password, ...safeUser } = user;
+          return res.send(safeUser);
+        }
+        res.status(401).send({ msg: 'Unauthorized' });
+      } catch (err) {
+        res.status(500).json({ msg: "Could not fetch user. Your database might be disconnected or a collection is missing." });
       }
-      res.status(401).send({ msg: 'Unauthorized' });
     });
 
     // --- USER PROFILE UPDATE (NEW) ---
@@ -167,6 +209,59 @@ let currentBroadcast = { message: '', messageId: null }; // Added for global pop
       } catch (err) { res.status(500).json({ msg: "Error fetching reviews" }); }
     });
 
+    // --- PROMPTS ---
+    apiRouter.post('/prompts', verifyUser, async (req, res) => {
+      try {
+        const { text } = req.body;
+        const wordCount = text.trim().split(/\s+/).filter(Boolean).length;
+        if (!text || wordCount < 5) return res.status(400).json({ msg: "Prompt is too short." });
+        if (wordCount > 100) return res.status(400).json({ msg: "Prompt cannot exceed 100 words." });
+
+        await Prompt.insertOne({ text, authorEmail: req.user.email, authorUsername: req.user.username, date: new Date(), denials: [] });
+        res.status(201).json({ msg: "Prompt submitted!" });
+      } catch (err) {
+        res.status(500).json({ msg: "Failed to submit prompt. The 'Prompt' collection may be missing." });
+      }
+    });
+
+    apiRouter.get('/prompts/recommended', verifyUser, async (req, res) => {
+      try {
+        const prompts = await Prompt.aggregate([
+          { $match: { authorEmail: { $ne: req.user.email }, 'denials.userId': { $ne: req.user._id.toString() } } },
+          { $sample: { size: 3 } }
+        ]).toArray();
+        if (prompts.length > 0) res.json(prompts);
+        else res.status(404).json({ msg: "No prompts available." });
+      } catch (err) {
+        res.status(500).json({ msg: "Failed to get prompts. The 'Prompt' collection may be missing." });
+      }
+    });
+
+    apiRouter.post('/prompts/:id/deny', verifyUser, async (req, res) => {
+      try {
+        await Prompt.updateOne({ _id: new ObjectId(req.params.id) }, { $addToSet: { denials: { userId: req.user._id.toString() } } });
+        res.json({ msg: "Prompt denied." });
+      } catch (err) {
+        res.status(500).json({ msg: "Failed to deny prompt. The 'Prompt' collection may be missing." });
+      }
+    });
+
+    apiRouter.get('/author/stories-from-my-prompts', verifyUser, async (req, res) => {
+      try {
+          const myPrompts = await Prompt.find({ authorEmail: req.user.email }, { projection: { _id: 1 } }).toArray();
+          const myPromptIds = myPrompts.map(p => p._id.toString());
+          if (myPromptIds.length === 0) return res.json([]);
+
+          const stories = await Story.find({
+              promptId: { $in: myPromptIds },
+              status: 'published'
+          }).sort({ date: -1 }).toArray();
+          res.json(stories);
+      } catch (err) {
+          res.status(500).json({ msg: "Error fetching stories from your prompts." });
+      }
+    });
+
     // --- SYSTEM SETTINGS & GOALS ---
     apiRouter.get('/system/settings', async (req, res) => {
       try {
@@ -187,12 +282,12 @@ let currentBroadcast = { message: '', messageId: null }; // Added for global pop
       } catch (err) { res.status(500).json({ error: "Failed to submit flag" }); }
     });
 
-    apiRouter.get('/admin/flags', verifyUser, async (req, res) => {
+    apiRouter.get('/admin/flags', verifyAdmin, async (req, res) => {
       const f = await Flag.find({}).sort({ date: -1 }).toArray();
       res.json(f);
     });
 
-    apiRouter.delete('/admin/flag/:id', verifyUser, async (req, res) => {
+    apiRouter.delete('/admin/flag/:id', verifyAdmin, async (req, res) => {
       try { 
         await Flag.deleteOne({ _id: new ObjectId(req.params.id) }); 
         res.json({ msg: "Flag resolved" }); 
@@ -211,6 +306,7 @@ let currentBroadcast = { message: '', messageId: null }; // Added for global pop
     apiRouter.get('/stories/trending', async (req, res) => {
       try {
         const stories = await Story.aggregate([
+          { $match: { status: { $ne: 'draft' } } },
           { $lookup: { from: 'users', localField: 'authorEmail', foreignField: 'email', as: 'authorData' } },
           { $unwind: { path: '$authorData', preserveNullAndEmptyArrays: true } },
           { $sort: { "authorData.points": -1, "date": -1 } }
@@ -250,22 +346,49 @@ let currentBroadcast = { message: '', messageId: null }; // Added for global pop
       } catch (err) { res.status(500).json({ msg: "Trending failed" }); }
     });
 
+    apiRouter.get('/author/my-stories', verifyUser, async (req, res) => {
+      try {
+        const stories = await Story.find({ authorEmail: req.user.email }).sort({ date: -1 }).toArray();
+        res.json(stories);
+      } catch (err) { res.status(500).json({ msg: "Error fetching stories" }); }
+    });
+
     apiRouter.post('/story', verifyUser, async (req, res) => {
-      const { title, content, genre } = req.body;
-      await Story.insertOne({ title, content, genre, author: req.user.username, authorEmail: req.user.email, date: new Date() });
+      const { title, content, genre, status, promptId } = req.body;
+      const newStory = { 
+        title, content, genre, 
+        author: req.user.username, authorEmail: req.user.email, date: new Date(),
+        status: status || 'published', // Default to published if not specified
+        promptId: promptId || null
+      };
+      const result = await Story.insertOne(newStory);
       
       if (req.user.referredBy) {
         await User.updateOne({ email: req.user.referredBy }, { $inc: { points: 3 } });
       }
       
-      res.status(201).json({ msg: "Published" });
+      res.status(201).json({ msg: "Story saved", story: { ...newStory, _id: result.insertedId } });
     });
 
     // RESTORED: Edit route
     apiRouter.put('/story/:id', verifyUser, async (req, res) => {
       try {
-        const result = await Story.updateOne({ _id: new ObjectId(req.params.id), authorEmail: req.user.email }, { $set: { title: req.body.title, content: req.body.content, genre: req.body.genre, lastUpdated: new Date() } });
-        (result.matchedCount === 1) ? res.json({ msg: "Updated" }) : res.status(404).json({ msg: "Not found/Auth" });
+        const storyId = new ObjectId(req.params.id);
+        const { title, content, genre, status } = req.body;
+
+        const originalStory = await Story.findOne({ _id: storyId, authorEmail: req.user.email });
+        if (!originalStory) {
+          return res.status(404).json({ msg: "Not found or not authorized" });
+        }
+
+        const result = await Story.updateOne({ _id: storyId }, { $set: { title, content, genre, status, lastUpdated: new Date() } });
+
+        // If a draft from a prompt is being published, award a point.
+        if (originalStory.promptId && originalStory.status === 'draft' && status === 'published') {
+          await User.updateOne({ _id: req.user._id }, { $inc: { points: 1 } });
+        }
+
+        (result.matchedCount === 1) ? res.json({ msg: "Updated" }) : res.status(404).json({ msg: "Not found or not authorized" });
       } catch (err) { res.status(500).json({ msg: "Update failed" }); }
     });
 
@@ -284,23 +407,23 @@ let currentBroadcast = { message: '', messageId: null }; // Added for global pop
     });
 
     // --- ADMIN (Fully restored) ---
-    apiRouter.get('/admin/stats', verifyUser, async (req, res) => {
+    apiRouter.get('/admin/stats', verifyAdmin, async (req, res) => {
       const u = await User.countDocuments();
       const s = await Story.countDocuments();
       res.json({ userCount: u, storyCount: s });
     });
 
-    apiRouter.get('/admin/users', verifyUser, async (req, res) => {
+    apiRouter.get('/admin/users', verifyAdmin, async (req, res) => {
       const all = await User.find({}).toArray();
       res.json(all.map(({ password, token, ...safe }) => safe));
     });
 
-    apiRouter.get('/admin/reviews', verifyUser, async (req, res) => {
+    apiRouter.get('/admin/reviews', verifyAdmin, async (req, res) => {
       const r = await Review.find({}).sort({ date: -1 }).toArray();
       res.json(r);
     });
 
-    apiRouter.post('/admin/user/curriculum', verifyUser, async (req, res) => {
+    apiRouter.post('/admin/user/curriculum', verifyAdmin, async (req, res) => {
       try {
         const { email, completed } = req.body;
         const user = await User.findOne({ email });
@@ -311,22 +434,22 @@ let currentBroadcast = { message: '', messageId: null }; // Added for global pop
       } catch (e) { res.status(500).json({ error: 'Error' }); }
     });
 
-    apiRouter.delete('/admin/review/:id', verifyUser, async (req, res) => {
+    apiRouter.delete('/admin/review/:id', verifyAdmin, async (req, res) => {
       try { await Review.deleteOne({ _id: new ObjectId(req.params.id) }); res.json({ msg: "Review deleted" }); } 
       catch (err) { res.status(500).json({ msg: "Delete failed" }); }
     });
     
-    apiRouter.delete('/admin/user/:email', verifyUser, async (req, res) => {
+    apiRouter.delete('/admin/user/:email', verifyAdmin, async (req, res) => {
       try { await User.deleteOne({ email: req.params.email }); res.json({ msg: "User deleted" }); }
       catch (err) { res.status(500).json({ error: "Delete failed" }); }
     });
     
-    apiRouter.post('/admin/user/status', verifyUser, async (req, res) => {
+    apiRouter.post('/admin/user/status', verifyAdmin, async (req, res) => {
        try { await User.updateOne({ email: req.body.email }, { $set: { status: req.body.status } }); res.json({ msg: "Status updated" }); }
        catch (err) { res.status(500).json({ error: "Update failed" }); }
     });
 
-    apiRouter.put('/admin/goals', verifyUser, async (req, res) => {
+    apiRouter.put('/admin/goals', verifyAdmin, async (req, res) => {
       try {
         await updateMonthlyGoals(req.body);
         res.json({ msg: "Goals updated" });
@@ -338,13 +461,25 @@ let currentBroadcast = { message: '', messageId: null }; // Added for global pop
       res.json(currentBroadcast);
     });
 
-    apiRouter.post('/admin/broadcast', verifyUser, async (req, res) => {
+    apiRouter.post('/admin/broadcast', verifyAdmin, async (req, res) => {
       const { message } = req.body;
       currentBroadcast = {
         message: message,
         messageId: Date.now().toString()
       };
       res.json({ success: true, broadcast: currentBroadcast });
+    });
+
+    apiRouter.post('/user/dismiss-broadcast', verifyUser, async (req, res) => {
+      try {
+        await User.updateOne(
+          { _id: req.user._id },
+          { $set: { dismissedBroadcastId: req.body.messageId } }
+        );
+        res.json({ success: true });
+      } catch (err) {
+        res.status(500).json({ error: "Failed to update" });
+      }
     });
 
     // --- STATIC FILES ---
@@ -357,6 +492,26 @@ let currentBroadcast = { message: '', messageId: null }; // Added for global pop
       res.sendFile(path.join(frontendDir, 'index.html'));
     });
 
-    app.listen(port, () => console.log(`🚀 Server on ${port}`));
+    const server = app.listen(port, () => console.log(`🚀 Server on ${port}`));
+
+    // --- GRACEFUL SHUTDOWN ---
+    const shutdown = async () => {
+      console.log('\n🛑 Shutting down server...');
+      server.close(async () => {
+        console.log('HTTP server closed.');
+        await closeDatabase();
+        process.exit(0);
+      });
+
+      // Force close if it takes too long (10 seconds)
+      setTimeout(() => {
+        console.error('⚠️ Could not close connections in time, forcefully shutting down');
+        process.exit(1);
+      }, 10000);
+    };
+
+    process.on('SIGINT', shutdown);
+    process.on('SIGTERM', shutdown);
+
   } catch (err) { console.error(err); }
 })();
