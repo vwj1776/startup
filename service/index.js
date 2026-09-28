@@ -7,6 +7,7 @@ const uuid = require('uuid');
 const path = require('path');
 const fs = require('fs');
 const { ObjectId } = require('mongodb');
+const axios = require('axios');
 
 const app = express();
 const authCookieName = 'token';
@@ -351,6 +352,58 @@ const checkIsAdmin = (user) => {
         const stories = await Story.find({ authorEmail: req.user.email }).sort({ date: -1 }).toArray();
         res.json(stories);
       } catch (err) { res.status(500).json({ msg: "Error fetching stories" }); }
+    });
+
+    apiRouter.post('/import-google-doc', verifyUser, async (req, res) => {
+      const { url, title, genre } = req.body;
+      const allowedGenres = ['Fantasy', 'Fiction', 'Nonfiction', 'Horror', 'Poetry', 'Sci-Fi'];
+
+      if (!title?.trim() || !allowedGenres.includes(genre)) {
+        return res.status(400).json({ msg: 'A title and valid genre are required.' });
+      }
+
+      let documentId;
+      try {
+        const docUrl = new URL(url);
+        const match = docUrl.hostname === 'docs.google.com'
+          ? docUrl.pathname.match(/^\/document\/(?:u\/\d+\/)?d\/([\w-]+)/)
+          : null;
+        if (docUrl.protocol !== 'https:' || !match) {
+          return res.status(400).json({ msg: 'Enter a valid Google Docs sharing link.' });
+        }
+        documentId = match[1];
+      } catch (err) {
+        return res.status(400).json({ msg: 'Enter a valid Google Docs sharing link.' });
+      }
+
+      try {
+        const googleDoc = await axios.get(
+          `https://docs.google.com/document/d/${documentId}/export?format=txt`,
+          { responseType: 'text', timeout: 15000, maxContentLength: 5 * 1024 * 1024 }
+        );
+        const content = typeof googleDoc.data === 'string' ? googleDoc.data.trim() : '';
+        const contentType = googleDoc.headers['content-type'] || '';
+        if (!content || contentType.includes('text/html')) {
+          return res.status(422).json({ msg: 'Could not read this document. Set General access to “Anyone with the link” and try again.' });
+        }
+
+        const newStory = {
+          title: title.trim(), content, genre,
+          author: req.user.username, authorEmail: req.user.email, date: new Date(),
+          status: 'published', promptId: null
+        };
+        const result = await Story.insertOne(newStory);
+        return res.status(201).json({
+          msg: 'Google Doc imported',
+          story: { ...newStory, _id: result.insertedId }
+        });
+      } catch (err) {
+        const status = err.response?.status;
+        const msg = status === 403 || status === 404
+          ? 'Google could not access this document. Set General access to “Anyone with the link” and try again.'
+          : 'Unable to import the Google Doc right now. Please try again.';
+        return res.status(502).json({ msg });
+      }
     });
 
     apiRouter.post('/story', verifyUser, async (req, res) => {

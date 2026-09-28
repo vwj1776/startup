@@ -357,13 +357,15 @@ export default function AuthorAccountPage() {
         credentials: 'include',
         body: JSON.stringify({ url: docLink, title: docTitle, genre: selectedGenre })
       });
-      if (res.ok) {
-        const data = await res.json();
-        setMyStories(prev => [...prev, data.story]);
-        setDocLink(''); setDocTitle('');
-        alert('Imported!');
-      }
-    } catch (err) { console.error(err); }
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) return alert(data.msg || `Import failed (${res.status}).`);
+      setMyStories(prev => [...prev, data.story]);
+      setDocLink(''); setDocTitle('');
+      alert('Imported!');
+    } catch (err) {
+      console.error(err);
+      alert('Could not reach the server. Please try again.');
+    }
   };
 
   const handleFileChange = async (event) => {
